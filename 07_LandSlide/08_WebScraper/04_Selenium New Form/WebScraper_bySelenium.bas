@@ -94,7 +94,6 @@ End Function
 
 
 
-
 Sub get_weather_data()
     Dim cd As New ChromeDriver
     Dim ddl As Selenium.SelectElement
@@ -137,6 +136,8 @@ Sub get_weather_data()
     
     
     ' ---------------------------------------------------------------
+    ' 시작년도, 끝년도 삽입
+    
     eYear = Year(Now()) - 1
     sYear = eYear - 29
     
@@ -153,11 +154,20 @@ Sub get_weather_data()
     ' cd.FindElementByXPath("//*[@id='schForm']/div[2]").Click
     ' copy by selector
     
+    '검색 버튼클릭
     cd.FindElementByCss("#schForm > div.wrap_btn > button").Click
-    Sleep (1 * 1000)
+    Sleep (2 * 1000)
     
     ' Excel download button
-    cd.FindElementByLinkText("Excel").Click
+    ' cd.FindElementByLinkText("Excel").Click
+     
+     
+    'Excel download
+    ' cd.FindElementByCss("#wrap_content > div:nth-child(15) > div.hd_itm > div > a.DOWNLOAD_BTN_XLS").Click
+      
+    'CSV download
+    cd.FindElementByCss("#wrap_content > div:nth-child(15) > div.hd_itm > div > a.DOWNLOAD_BTN").Click
+    
     Sleep (3 * 1000)
 
     
