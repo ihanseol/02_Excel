@@ -1,13 +1,9 @@
 Attribute VB_Name = "PhotoEmbedding"
-
-Function ConvertPointToCm(ByVal pnt As Double) As Double
-    ConvertPointToCm = pnt * 0.03527778
-End Function
-
-
-Function ConvertCmToPoint(ByVal cm As Double) As Double
-    ConvertCmToPoint = cm * 28.34646
-End Function
+Public Enum ASPECT_RATIO
+    asr1609 = 1
+    asr43 = 2
+    asrETC = -1
+End Enum
 
 
 'Sub InsertImage_LinkedPicture()
@@ -56,11 +52,14 @@ End Function
 'End Sub
 
 
-
 Sub InsertImage_EmbedPicture()
 Attribute InsertImage_EmbedPicture.VB_ProcData.VB_Invoke_Func = "e\n14"
 
     Dim fd As FileDialog
+    ' Position image
+    Dim centerX As Double
+    Dim centerY As Double
+            
     Set fd = Application.FileDialog(msoFileDialogFilePicker)
     fd.AllowMultiSelect = False
     
@@ -70,7 +69,7 @@ Attribute InsertImage_EmbedPicture.VB_ProcData.VB_Invoke_Func = "e\n14"
         
         Dim area As Range
         ' Set area = Application.InputBox(prompt:="Select the area where you want to insert the image.", Type:=8)
-        
+
         Set area = MakeRangeFromIndex(FindPageIndex(ActiveCell.Row))
         
         If Not area Is Nothing Then
@@ -80,14 +79,15 @@ Attribute InsertImage_EmbedPicture.VB_ProcData.VB_Invoke_Func = "e\n14"
             Left:=area.Left, Top:=area.Top, Width:=-1, Height:=-1)
             
             ' Resize image
-            Image.LockAspectRatio = msoTrue
+            Image.LockAspectRatio = msoFalse
             
-            Image.Height = ConvertCmToPoint(8)    ' 8 cm * 28.35 points/cm
-            Image.Width = ConvertCmToPoint(10.7)  ' 10.7 cm * 28.35 points/cm
-            
-            ' Position image
-            Dim centerX As Double
-            Dim centerY As Double
+            If GetImageRatio(Image) = asr43 Then
+                Image.Width = ConvertCmToPoint(10.7)  ' 10.7 cm * 28.35 points/cm
+                Image.Height = ConvertCmToPoint(8)    ' 8 cm * 28.35 points/cm
+            Else
+                Image.Width = ConvertCmToPoint(14.35)  ' 10.7 cm * 28.35 points/cm
+                Image.Height = ConvertCmToPoint(8.08)    ' 8 cm * 28.35 points/cm
+            End If
             
             centerX = area.Left + (area.Width / 2) - (Image.Width / 2)
             centerY = area.Top + (area.Height / 2) - (Image.Height / 2)
@@ -100,6 +100,48 @@ Attribute InsertImage_EmbedPicture.VB_ProcData.VB_Invoke_Func = "e\n14"
 End Sub
 
 
+Function ConvertPointToCm(ByVal pnt As Double) As Double
+    ConvertPointToCm = pnt * 0.03527778
+End Function
+
+
+Function ConvertCmToPoint(ByVal cm As Double) As Double
+    ConvertCmToPoint = cm * 28.34646
+End Function
+
+
+
+Function GetImageRatio(Image As Shape) As Integer
+    Dim dlgOpen As FileDialog
+    Dim img As Object
+    Dim iWidth As Long, iHeight As Long
+    Dim iRatio As Double
+    Dim aspectRatio As String
+    
+    ' 16:9 -  1.77618152524168
+    ' 4:3 - 1.33334153543307
+    
+    'Get the selected image and its dimensions
+    
+    iWidth = Image.Width
+    iHeight = Image.Height
+    
+    iRatio = iWidth / iHeight
+    Debug.Print iRatio
+    
+    'Check the aspect ratio of the image
+    If 1.2 < iRatio And iRatio < 1.4 Then
+        aspectRatio = "4:3"
+        GetImageRatio = asr43
+    ElseIf 1.5 < iRatio And iRatio < 1.9 Then
+        aspectRatio = "16:9"
+        GetImageRatio = asr1609
+    Else
+        aspectRatio = "Etc"
+        GetImageRatio = asrETC
+    End If
+     
+End Function
 
 
 Public Function GetFilePath()
@@ -116,7 +158,6 @@ Public Function GetFilePath()
     
     GetFilePath = FileSelected
 End Function
-    
     
 
 Function GetInitialPositionArray() As Integer()
@@ -174,6 +215,11 @@ Function MakeRangeFromIndex(index As Integer) As Range
     Set MakeRangeFromIndex = rng
 End Function
 
+
+'
+' MsoShapeType Enumeration
+' https://learn.microsoft.com/en-us/previous-versions/office/developer/office-2007/aa432678(v=office.12)?redirectedfrom=MSDN
+'
 
 Sub DeleteAllImages_LinkedPictures()
 Attribute DeleteAllImages_LinkedPictures.VB_ProcData.VB_Invoke_Func = "d\n14"
