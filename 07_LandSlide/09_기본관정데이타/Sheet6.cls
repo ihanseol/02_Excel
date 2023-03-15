@@ -115,7 +115,7 @@ Private Sub CommandButton7_Click()
 End Sub
 
 
-'2022/6/9 Insert YangSoo Data
+' 2022/6/9 Insert YangSoo Data
 ' Radius of Influence - 양수영향반경
 ' Effective Radius - 유효우물반경
 
@@ -123,10 +123,10 @@ Private Sub CommandButton8_Click()
     Dim WkbkName As Object
     Dim WBName, cell1 As String
     Dim i As Integer
-    Dim s1, s2, t1, t2, RI1, RI2, RI3, ir As Double
+    Dim S1, s2, T1, T2, RI1, RI2, RI3, ir As Double
     
     ' nl : natural level, sl : stable level
-    Dim nl, sl As Double
+    Dim nl, sl, deltas As Double
     Dim casing As Integer
     
     i = 2
@@ -141,15 +141,18 @@ Private Sub CommandButton8_Click()
         Exit Sub
     End If
 
+    ' delta s : 최초1분의 수위강하
+    deltas = Workbooks(WBName).Worksheets("SkinFactor").Range("b4").value
+    
     ' 자연수위, 안정수위, 케이싱 심도 결정
     nl = Workbooks(WBName).Worksheets("SkinFactor").Range("i4").value
     sl = Workbooks(WBName).Worksheets("SkinFactor").Range("i6").value
     casing = Workbooks(WBName).Worksheets("SkinFactor").Range("i10").value
     
     ' WkbkName.Close
-    t1 = Workbooks(WBName).Worksheets("SkinFactor").Range("D5").value
-    s1 = Workbooks(WBName).Worksheets("SkinFactor").Range("E10").value
-    t2 = Workbooks(WBName).Worksheets("SkinFactor").Range("H13").value
+    T1 = Workbooks(WBName).Worksheets("SkinFactor").Range("D5").value
+    S1 = Workbooks(WBName).Worksheets("SkinFactor").Range("E10").value
+    T2 = Workbooks(WBName).Worksheets("SkinFactor").Range("H13").value
     s2 = Workbooks(WBName).Worksheets("SkinFactor").Range("i16").value
     
     ' yangsoo radius of influence
@@ -166,15 +169,17 @@ Private Sub CommandButton8_Click()
     Range("c10") = 5
     Range("c11") = casing - 5
         
-    Range("E5") = t1
-    Range("E6") = t2
+    Range("E5") = T1
+    Range("E6") = T2
     Range("g5") = s2
-    Range("h7") = s1
+    Range("h7") = S1
     Range("h6") = ir 'find influence radius
     
     Range("e10") = RI1
     Range("f10") = RI2
     Range("g10") = RI3
+    
+    Range("c23") = Round(deltas, 2) 'deltas
         
 End Sub
 

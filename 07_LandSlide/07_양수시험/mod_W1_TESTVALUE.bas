@@ -1,4 +1,4 @@
-Attribute VB_Name = "mod_PT_WaterTest"
+Attribute VB_Name = "mod_W1_TESTVALUE"
 Option Explicit
 
 Public Sub rows_and_column()

@@ -2,17 +2,19 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "shLongTermTest"
+Attribute VB_Name = "shW_LongTEST"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 
 Private Sub CommandButton2_Click()
-
     UserFormSTime.Show
     ' Call frame_time_setting
     Call TimeSetting
+    
+    ActiveWindow.SmallScroll Down:=-66
+    Range("O10").Select
 End Sub
 
 Private Sub frame_time_setting()
@@ -21,7 +23,7 @@ Private Sub frame_time_setting()
     
     Call initDictionary
     
-    dStableTime = CInt(shLongTermTest.ComboBox1.Value)
+    dStableTime = CInt(shW_LongTEST.ComboBox1.Value)
     MY_TIME = gDicStableTime(dStableTime)
 
 End Sub
@@ -54,32 +56,27 @@ End Sub
 Private Sub Worksheet_Activate()
     Dim gong1, gong2 As String
     Dim gong, occur As Long
-    Dim KeyCell As Range
+    
     
     Debug.Print ActiveSheet.name
-       
     Call initDictionary
     
     If ActiveSheet.name <> "LongTest" Then
         Exit Sub
     End If
-   
-    
+       
     If MY_TIME = 0 Then
         MY_TIME = initialize_myTime
-        shLongTermTest.ComboBox1.Value = gDicMyTime(MY_TIME)
+        shW_LongTEST.ComboBox1.Value = gDicMyTime(MY_TIME)
     End If
 
-   Set KeyCell = shInput.Range("J48")
-   
-   gong = Val(CleanString(KeyCell.Value))
-     
-   gong1 = "W-" & CStr(gong)
-   gong2 = shInput.Range("i54").Value
- 
-   If gong1 <> gong2 Then
-        shInput.Range("i54").Value = gong1
-   End If
+'   gong = Val(CleanString(shInput.Range("J48").Value))
+'   gong1 = "W-" & CStr(gong)
+'   gong2 = shInput.Range("i54").Value
+'
+'   If gong1 <> gong2 Then
+'        shInput.Range("i54").Value = gong1
+'   End If
     
 End Sub
 

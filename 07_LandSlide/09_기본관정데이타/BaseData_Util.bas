@@ -73,14 +73,14 @@ Function RemoveDupesDict(MyArray As Variant) As Variant
     End With
 End Function
 
-Public Function GetLength(a As Variant) As Integer
+Public Function GetLength(A As Variant) As Integer
     ' if array is empty return 0
     ' else return number of array item
     
-    If IsEmpty(a) Then
+    If IsEmpty(A) Then
         GetLength = 0
     Else
-        GetLength = UBound(a) - LBound(a) + 1
+        GetLength = UBound(A) - LBound(A) + 1
     End If
 End Function
 

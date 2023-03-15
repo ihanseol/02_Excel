@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "shStepTest"
+Attribute VB_Name = "shW_StepTEST"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -43,15 +43,20 @@ Private Sub Worksheet_Activate()
     Dim arr() As Variant
     Dim i As Integer
     
-    arr = Array(250, 260, 270, 300, 360, 370, 380, 390, 420, 480, 490, 500, 510, 540, 600)
+    arr = Array(250, 260, 270, 300, 360, 370, 380, 390, 420, 480, 490, 500, 510, 540, 600, 640, 700)
         
-    If (ActiveSheet.name = "Step") Then Exit Sub
+    If (ActiveSheet.name <> "StepTest") Then Exit Sub
     
-    ComboBox1.Clear
-    For i = LBound(arr) To UBound(arr)
-        ComboBox1.AddItem (arr(i))
-    Next i
-    ComboBox1.Value = arr(UBound(arr))
+    
+    If ComboBox1.Value <> arr(UBound(arr)) Then
+        ComboBox1.Clear
+        For i = LBound(arr) To UBound(arr)
+            ComboBox1.AddItem (arr(i))
+        Next i
+        ComboBox1.Value = arr(UBound(arr))
+    End If
+    
 End Sub
+
 
 

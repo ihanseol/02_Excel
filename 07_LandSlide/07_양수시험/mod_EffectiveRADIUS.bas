@@ -1,4 +1,4 @@
-Attribute VB_Name = "modEffectiveRadius"
+Attribute VB_Name = "mod_EffectiveRadius"
 Option Explicit
 
 '0 : skin factor

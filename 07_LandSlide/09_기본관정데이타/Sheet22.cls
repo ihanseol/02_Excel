@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "Sheet16"
+Attribute VB_Name = "Sheet22"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -12,8 +12,8 @@ UserFormTS.Show
 End Sub
 
 
+'Get Water Spec from YanSoo ilbo
 Private Sub CommandButton2_Click()
-  
   Dim thisname, fname As String
   Dim cell  As String
   Dim time As Date
@@ -22,7 +22,7 @@ Private Sub CommandButton2_Click()
   
   cell = Range("d12").value
   
-  thisname = ActiveWorkbook.Name
+  thisname = ActiveWorkbook.name
   fname = "A" & GetNumeric2(cell) & "_ge_OriginalSaveFile.xlsm"
  
   If Not IsWorkBookOpen(fname) Then
@@ -47,13 +47,12 @@ Private Sub CommandButton2_Click()
   Range("c9").value = ph1
     
   Call getModDataFromYangSooSingle(thisname, fname)
-  
 End Sub
 
 
 Sub getModDataFromYangSooSingle(ByVal thisname As String, ByVal fname As String)
-
     Windows(fname).Activate
+    Sheets("w1").Activate
     Sheets("w1").Range("H14:J23").Select
     Selection.Copy
     
@@ -62,43 +61,38 @@ Sub getModDataFromYangSooSingle(ByVal thisname As String, ByVal fname As String)
    
     Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
         :=False, Transpose:=False
-    
 End Sub
 
+' Get(Ec, Ph, Temp) Range - 지열공에서 통계내는 함수 ....
 ' Ph, EC, Temp statistics, find range
-
+' data gathering function in EarthThermal test ...
 Private Sub CommandButton3_Click()
-
-    Dim nOfWell, i As Integer
+    Dim nofWell, i As Integer
     
     Dim lowEC() As Double
     Dim hiEC() As Double
-    
     Dim lowPH() As Double
     Dim hiPH() As Double
-    
     Dim lowTEMP() As Double
     Dim hiTEMP() As Double
+
+    nofWell = sheets_count()
     
+    If nofWell < 2 Or Not Contains(Sheets, "a1") Then
+        MsgBox "first Generate Simple YangSoo"
+        Exit Sub
+    End If
     
-    Sheets("Well").Select
-    Sheets("Well").Range("A30").Select
-    Selection.End(xlUp).Select
+    ReDim lowPH(1 To nofWell)
+    ReDim hiPH(1 To nofWell)
     
-    nOfWell = GetNumeric2(Selection.value)
+    ReDim lowEC(1 To nofWell)
+    ReDim hiEC(1 To nofWell)
     
+    ReDim lowTEMP(1 To nofWell)
+    ReDim hiTEMP(1 To nofWell)
     
-    ReDim lowPH(1 To nOfWell)
-    ReDim hiPH(1 To nOfWell)
-    
-    ReDim lowEC(1 To nOfWell)
-    ReDim hiEC(1 To nOfWell)
-    
-    ReDim lowTEMP(1 To nOfWell)
-    ReDim hiTEMP(1 To nOfWell)
-    
-    
-    For i = 1 To nOfWell
+    For i = 1 To nofWell
         lowEC(i) = getEC(cellLOW, i)
         hiEC(i) = getEC(cellHI, i)
         
@@ -109,46 +103,44 @@ Private Sub CommandButton3_Click()
         hiTEMP(i) = getTEMP(cellHI, i)
     Next i
     
+    Debug.Print String(3, vbCrLf)
     
     Debug.Print "--Temp----------------------------------------"
-    Debug.Print "low : " & Application.Min(lowTEMP), Application.Max(lowTEMP)
-    Debug.Print "hi  : " & Application.Min(hiTEMP), Application.Max(hiTEMP)
+    Debug.Print "low : " & Application.min(lowTEMP), Application.max(lowTEMP)
+    Debug.Print "hi  : " & Application.min(hiTEMP), Application.max(hiTEMP)
     Debug.Print "----------------------------------------------"
     
     Debug.Print "--PH------------------------------------------"
-    Debug.Print "low : " & Application.Min(lowPH), Application.Max(lowPH)
-    Debug.Print "hi  : " & Application.Min(hiPH), Application.Max(hiPH)
+    Debug.Print "low : " & Application.min(lowPH), Application.max(lowPH)
+    Debug.Print "hi  : " & Application.min(hiPH), Application.max(hiPH)
     Debug.Print "----------------------------------------------"
        
     Debug.Print "--EC------------------------------------------"
-    Debug.Print "low : " & Application.Min(lowEC), Application.Max(lowEC)
-    Debug.Print "hi  : " & Application.Min(hiEC), Application.Max(hiEC)
+    Debug.Print "low : " & Application.min(lowEC), Application.max(lowEC)
+    Debug.Print "hi  : " & Application.min(hiEC), Application.max(hiEC)
     Debug.Print "----------------------------------------------"
-    
-   
-   
 End Sub
 
 Function getEC(ByVal LOWHI As Integer, ByVal well As Integer)
     Dim page, quo, remainder As Integer
     
-    quo = WorksheetFunction.Quotient(well, 2)
+    quo = WorksheetFunction.quotient(well, 2)
     remainder = well Mod 2
     page = quo + remainder
     
-    Sheets("a" & CStr(page)).Activate
+    Sheets("p" & CStr(page)).Activate
     
     If remainder = 1 Then
         If LOWHI = cellLOW Then
-            getEC = Sheets("a" & CStr(page)).Range("e25").value
+            getEC = Sheets("p" & CStr(page)).Range("e25").value
         Else
-            getEC = Sheets("a" & CStr(page)).Range("e24").value
+            getEC = Sheets("p" & CStr(page)).Range("e24").value
         End If
     Else
         If LOWHI = cellLOW Then
-            getEC = Sheets("a" & CStr(page)).Range("h25").value
+            getEC = Sheets("p" & CStr(page)).Range("h25").value
         Else
-            getEC = Sheets("a" & CStr(page)).Range("h24").value
+            getEC = Sheets("p" & CStr(page)).Range("h24").value
         End If
     End If
 End Function
@@ -156,23 +148,23 @@ End Function
 Function getPH(ByVal LOWHI As Integer, ByVal well As Integer)
     Dim page, quo, remainder As Integer
     
-    quo = WorksheetFunction.Quotient(well, 2)
+    quo = WorksheetFunction.quotient(well, 2)
     remainder = well Mod 2
     page = quo + remainder
     
-    Sheets("a" & CStr(page)).Activate
+    Sheets("p" & CStr(page)).Activate
     
     If remainder = 1 Then
         If LOWHI = cellLOW Then
-            getPH = Sheets("a" & CStr(page)).Range("f25").value
+            getPH = Sheets("p" & CStr(page)).Range("f25").value
         Else
-            getPH = Sheets("a" & CStr(page)).Range("f24").value
+            getPH = Sheets("p" & CStr(page)).Range("f24").value
         End If
     Else
         If LOWHI = cellLOW Then
-            getPH = Sheets("a" & CStr(page)).Range("i25").value
+            getPH = Sheets("p" & CStr(page)).Range("i25").value
         Else
-            getPH = Sheets("a" & CStr(page)).Range("i24").value
+            getPH = Sheets("p" & CStr(page)).Range("i24").value
         End If
     End If
 End Function
@@ -180,26 +172,31 @@ End Function
 Function getTEMP(ByVal LOWHI As Integer, ByVal well As Integer)
     Dim page, quo, remainder As Integer
     
-    quo = WorksheetFunction.Quotient(well, 2)
+    quo = WorksheetFunction.quotient(well, 2)
     remainder = well Mod 2
     page = quo + remainder
     
-    Sheets("a" & CStr(page)).Activate
+    Sheets("p" & CStr(page)).Activate
     
     If remainder = 1 Then
         If LOWHI = cellLOW Then
-            getTEMP = Sheets("a" & CStr(page)).Range("d25").value
+            getTEMP = Sheets("p" & CStr(page)).Range("d25").value
         Else
-            getTEMP = Sheets("a" & CStr(page)).Range("d24").value
+            getTEMP = Sheets("p" & CStr(page)).Range("d24").value
         End If
     Else
         If LOWHI = cellLOW Then
-            getTEMP = Sheets("a" & CStr(page)).Range("g25").value
+            getTEMP = Sheets("p" & CStr(page)).Range("g25").value
         Else
-            getTEMP = Sheets("a" & CStr(page)).Range("g24").value
+            getTEMP = Sheets("p" & CStr(page)).Range("g24").value
         End If
     End If
 End Function
+
+
+
+
+
 
 
 

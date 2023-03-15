@@ -3,9 +3,7 @@ Attribute VB_Name = "BaseData_AddPumpingWell"
 Option Explicit
 
 '쉬트를 생성할때에는 전체 관정데이타를 건들지 않고, 우선먼저 쉬트복제를 누르는것이 기본으로 정해져 있다.
-
 Private Sub deleteCommandButton()
-    
     ActiveSheet.Shapes.Range(Array("CommandButton1")).Select
     Selection.Delete
     ActiveSheet.Shapes.Range(Array("CommandButton2")).Select
@@ -19,7 +17,6 @@ Private Sub deleteCommandButton()
 End Sub
 
 Public Sub CopyOneSheet()
-    
     Dim n_sheets    As Integer
     
     n_sheets = sheets_count()
@@ -36,7 +33,7 @@ Public Sub CopyOneSheet()
         Sheets("2").Copy Before:=Sheets("Q1")
     End If
     
-    ActiveSheet.Name = CStr(n_sheets + 1)
+    ActiveSheet.name = CStr(n_sheets + 1)
     Range("b2").value = "W-" & (n_sheets + 1)
     Range("e15").value = CStr(n_sheets + 1)
     
@@ -53,7 +50,6 @@ Public Sub CopyOneSheet()
 End Sub
 
 Private Sub InsertOneRow(ByVal n_sheets As Integer)
-    
     n_sheets = n_sheets + 4
     Rows(n_sheets & ":" & n_sheets).Select
     Selection.Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove
@@ -64,11 +60,9 @@ Private Sub InsertOneRow(ByVal n_sheets As Integer)
     ActiveSheet.Paste
     
     Application.CutCopyMode = False
-    
 End Sub
 
 Private Sub ChangeCellData(ByVal nsheet As Integer, ByVal nselect As Integer)
-    '
     ' change sheet data direct to well sheet data value
     ' https://stackoverflow.com/questions/18744537/vba-setting-the-formula-for-a-cell
     
@@ -80,8 +74,6 @@ Private Sub ChangeCellData(ByVal nsheet As Integer, ByVal nselect As Integer)
                       ReplaceFormat:=False
     
     Range("E21").Select
-    'Range("E21").Formula = "=Well!" & Cells(nsheet, 9).Address
     Range("E21").Formula = "=Well!" & Cells(nsheet, "I").Address
-    
 End Sub
 

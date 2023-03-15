@@ -39,11 +39,11 @@ Function GetEffectiveRadius(ByVal WB_NAME As String) As Double
     er = GetER_Mode(WB_NAME)
     
     Select Case er
-        Case 1
+        Case erRE1
             GetEffectiveRadius = Workbooks(WB_NAME).Worksheets("SkinFactor").Range("k8").value
-        Case 2
+        Case erRE2
             GetEffectiveRadius = Workbooks(WB_NAME).Worksheets("SkinFactor").Range("k9").value
-        Case 3
+        Case erRE3
             GetEffectiveRadius = Workbooks(WB_NAME).Worksheets("SkinFactor").Range("k10").value
         Case Else
             GetEffectiveRadius = Workbooks(WB_NAME).Worksheets("SkinFactor").Range("C8").value

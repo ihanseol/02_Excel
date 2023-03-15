@@ -1,4 +1,4 @@
-Attribute VB_Name = "mod_ChartModify"
+Attribute VB_Name = "mod_Chart"
 Option Explicit
 
 ' 2019/11/27 --- adjustment of chart's graph position and x, y scale
@@ -24,7 +24,21 @@ Sub adjustChartGraph()
     Call setAxisScale("Chart 7", Q0, Q1, SwQ0, SwQ1)
     
     Call setAxisScale_Efficiency("Chart 8", Q0, Q1, E0, E1)
+    
+    Call SetGONGBEON
 End Sub
+
+
+Public Sub SetGONGBEON()
+    Dim gong As Integer
+                  
+    If ActiveSheet.name = "Input" Then
+        gong = Val(CleanString(Range("J48").Value))
+        Range("i54").Value = "W-" & gong
+    End If
+End Sub
+
+
 
 Function determinX(ByVal x0 As Double, ByVal x1 As Double) As Double
     determinX = (x1 - x0) / 3

@@ -363,6 +363,7 @@ Public Sub getMotorPower()
         Else
            efficiency(i) = get_efficiency_dongho(pump_q(i))
         End If
+        
         hp(i) = Range("c17").value
     Next i
     

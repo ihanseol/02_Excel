@@ -17,8 +17,8 @@ End Sub
 
 Private Sub importRainfall()
 
-    Dim a, i&, fn$, prefix$
-    ReDim a(1 To Workbooks.count)
+    Dim A, i&, fn$, prefix$
+    ReDim A(1 To Workbooks.count)
     Dim fname_this, fname_that As String
         
     prefix = "report to excel."
@@ -29,16 +29,16 @@ Private Sub importRainfall()
     End If
     
     For i = 1 To Workbooks.count
-      a(i) = Workbooks(i).Name
-      If Left(a(i), Len(prefix)) = prefix Then fn = a(i)
+      A(i) = Workbooks(i).name
+      If Left(A(i), Len(prefix)) = prefix Then fn = A(i)
     Next i
     
-    If (InStr(1, a(1), "기본관정") <> 0) Then
-        fname_this = a(1)
-        fname_that = a(2)
+    If (InStr(1, A(1), "기본관정") <> 0) Then
+        fname_this = A(1)
+        fname_that = A(2)
     Else
-        fname_this = a(2)
-        fname_that = a(1)
+        fname_this = A(2)
+        fname_that = A(1)
     End If
     
     

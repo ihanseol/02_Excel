@@ -14,6 +14,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
 Option Explicit
 
 Private Sub CancelButton_Click()
@@ -69,7 +71,8 @@ Private Sub ComboBoxYear_Initialize()
     Dim sheetDate, currDate As Date
     Dim isThisYear As Boolean
     
-    sheetDate = Range("c10").Value
+    sheetDate = Range("c6").value
+    'MsgBox (sheetDate)
     currDate = Now()
     
     If ((Year(currDate) - Year(sheetDate)) = 0) Then
@@ -125,18 +128,18 @@ Private Sub ComboBoxYear_Initialize()
     
     
     
-    ComboBoxYear.Value = nYear
-    ComboBoxMonth.Value = nMonth
-    ComboBoxDay.Value = nDay
+    ComboBoxYear.value = nYear
+    ComboBoxMonth.value = nMonth
+    ComboBoxDay.value = nDay
     
-    ComboBoxHour.Value = IIf(nHour > 12, nHour - 12, nHour)
-    ComboBoxMinute.Value = whichSection(IIf(isThisYear, Minute(sheetDate), Minute(currDate)))
+    ComboBoxHour.value = IIf(nHour > 12, nHour - 12, nHour)
+    ComboBoxMinute.value = whichSection(IIf(isThisYear, Minute(sheetDate), Minute(currDate)))
     
    
     If nHour > 12 Then
-        OptionButtonPM.Value = True
+        OptionButtonPM.value = True
     Else
-        OptionButtonAM.Value = True
+        OptionButtonAM.value = True
     End If
     
     Debug.Print nYear
@@ -153,18 +156,18 @@ Sub ComboboxDay_ChangeItem(nYear As Integer, nMonth As Integer)
         ComboBoxDay.AddItem (i)
     Next i
     
-    ComboBoxDay.Value = 1
+    ComboBoxDay.value = 1
 
 End Sub
 
 Private Sub ComboBoxHour_Change()
-    ComboBoxMinute.Value = 0
+    ComboBoxMinute.value = 0
 End Sub
 
 Private Sub ComboBoxMonth_Change()
     '2019-11-26 change
     On Error GoTo Errcheck
-    Call ComboboxDay_ChangeItem(ComboBoxYear.Value, ComboBoxMonth.Value)
+    Call ComboboxDay_ChangeItem(ComboBoxYear.value, ComboBoxMonth.value)
 Errcheck:
         
 End Sub
@@ -173,26 +176,26 @@ Private Sub EnterButton_Click()
     Dim nYear, nMonth, nDay As Integer
     Dim nHour, nMinute As Integer
     
-    Dim nDate, ntime As Date
+    Dim nDate, nTime As Date
     
     
     On Error GoTo Errcheck
-    nYear = ComboBoxYear.Value
-    nMonth = ComboBoxMonth.Value
-    nDay = ComboBoxDay.Value
+    nYear = ComboBoxYear.value
+    nMonth = ComboBoxMonth.value
+    nDay = ComboBoxDay.value
         
-    nHour = ComboBoxHour.Value
-    nMinute = ComboBoxMinute.Value
+    nHour = ComboBoxHour.value
+    nMinute = ComboBoxMinute.value
             
             
-    nHour = nHour + IIf(OptionButtonPM.Value, 12, 0)
+    nHour = nHour + IIf(OptionButtonPM.value, 12, 0)
             
     nDate = DateSerial(nYear, nMonth, nDay)
-    ntime = TimeSerial(nHour, nMinute, 0)
+    nTime = TimeSerial(nHour, nMinute, 0)
             
-    nDate = nDate + ntime
+    nDate = nDate + nTime
          
-    shLongTermTest.Range("c10").Value = nDate
+    Range("c6").value = nDate
          
 Errcheck:
      
@@ -202,9 +205,6 @@ End Sub
 
 Private Sub UserForm_Initialize()
     Call ComboBoxYear_Initialize
-    Me.StartUpPosition = 0
-    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
-    Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
     
 End Sub
 

@@ -10,9 +10,10 @@ Attribute VB_Exposed = True
 Option Explicit
 
 
+' pumping test
 Private Sub CommandButton1_Click()
-    step_pumping_test
-    vertical_copy
+    Call step_pumping_test
+    Call vertical_copy
 End Sub
 
 Private Sub CommandButton2_Click()
@@ -44,40 +45,22 @@ End Sub
 
 Private Sub Worksheet_Activate()
   
-  Dim gong As Integer
-  Dim KeyCell As Range
-  
-  WB_NAME = ThisWorkbook.name
-   
-  Set KeyCell = Range("J48")
-  
-  gong = Val(CleanString(KeyCell.Value))
-  Call SetChartTitleText(gong)
+'  Dim gong As Integer
+'  Dim KeyCell As Range
+'
+'  Set KeyCell = Range("J48")
+'
+'  gong = Val(CleanString(KeyCell.Value))
+'  Call SetChartTitleText(gong)
 
 End Sub
 
-
-
-'2019/11/24 - set gong bun change
-Private Sub Worksheet_Change(ByVal Target As Range)
-    Dim KeyCell As Range
-    Dim gong As Integer
-        
-    Set KeyCell = Range("J48")
-    
-    If Not Application.Intersect(KeyCell, Range(Target.Address)) Is Nothing Then
-                
-        gong = Val(CleanString(KeyCell.Value))
-        Range("i54").Value = "W-" & gong
-        
-        Call SetChartTitleText(gong)
-    End If
-    
-End Sub
 
 
 Private Sub SetChartTitleText(ByVal i As Integer)
-    
+
+    Call SetGONGBEON
+
     ActiveSheet.ChartObjects("Chart 7").Activate
     ActiveChart.Axes(xlCategory).AxisTitle.Select
     ActiveChart.Axes(xlValue, xlPrimary).AxisTitle.Text = "양수량(㎥/day)(W-" & CStr(i) & ")"
@@ -110,6 +93,7 @@ Private Sub SetChartTitleText(ByVal i As Integer)
     Selection.Format.TextFrame2.TextRange.Characters.Text = "수위강하량(Sw)"
     
 End Sub
+
 
 
 

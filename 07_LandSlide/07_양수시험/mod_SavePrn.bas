@@ -13,20 +13,20 @@ End Function
 
 Sub janggi_01()
     ActiveWorkbook.SaveAs Filename:= _
-                          WB_HEAD + "_janggi_01.prn", FileFormat _
+                          WB_HEAD + "_janggi_01.dat", FileFormat _
                           :=xlTextPrinter, CreateBackup:=False
 End Sub
 
 Sub janggi_02()
     ActiveWorkbook.SaveAs Filename:= _
-                          WB_HEAD + "_janggi_02.prn", FileFormat _
+                          WB_HEAD + "_janggi_02.dat", FileFormat _
                           :=xlTextPrinter, CreateBackup:=False
 End Sub
 
 Sub recover_01()
     Debug.Print WB_HEAD
     ActiveWorkbook.SaveAs Filename:= _
-                          WB_HEAD + "_recover_01.prn", FileFormat:= _
+                          WB_HEAD + "_recover_01.dat", FileFormat:= _
                           xlTextPrinter, CreateBackup:=False
 End Sub
 
@@ -34,7 +34,7 @@ Sub step_01()
     Range("a1").Select
     
     ActiveWorkbook.SaveAs Filename:= _
-                          WB_HEAD + "_step_01.prn", FileFormat:= _
+                          WB_HEAD + "_step_01.dat", FileFormat:= _
                           xlTextPrinter, CreateBackup:=False
 End Sub
 

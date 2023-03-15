@@ -31,6 +31,24 @@ End If
 
 End Function
 
+Function IsSheetsHasA(name As String)
+    Dim sheet As Worksheet
+    Dim result As Integer
+    
+    ' Loop through all sheets in the workbook
+    For Each sheet In ThisWorkbook.Worksheets
+        result = StrComp(sheet.name, name, vbTextCompare)
+        If result = 0 Then
+            IsSheetsHasA = True
+            Exit Function
+        End If
+    Next sheet
+    
+    IsSheetsHasA = False
+End Function
+
+
+
 Function sheets_count() As Long
     Dim i, nSheetsCount, nWell  As Integer
     Dim strSheetsName(50) As String

@@ -49,7 +49,6 @@ Public Sub draw_motor_frame(ByVal nof_sheets As Integer, ByVal po As Integer)
 End Sub
 
 Private Sub alignTitle(ByVal nof_sheets As Integer, ByVal po As Integer)
-    
     Dim mychar
     mychar = Chr(65 + nof_sheets)
     
@@ -59,7 +58,7 @@ Private Sub alignTitle(ByVal nof_sheets As Integer, ByVal po As Integer)
     Selection.Font.Italic = True
     Selection.Font.Italic = False
     With Selection.Font
-        .Name = "¸¼Àº °íµñ"
+        .name = "¸¼Àº °íµñ"
         .Size = 12
         .Underline = xlUnderlineStyleNone
         .ThemeColor = xlThemeColorLight1
@@ -70,7 +69,7 @@ Private Sub alignTitle(ByVal nof_sheets As Integer, ByVal po As Integer)
     Range("A" & CStr(po + 2) & ":" & "A" & CStr(po + 12)).Select
     
     With Selection.Font
-        .Name = "¸¼Àº °íµñ"
+        .name = "¸¼Àº °íµñ"
         .Size = 11
         .ThemeColor = xlThemeColorLight1
         .TintAndShade = 0
@@ -84,15 +83,12 @@ Private Sub alignTitle(ByVal nof_sheets As Integer, ByVal po As Integer)
     End With
     
     Range("O65").Select
-    
 End Sub
 
 Private Sub decorationPumpHP(ByVal nof_sheets As Integer, ByVal po As Integer)
-    
     Dim mychar
     
     mychar = Chr(65 + nof_sheets)
-    
     'Range("B58:N69").Select
     Range("B" & CStr(po + 1) & ":" & mychar & CStr(po + 12)).Select
     
@@ -103,7 +99,7 @@ Private Sub decorationPumpHP(ByVal nof_sheets As Integer, ByVal po As Integer)
         .MergeCells = False
     End With
     With Selection.Font
-        .Name = "¸¼Àº °íµñ"
+        .name = "¸¼Àº °íµñ"
         .Size = 12
         .ThemeColor = xlThemeColorLight1
         .TintAndShade = 0
@@ -138,7 +134,7 @@ Private Sub decorationPumpHP(ByVal nof_sheets As Integer, ByVal po As Integer)
     Range("B" & CStr(po + 10) & ":" & mychar & CStr(po + 10)).Select
     Selection.Font.Bold = True
     With Selection.Font
-        .Name = "¸¼Àº °íµñ"
+        .name = "¸¼Àº °íµñ"
         .Size = 14
         .Italic = True
         .ThemeColor = xlThemeColorLight1
@@ -155,15 +151,12 @@ Private Sub decorationPumpHP(ByVal nof_sheets As Integer, ByVal po As Integer)
         .Color = -16776961
         .TintAndShade = 0
     End With
-    
 End Sub
 
 Private Sub decorationInerLine(ByVal nof_sheets As Integer, ByVal po As Integer)
-    
     Dim mychar
     
     mychar = Chr(65 + nof_sheets)
-    
     'Range("A60:N61").Select
     Range("A" & CStr(po + 3) & ":" & mychar & CStr(po + 4)).Select
     With Selection.Interior
@@ -300,11 +293,9 @@ Private Sub decorationInerLine(ByVal nof_sheets As Integer, ByVal po As Integer)
         .LineStyle = xlDot
         .Weight = xlThin
     End With
-    
 End Sub
 
 Private Sub draw_border()
-    
     Selection.Borders(xlDiagonalDown).LineStyle = xlNone
     Selection.Borders(xlDiagonalUp).LineStyle = xlNone
     
@@ -327,5 +318,4 @@ Private Sub draw_border()
     
     Selection.Borders(xlInsideVertical).LineStyle = xlNone
     Selection.Borders(xlInsideHorizontal).LineStyle = xlNone
-    
 End Sub

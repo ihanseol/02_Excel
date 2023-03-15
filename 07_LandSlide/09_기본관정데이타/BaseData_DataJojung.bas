@@ -4,7 +4,6 @@ Option Explicit
 Dim ColorValue(1 To 20) As Long
 
 Public Sub InitialSetColorValue()
-    
     ColorValue(1) = RGB(192, 0, 0)
     ColorValue(2) = RGB(255, 0, 0)
     ColorValue(3) = RGB(255, 192, 0)
@@ -26,28 +25,35 @@ Public Sub InitialSetColorValue()
     ColorValue(18) = RGB(0 + 10, 112 + 10, 192)
     ColorValue(19) = RGB(0 + 10, 32 + 10, 96)
     ColorValue(20) = RGB(112, 48 + 10, 160 + 10)
-    
 End Sub
 
 Private Sub initialize_wellstyle()
-    
     Range("C3:C22").Select
     Selection.NumberFormat = "General"
+        
     With Selection
         .HorizontalAlignment = xlGeneral
         .VerticalAlignment = xlCenter
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .ReadingOrder = xlContext
         .MergeCells = False
     End With
     
     With Selection.Font
-        .Name = "∏º¿∫ ∞ÌµÒ"
+        .name = "∏º¿∫ ∞ÌµÒ"
         .Size = 10
         .ThemeColor = xlThemeColorLight1
     End With
     
     Range("E19:G19").Select
     With Selection.Font
-        .Name = "∏º¿∫ ∞ÌµÒ"
+        .name = "∏º¿∫ ∞ÌµÒ"
         .Size = 12
         .ThemeColor = xlThemeColorLight1
         .ThemeFont = xlThemeFontNone
@@ -55,7 +61,7 @@ Private Sub initialize_wellstyle()
     
     Range("E21:G21").Select
     With Selection.Font
-        .Name = "∏º¿∫ ∞ÌµÒ"
+        .name = "∏º¿∫ ∞ÌµÒ"
         .Size = 12
         .ThemeColor = xlThemeColorLight1
         .TintAndShade = 0
@@ -64,23 +70,20 @@ Private Sub initialize_wellstyle()
     
     Range("B25:K29").Select
     With Selection.Font
-        .Name = "∏º¿∫ ∞ÌµÒ"
+        .name = "∏º¿∫ ∞ÌµÒ"
         .Size = 11
         .TintAndShade = 0
         .ThemeFont = xlThemeFontNone
     End With
     
     Range("d23").Select
-    
 End Sub
 
 Private Sub change_font_size()
-    
     Range("J25").Select
     Selection.Font.Size = 10
     Range("F26").Select
     Selection.Font.Size = 10
-    
 End Sub
 
 Public Sub make_wellstyle()
@@ -102,7 +105,6 @@ Public Sub make_wellstyle()
 End Sub
 
 Private Sub JojungData(ByVal nsheet As Integer)
-    
     Dim nselect     As String
     
     Range("C2, C3, C4, C5, C6, C7, C8, C15, C16, C17, C18, C19, E17, F21").Select
@@ -120,31 +122,25 @@ Private Sub JojungData(ByVal nsheet As Integer)
     
     Range("E21").Select
     Range("E21").Formula = "=Well!" & Cells(nsheet, "I").Address
-    
 End Sub
 
 Private Sub SetMyTabColor(ByVal index As Integer)
-    
     If Sheets("Well").SingleColor.value Then
         With ActiveWorkbook.Sheets(CStr(index)).Tab
             .Color = 192
             .TintAndShade = 0
         End With
     Else
-        
         With ActiveWorkbook.Sheets(CStr(index)).Tab
             .Color = ColorValue(index)
             .TintAndShade = 0
         End With
-        
     End If
-    
 End Sub
 
 '∞¢∞¢¿« Ω¨∆Æ∏¶ º¯»∏«œ∏Èº≠, ºø¿« ¬¸¡∂∞™¿ª ê¨√ﬂæÓ¡ÿ¥Ÿ.
 '
 Public Sub JojungSheetData()
-    
     Dim n_sheets    As Integer
     Dim i           As Integer
     
@@ -159,6 +155,5 @@ Public Sub JojungSheetData()
         Call JojungData(i)
         Call SetMyTabColor(i)
     Next i
-    
 End Sub
 

@@ -1,4 +1,4 @@
-Attribute VB_Name = "mod_SetTime_LongTest"
+Attribute VB_Name = "mod_W1LongtermTEST"
 Public MY_TIME      As Integer
 
 Public gDicStableTime As Scripting.Dictionary
@@ -126,7 +126,7 @@ Function find_stable_time() As Integer
 End Function
 
 Function initialize_myTime() As Integer
-    initialize_myTime = gDicStableTime(shSkinFactor.Range("g16").Value)
+    initialize_myTime = gDicStableTime(shW_aSkinFactor.Range("g16").Value)
 End Function
 
 Sub TimeSetting()
@@ -166,9 +166,9 @@ End Sub
 Sub setSkinTime(i As Integer)
     Application.ScreenUpdating = False
     
-    shSkinFactor.Activate
+    shW_aSkinFactor.Activate
     Range("G16").Value = gDicMyTime(i)
-    shLongTermTest.Activate
+    shW_LongTEST.Activate
     
     Application.ScreenUpdating = True
 End Sub
@@ -240,7 +240,7 @@ Sub findAnswer_LongTest()
         cellBLACK ("l8")
     End If
     
-    shSkinFactor.Range("d5").Value = Round(Range("t1").Value, 4)
+    shW_aSkinFactor.Range("d5").Value = Round(Range("t1").Value, 4)
 End Sub
 
 Sub check_LongTest()

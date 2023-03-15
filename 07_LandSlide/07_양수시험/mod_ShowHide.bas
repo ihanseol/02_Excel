@@ -6,6 +6,6 @@ End Sub
 
 Sub hide_gachae()
     shYield.Visible = False
-    shSkinFactor.Select
+    shW_aSkinFactor.Select
 End Sub
 

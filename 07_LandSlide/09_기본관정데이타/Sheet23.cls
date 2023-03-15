@@ -2,13 +2,106 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "Sheet30"
+Attribute VB_Name = "Sheet23"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub CommandButton1_Click()
 UserFormTS.Show
+End Sub
+
+Function DivideWellsBy2(ByVal numberOfWells As Integer) As Integer()
+    Dim quotient As Integer
+    Dim remainder As Integer
+    Dim result(1) As Integer
+    
+    quotient = numberOfWells \ 2
+    remainder = numberOfWells Mod 2
+    
+    result(0) = quotient
+    result(1) = remainder
+    
+    DivideWellsBy2 = result
+End Function
+
+
+Sub SetWellPropertyQ2(ByVal i As Integer)
+    ActiveSheet.Range("D12") = "W-" & CStr((i - 1) * 2 + 1)
+    ActiveSheet.Range("D29") = "W-" & CStr((i - 1) * 2 + 1)
+    
+    ActiveSheet.Range("G12") = "W-" & CStr((i - 1) * 2 + 2)
+    ActiveSheet.Range("H29") = "W-" & CStr((i - 1) * 2 + 2)
+    
+    ActiveSheet.Shapes.Range(Array("CommandButton3")).Select
+    Selection.Delete
+End Sub
+
+
+
+Sub DuplicateQ2Page(ByVal n As Integer)
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("Q2")
+    
+    For i = 1 To n
+        ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count)
+        ActiveSheet.name = "p" & i
+        
+        With ActiveSheet.Tab
+            .ThemeColor = xlThemeColorAccent3
+            .TintAndShade = 0
+        End With
+        
+        Call SetWellPropertyQ2(i)
+    Next i
+End Sub
+
+Sub SetWellPropertyRest(ByVal w2page As Integer)
+    Dim firstwell As Integer
+      
+    firstwell = 2 * w2page + 1
+    
+    ActiveSheet.Range("D12") = "W-" & CStr(firstwell)
+    ActiveSheet.Range("H12") = "W-" & CStr(firstwell)
+End Sub
+
+
+Sub DuplicateRest(ByVal w2page As Integer)
+
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("Q1")
+    
+    ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count)
+    ActiveSheet.name = "p" & CStr(w2page + 1)
+    
+    With ActiveSheet.Tab
+        .ThemeColor = xlThemeColorAccent3
+        .TintAndShade = 0
+    End With
+        
+    Call SetWellPropertyRest(w2page)
+    
+End Sub
+
+
+Private Sub CommandButton3_Click()
+    Dim result() As Integer
+    Dim w2page, wselect, restpage As Integer
+    'wselect = 1 --> only w1
+       
+    result = DivideWellsBy2(sheets_count())
+    
+    w2page = result(0)
+    restpage = result(1)
+    
+    Call DuplicateQ2Page(w2page)
+    
+    If restpage = 0 Then
+        Exit Sub
+    Else
+        Call DuplicateRest(w2page)
+    End If
+
 End Sub
 
 
@@ -24,7 +117,7 @@ Private Sub CommandButton2_Click()
   cell1 = Range("d12").value
   cell2 = Range("g12").value
   
-  thisname = ActiveWorkbook.Name
+  thisname = ActiveWorkbook.name
   fname1 = "A" & GetNumeric2(cell1) & "_ge_OriginalSaveFile.xlsm"
   fname2 = "A" & GetNumeric2(cell2) & "_ge_OriginalSaveFile.xlsm"
   
@@ -93,5 +186,6 @@ Sub getModDataFromYangSooDual(ByVal thisname As String, ByVal fname As String)
         :=False, Transpose:=False
     
 End Sub
+
 
 

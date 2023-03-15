@@ -2,7 +2,7 @@ Attribute VB_Name = "BaseData_DrasticIndex"
 '기본관정데이타 - 드라스틱인덱스
 Option Explicit
 
-Dim Dr, Rr          As Single
+Dim Dr, Rr  As Single
 
 Public Enum DRASTIC_MODE
     dmGENERAL = 0
@@ -48,7 +48,6 @@ Sub ToggleDirection()
 End Sub
 
 Private Sub CellBlack(S As Range)
-    
     S.Select
     
     With Selection.Interior
@@ -62,11 +61,9 @@ Private Sub CellBlack(S As Range)
         .ThemeColor = xlThemeColorDark1
         .TintAndShade = 0
     End With
-    
 End Sub
 
 Private Sub CellLight(S As Range)
-    
     S.Select
     
     With Selection.Interior
@@ -80,7 +77,6 @@ Private Sub CellLight(S As Range)
         .ThemeColor = xlThemeColorLight1
         .TintAndShade = 0
     End With
-    
 End Sub
 
 'Drastic Index 를 계산 해주기 위한 함수 ...
@@ -182,7 +178,7 @@ Private Function Rating_AqMedia(ByVal value As String) As Integer
     End If
 End Function
 
-'4 토양특성ㅇ에 대한 등급
+'4 토양특성에 대한 등급
 
 Private Function Rating_SoilMedia(ByVal value As String) As Integer
     If StrComp(value, "Thin Or Absecnt") = 0 Then
@@ -445,9 +441,6 @@ Sub main_drasticindex()
     n_sheets = sheets_count()
     
     For i = 1 To n_sheets
-        
-        'Debug.Print "Loop counter : " & i
-        
         Worksheets(CStr(i)).Activate
         
         '1
@@ -477,8 +470,6 @@ Sub main_drasticindex()
         '7
         EC = Range("J26").value
         Range("J27").value = Rating_EC(EC)
-        
-        ' Debug.Print " D : " & Soil
         
     Next i
 End Sub

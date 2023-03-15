@@ -1,4 +1,4 @@
-Attribute VB_Name = "mod_StepTest"
+Attribute VB_Name = "mod_W1StepTEST"
 Option Explicit
 Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As LongPtr)
 
@@ -6,6 +6,8 @@ Sub step_pumping_test()
     Dim i           As Integer
     
     Application.ScreenUpdating = False
+    
+    ' ----------------------------------------------------------------
     
     Range("D3:D7").Select
     Selection.Copy
@@ -21,9 +23,10 @@ Sub step_pumping_test()
         .VerticalAlignment = xlCenter
     End With
     
-    For i = 1 To 5
-        Cells(43 + i, "Q").Value = Round(Cells(43 + i, "Q").Value, 0)
-    Next i
+    
+    Call CutDownNumber("Q", 0)
+    
+    ' ----------------------------------------------------------------
     
     Range("A3:A7").Select
     Selection.Copy
@@ -32,20 +35,29 @@ Sub step_pumping_test()
                            :=False, Transpose:=False
     Selection.NumberFormatLocal = "0.00"
     
+    
+    ' ----------------------------------------------------------------
+    
     Range("B3:B7").Select
     Selection.Copy
-    
+      
     Range("S44").Select
     Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
                            :=False, Transpose:=False
     Selection.NumberFormatLocal = "0.00"
     
+    ' ----------------------------------------------------------------
+
     Range("G3:G7").Select
     Selection.Copy
     Range("T44").Select
     Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
                            :=False, Transpose:=False
-    Selection.NumberFormatLocal = "0.000"
+    ' Selection.NumberFormatLocal = "0.000"
+    
+    Call CutDownNumber("T", 3)
+     Application.CutCopyMode = False
+    ' ----------------------------------------------------------------
     
     Range("F3:F7").Select
     Selection.Copy
@@ -55,55 +67,63 @@ Sub step_pumping_test()
     
     Range("T44:T48").Select
     Selection.NumberFormatLocal = "0.000"
-    Range("S54").Select
+    
+    ' ----------------------------------------------------------------
     
     Application.CutCopyMode = False
     Application.ScreenUpdating = True
 End Sub
 
-Sub vertical_copy()
-    Application.ScreenUpdating = False
-    
-    ActiveWindow.SmallScroll Down:=-6
-    Range("Q44:Q48").Select
-    Selection.Copy
-    Range("Q51").Select
-    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                           :=False, Transpose:=False
-    
-    Range("R44:R48").Select
-    Selection.Copy
-    Range("Q57").Select
-    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                           :=False, Transpose:=False
-    
-    Range("S44:S48").Select
-    Selection.Copy
-    Range("Q63").Select
-    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                           :=False, Transpose:=False
-    
-    Range("T44:T48").Select
-    Selection.Copy
-    Range("Q69").Select
-    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
-                           :=False, Transpose:=False
-    
-    Selection.NumberFormatLocal = "0.000"
-    Range("U44:U48").Select
-    Selection.Copy
-    
-    Range("Q75").Select
-    ActiveSheet.Paste
-    ActiveWindow.SmallScroll Down:=0
-    Range("R70").Select
-    
-    ActiveWindow.LargeScroll Down:=-2
-    Range("P35").Select
-    
-    Application.CutCopyMode = False
-    Application.ScreenUpdating = True
+Sub CutDownNumber(po As String, cutdown As Integer)
+    Dim i, chrcode As Integer
+    For i = 1 To 5
+        Cells(i + 43, po).Value = Format(Round(Cells(i + 43, po).Value, cutdown), "###0.000")
+    Next i
 End Sub
+
+Sub vertical_copy()
+    Dim strValue(1 To 5) As String
+    Dim result As String
+    Dim i As Integer
+    
+    strValue(1) = "Q44:Q48"
+    strValue(2) = "R44:R48"
+    strValue(3) = "S44:S48"
+    strValue(4) = "T44:T48"
+    strValue(5) = "U44:U48"
+    
+    
+    
+    
+    For i = 1 To 5
+        result = ConcatenateCells(strValue(i))
+        Cells(64, Chr(81 + i - 1)).Value = result
+    Next i
+    
+End Sub
+
+Function ConcatenateCells(inRange As String) As String
+    Dim cell As Range
+    Dim concatenatedValue As String
+    Dim sFormat(1 To 5) As String
+    Dim i As Integer
+    
+    
+    sFormat(1) = "###0"
+    sFormat(2) = "###0.00"
+    sFormat(3) = "###0.00"
+    sFormat(4) = "###0.000"
+    sFormat(5) = "###0.000"
+    
+    i = Asc(Left(inRange, 1)) - Asc("P")
+        
+    For Each cell In Range(inRange)
+        concatenatedValue = concatenatedValue & Format(cell.Value, sFormat(i)) & vbLf
+    Next cell
+    
+     ConcatenateCells = Left(concatenatedValue, Len(concatenatedValue) - 1)
+End Function
+
 
 Function get_chart_equation(ByVal chartname) As String
     Dim objTrendline As Trendline
