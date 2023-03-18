@@ -1,13 +1,33 @@
 Attribute VB_Name = "mod_MakeREPORT"
 
+
+
+Sub DuplicateQ2Page(ByVal n As Integer)
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("Q2")
+    
+    For i = 1 To n
+        ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)
+        ActiveSheet.name = "p" & i
+        
+        With ActiveSheet.Tab
+            .ThemeColor = xlThemeColorAccent3
+            .TintAndShade = 0
+        End With
+        
+        Call SetWellPropertyQ2(i)
+    Next i
+End Sub
+
+
 Sub make_step_document()
     ' StepTest 복사
     ' select last sheet -- Sheets(Sheets.Count).Select
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("StepTest")
     
     Application.ScreenUpdating = False
-    
-    Sheets("StepTest").Select
-    Sheets("StepTest").Copy Before:=Sheet15
+    ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)
     
     Application.GoTo Reference:="Print_Area"
     Selection.Copy
@@ -37,6 +57,8 @@ Sub make_step_document()
     
     ActiveWindow.View = xlPageBreakPreview
     
+    Set ActiveSheet.HPageBreaks(1).Location = Range("A31")
+    
     If (Not Contains(Sheets, "Step")) Then
         Sheets("StepTest (2)").name = "Step"
     Else
@@ -54,10 +76,11 @@ Sub Make2880Document()
     Dim lang_code   As Long
     Dim randomNumber As Integer
     
-    lang_code = Application.LanguageSettings.LanguageID(msoLanguageIDUI)
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("LongTest")
     
-    Sheets("LongTest").Select
-    Sheets("LongTest").Copy Before:=Sheet15
+    lang_code = Application.LanguageSettings.LanguageID(msoLanguageIDUI)
+    ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)
     
     If (Not Contains(Sheets, "out")) Then
         Sheets("LongTest (2)").name = "out"
@@ -66,6 +89,15 @@ Sub Make2880Document()
         Sheets("LongTest (2)").name = "out"
     End If
     
+'    If IsSheetsHasA(ActiveSheet.name) Then
+'        randomNumber = Int((100 * Rnd) + 1)
+'        ActiveSheet.name = "2880_" & Format(CStr(randomNumber), "00")
+'    Else
+'        ActiveSheet.name = 2880
+'    End If
+    
+    
+    '---------------------------------------------------------------------------------
     Application.GoTo Reference:="Print_Area"
     Selection.Copy
     Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
@@ -118,13 +150,6 @@ Sub Make2880Document()
         Selection.NumberFormatLocal = "G/표준"
     Else
         Selection.NumberFormatLocal = "G/General"
-    End If
-        
-    If IsSheetsHasA(ActiveSheet.name) Then
-        randomNumber = Int((100 * Rnd) + 1)
-        ActiveSheet.name = "2880_" & Format(CStr(randomNumber), "00")
-    Else
-        ActiveSheet.name = 2880
     End If
     
     Range("K13").Select

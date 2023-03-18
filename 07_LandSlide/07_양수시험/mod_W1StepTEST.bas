@@ -81,25 +81,56 @@ Sub CutDownNumber(po As String, cutdown As Integer)
     Next i
 End Sub
 
+Private Sub EraseCellData(str_range As String)
+    With Range(str_range)
+        .Value = ""
+    End With
+End Sub
+
 Sub vertical_copy()
     Dim strValue(1 To 5) As String
     Dim result As String
     Dim i As Integer
+    
+    EraseCellData ("q64:x64")
     
     strValue(1) = "Q44:Q48"
     strValue(2) = "R44:R48"
     strValue(3) = "S44:S48"
     strValue(4) = "T44:T48"
     strValue(5) = "U44:U48"
-    
-    
-    
-    
+
     For i = 1 To 5
         result = ConcatenateCells(strValue(i))
         Cells(64, Chr(81 + i - 1)).Value = result
     Next i
     
+    Range("q63").Select
+    Call WriteStringEtc
+End Sub
+
+
+Sub WriteStringEtc()
+    Dim i As Integer
+    Dim cv1, cv2, cv3, append As String
+    Dim arr() As Variant
+    arr = Array(0, 120, 240, 360, 480)
+    
+    For i = 1 To 5
+        If i = 5 Then
+            append = ""
+        Else
+            append = vbLf
+        End If
+        
+        cv1 = cv1 & CStr(i) & append
+        cv2 = cv2 & CStr(arr(i - 1)) & append
+        cv3 = cv3 & CStr(120) & append
+    Next i
+    
+    Cells(64, "v").Value = cv1
+    Cells(64, "w").Value = cv2
+    Cells(64, "x").Value = cv3
 End Sub
 
 Function ConcatenateCells(inRange As String) As String

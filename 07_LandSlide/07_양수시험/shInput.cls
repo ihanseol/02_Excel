@@ -34,7 +34,15 @@ Private Sub CommandButton5_Click()
 End Sub
 
 Private Sub CommandButton6_Click()
+    Dim gong As Integer
+    Dim KeyCell As Range
+    
     Call adjustChartGraph
+    
+    Set KeyCell = Range("J48")
+    
+    gong = Val(CleanString(KeyCell.Value))
+    Call SetChartTitleText(gong)
 End Sub
 
 Private Sub CommandButton7_Click()

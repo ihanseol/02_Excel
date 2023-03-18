@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "Sheet5"
+Attribute VB_Name = "Sheet_Well"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -13,21 +13,81 @@ Private Sub CommandButton1_Click()
     Call CopyOneSheet
 End Sub
 
-'Jojung Button
-'add new feature - correct border frame ...
-Private Sub CommandButton2_Click()
-    Dim nofWell As Integer
+Private Sub CommandButton10_Click()
+    Sheets("AggChart").Visible = True
+    Sheets("AggChart").Select
+End Sub
 
-    nofWell = sheets_count()
-    Call JojungSheetData
-    Call make_wellstyle
-    Call DecorateWellBorder(nofWell)
+Private Sub CommandButton3_Click()
+    Sheets("AggSum").Visible = True
+    Sheets("AggSum").Select
+End Sub
+
+Private Sub CommandButton4_Click()
+    Sheets("Aggregate1").Visible = True
+    Sheets("Aggregate1").Select
+End Sub
+
+Private Sub CommandButton5_Click()
+    Sheets("Aggregate2").Visible = True
+    Sheets("Aggregate2").Select
 End Sub
 
 
-Private Sub DecorateWellBorder(ByVal nofWell As Integer)
+Private Sub CommandButton7_Click()
+    Sheets("aggWhpa").Visible = True
+    Sheets("aggWhpa").Select
+End Sub
+
+
+Private Sub CommandButton9_Click()
+  Sheets("AggStep").Visible = True
+  Sheets("AggStep").Select
+End Sub
+
+
+'Jojung Button
+'add new feature - correct border frame ...
+Private Sub CommandButton2_Click()
+    Dim nofwell As Integer
+
+    nofwell = sheets_count()
+    Call JojungSheetData
+    Call make_wellstyle
+    Call DecorateWellBorder(nofwell)
+    
+    Worksheets("1").Range("E21") = "=Well!" & Cells(5 + GetNumberOfWell(), "I").Address
+End Sub
+
+
+' delete last
+Private Sub CommandButton8_Click()
+    Dim nofwell As Integer
+    nofwell = GetNumberOfWell()
+    
+    Rows(nofwell + 3).Delete
+    Call DeleteWorksheet(nofwell)
+    Call DecorateWellBorder(nofwell - 1)
+End Sub
+
+Sub DeleteWorksheet(well As Integer)
+    Application.DisplayAlerts = False
+    ThisWorkbook.Worksheets(CStr(well)).Delete
+    Application.DisplayAlerts = True
+End Sub
+
+
+
+Private Sub Worksheet_Activate()
+    Call InitialSetColorValue
+End Sub
+
+
+
+
+Private Sub DecorateWellBorder(ByVal nofwell As Integer)
     Sheets("Well").Activate
-    Range("A2:R" & CStr(nofWell + 3)).Select
+    Range("A2:R" & CStr(nofwell + 3)).Select
     
     Selection.Borders(xlDiagonalDown).LineStyle = xlNone
     Selection.Borders(xlDiagonalUp).LineStyle = xlNone
@@ -60,11 +120,11 @@ Private Sub DecorateWellBorder(ByVal nofWell As Integer)
 End Sub
 
 
-Private Sub getDuoSolo(ByVal nofWell As Integer, ByRef nDuo As Integer, ByRef nSolo As Integer)
+Private Sub getDuoSolo(ByVal nofwell As Integer, ByRef nDuo As Integer, ByRef nSolo As Integer)
     Dim page, quotient, remainder As Integer
     
-    quotient = WorksheetFunction.quotient(nofWell, 2)
-    remainder = nofWell Mod 2
+    quotient = WorksheetFunction.quotient(nofwell, 2)
+    remainder = nofwell Mod 2
     
     If remainder = 0 Then
         nDuo = quotient
@@ -77,35 +137,27 @@ Private Sub getDuoSolo(ByVal nofWell As Integer, ByRef nDuo As Integer, ByRef nS
 End Sub
 
 
-Private Sub CommandButton4_Click()
-    Sheets("Aggregate1").Visible = True
-    Sheets("Aggregate1").Select
-End Sub
 
-Private Sub CommandButton5_Click()
-    Sheets("Aggregate2").Visible = True
-    Sheets("Aggregate2").Select
-End Sub
 
 'one button
 'delete all well except for one ...
 
 Private Sub CommandButton6_Click()
-    Dim i, nofWell As Integer
+    Dim i, nofwell As Integer
     Dim response As VbMsgBoxResult
     
-    nofWell = GetNumberOfWell()
+    nofwell = GetNumberOfWell()
     
-    If nofWell = 1 Then Exit Sub
+    If nofwell = 1 Then Exit Sub
 
     response = MsgBox("Do you deletel all water well?", vbYesNo)
     If response = vbYes Then
-         For i = 2 To nofWell
+         For i = 2 To nofwell
              RemoveSheetIfExists (CStr(i))
         Next i
         
         Sheets("Well").Activate
-        Rows("5:" & CStr(nofWell + 3)).Select
+        Rows("5:" & CStr(nofwell + 3)).Select
         Selection.Delete Shift:=xlUp
         
         For i = 1 To 12
@@ -141,14 +193,5 @@ Function RemoveSheetIfExists(shname As String) As Boolean
     End If
 End Function
 
-
-Private Sub CommandButton7_Click()
-    Sheets("aggWhpa").Visible = True
-    Sheets("aggWhpa").Select
-End Sub
-
-Private Sub Worksheet_Activate()
-    Call InitialSetColorValue
-End Sub
 
 
