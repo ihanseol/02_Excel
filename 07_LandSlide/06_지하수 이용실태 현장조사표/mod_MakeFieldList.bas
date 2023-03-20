@@ -1,11 +1,71 @@
 Attribute VB_Name = "mod_MakeFieldList"
 Option Explicit
 
+
+Const EXPORT_DATE As String = "2022-03-18"
+Const EXPORT_FILE_NAME As String = "d:\05_Send\datafield_for_well.xlsx"
+
+
+Sub delay(ti As Integer)
+    Application.Wait Now + TimeSerial(0, 0, ti)
+End Sub
+
+
 Sub MakeFieldList()
+Attribute MakeFieldList.VB_ProcData.VB_Invoke_Func = " \n14"
     Call make("ss")
 End Sub
 
 
+Sub ExportData()
+Attribute ExportData.VB_ProcData.VB_Invoke_Func = "d\n14"
+    Call Make_DataOut
+    Call ExportCurrentWorksheet("data_out")
+End Sub
+
+Sub ExportCurrentWorksheet(sh As String)
+    Dim filePath As String
+    
+    If Not ActivateSheet(sh) Then
+        Debug.Print "ActivateSheet Error, maybe sheet does not exist ...."
+        Exit Sub
+    End If
+        
+    'filePath = Application.GetSaveAsFilename(FileFilter:="Excel Files (*.xlsx), *.xlsx")
+    ' filePath = "d:\05_Send\aaa.xlsx"
+    
+    filePath = EXPORT_FILE_NAME
+    
+    If VarType(filePath) = vbString Then
+    
+        If Dir(filePath) <> "" Then
+    
+            If MsgBox("The file " & filePath & " already exists. Do you want to overwrite it?", _
+                      vbQuestion + vbYesNo, "Confirm Overwrite") = vbNo Then
+                Exit Sub
+            End If
+        End If
+    
+        ActiveSheet.Copy
+        ActiveWorkbook.SaveAs Filename:=filePath, FileFormat:=xlOpenXMLWorkbook, ConflictResolution:=xlLocalSessionChanges
+        ActiveWorkbook.Close savechanges:=False
+    End If
+End Sub
+
+
+Function ActivateSheet(sh As String) As Boolean
+    On Error GoTo ErrorHandler
+    Sheets(sh).Activate
+    ActivateSheet = True
+    Exit Function
+    
+ErrorHandler:
+'    MsgBox "An error occurred while trying to activate the sheet." & vbNewLine & _
+'           "Please check that the sheet name is correct and try again.", _
+'           vbExclamation, "Error"
+
+    ActivateSheet = False
+End Function
 
 Sub Make_DataOut()
     Dim str_, address, id, purpose As String
@@ -177,7 +237,8 @@ Sub PutDataSheetOut(ii As Variant, setting As Variant, address As Variant, simdo
         Sheets("data_out").Cells(ii, index).Value = str_
     Next i
     
-    Sheets("data_out").Cells(ii, "a").Value = "2023-03-19"
+    '  myString = Format(myDate, "yyyy-mm-dd")
+    Sheets("data_out").Cells(ii, "a").Value = "_" & Format(EXPORT_DATE, "yyyy-mm-dd") & "_"
     Sheets("data_out").Cells(ii, "e").Value = address
     Sheets("data_out").Cells(ii, "aq").Value = simdo
     Sheets("data_out").Cells(ii, "ar").Value = diameter
@@ -202,21 +263,12 @@ Sub PutDataSheetOut(ii As Variant, setting As Variant, address As Variant, simdo
 
 End Sub
                              
-                             
-
-
-'    Dim str_, address, id, purpose As String
-'    Dim allowType, i, lastRow  As Integer
-'    Dim simdo, diameter, hp, capacity, tochool, Q As Double
-'    Dim setting As String
-'
-'    Dim ag_start, ag_end, sayong_gagu, sayong_ingu, sayong_ilin_geupsoo As String
-'    Dim usage_day, usage_month, usage_year As Double
-    
-    
-    
+                          
 ' GetDataFromSheet(i, id, address, allowType, simdo, diameter, hp, capacity, tochool, purpose, Q)
-Sub GetDataFromSheet(i As Variant, id As Variant, address As Variant, allowType As Variant, simdo As Variant, diameter As Variant, hp As Variant, capacity As Variant, tochool As Variant, purpose As Variant, Q As Variant)
+Sub GetDataFromSheet(i As Variant, id As Variant, address As Variant, allowType As Variant, _
+                     simdo As Variant, diameter As Variant, hp As Variant, capacity As Variant, tochool As Variant, _
+                     purpose As Variant, Q As Variant)
+    
     id = Sheets("data_mid").Cells(i, "a").Value
     address = Sheets("data_mid").Cells(i, "b").Value
     allowType = Sheets("data_mid").Cells(i, "c").Value
@@ -227,6 +279,7 @@ Sub GetDataFromSheet(i As Variant, id As Variant, address As Variant, allowType 
     tochool = Sheets("data_mid").Cells(i, "h").Value
     purpose = Sheets("data_mid").Cells(i, "i").Value
     Q = Sheets("data_mid").Cells(i, "j").Value
+    
 End Sub
 
 
@@ -350,6 +403,7 @@ Public Sub make(wtype As String)
 End Sub
 
 Sub putdata(i As Variant, id As Variant, newAddress As Variant, allowType As Variant, well_data As Variant, purpose As Variant, Q As Variant)
+    
     ' Sheets("data_mid").Activate
     Sheets("data_mid").Cells(i + 1, "a").Value = id
     Sheets("data_mid").Cells(i + 1, "b").Value = newAddress
@@ -361,6 +415,7 @@ Sub putdata(i As Variant, id As Variant, newAddress As Variant, allowType As Var
     Sheets("data_mid").Cells(i + 1, "h").Value = well_data(5)
     Sheets("data_mid").Cells(i + 1, "i").Value = purpose
     Sheets("data_mid").Cells(i + 1, "j").Value = Q
+    
 End Sub
 
 
