@@ -108,9 +108,7 @@ Private Sub CommandButton3_Click()
         Exit Sub
     End If
     
-    
-    
-
+ 
     ReDim lowPH(1 To nofwell)
     ReDim hiPH(1 To nofwell)
     
@@ -150,87 +148,114 @@ Private Sub CommandButton3_Click()
 End Sub
 
 Function getEC(ByVal LOWHI As Integer, ByVal well As Integer)
-    Dim page, quo, remainder As Integer
+    Sheets("p" & well).Activate
     
-    quo = WorksheetFunction.quotient(well, 2)
-    remainder = well Mod 2
-    page = quo + remainder
-    
-    Sheets("p" & CStr(page)).Activate
-    
-    If remainder = 1 Then
-        If LOWHI = cellLOW Then
-            getEC = Sheets("p" & CStr(page)).Range("e25").value
-        Else
-            getEC = Sheets("p" & CStr(page)).Range("e24").value
-        End If
+    If LOWHI = cellLOW Then
+        getEC = Sheets("p" & CStr(well)).Range("e25").value
     Else
-        If LOWHI = cellLOW Then
-            getEC = Sheets("p" & CStr(page)).Range("h25").value
-        Else
-            getEC = Sheets("p" & CStr(page)).Range("h24").value
-        End If
+        getEC = Sheets("p" & CStr(well)).Range("e24").value
     End If
 End Function
 
 Function getPH(ByVal LOWHI As Integer, ByVal well As Integer)
-    Dim page, quo, remainder As Integer
+    Sheets("p" & CStr(well)).Activate
     
-    quo = WorksheetFunction.quotient(well, 2)
-    remainder = well Mod 2
-    page = quo + remainder
-    
-    Sheets("p" & CStr(page)).Activate
-    
-    If remainder = 1 Then
-        If LOWHI = cellLOW Then
-            getPH = Sheets("p" & CStr(page)).Range("f25").value
-        Else
-            getPH = Sheets("p" & CStr(page)).Range("f24").value
-        End If
+    If LOWHI = cellLOW Then
+        getPH = Sheets("p" & CStr(well)).Range("f25").value
     Else
-        If LOWHI = cellLOW Then
-            getPH = Sheets("p" & CStr(page)).Range("i25").value
-        Else
-            getPH = Sheets("p" & CStr(page)).Range("i24").value
-        End If
+        getPH = Sheets("p" & CStr(well)).Range("f24").value
     End If
+    
 End Function
 
 Function getTEMP(ByVal LOWHI As Integer, ByVal well As Integer)
-    Dim page, quo, remainder As Integer
-    
-    quo = WorksheetFunction.quotient(well, 2)
-    remainder = well Mod 2
-    page = quo + remainder
-    
-    Sheets("p" & CStr(page)).Activate
-    
-    If remainder = 1 Then
-        If LOWHI = cellLOW Then
-            getTEMP = Sheets("p" & CStr(page)).Range("d25").value
-        Else
-            getTEMP = Sheets("p" & CStr(page)).Range("d24").value
-        End If
+    Sheets("p" & CStr(well)).Activate
+
+    If LOWHI = cellLOW Then
+        getTEMP = Sheets("p" & CStr(well)).Range("d25").value
     Else
-        If LOWHI = cellLOW Then
-            getTEMP = Sheets("p" & CStr(page)).Range("g25").value
-        Else
-            getTEMP = Sheets("p" & CStr(page)).Range("g24").value
-        End If
+        getTEMP = Sheets("p" & CStr(well)).Range("d24").value
     End If
 End Function
 
 
+Sub DuplicateQ1Page(ByVal n As Integer)
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("Q1")
+    
+    
+    ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count)
+    ActiveSheet.name = "p" & n
+    
+    With ActiveSheet.Tab
+        .ThemeColor = xlThemeColorAccent3
+        .TintAndShade = 0
+    End With
+    
+    Call SetWellPropertyQ1(n)
+    
+End Sub
+
+Sub SetWellPropertyQ1(ByVal i As Integer)
+    ActiveSheet.Range("C4") = "W-" & CStr(i)
+    ActiveSheet.Range("D12") = "W-" & CStr(i)
+    ActiveSheet.Range("H12") = "W-" & CStr(i)
+    
+    ActiveSheet.Shapes.Range(Array("CommandButton3")).Select
+    Selection.Delete
+    ActiveSheet.Shapes.Range(Array("CommandButton4")).Select
+    Selection.Delete
+    ActiveSheet.Shapes.Range(Array("CommandButton5")).Select
+    Selection.Delete
+End Sub
 
 
+Private Sub DeleteWorksheet(shname As String)
+    Dim ws As Worksheet
+    
+    On Error GoTo ErrorHandler
+    
+    Set ws = ThisWorkbook.Worksheets(shname)
+    Application.DisplayAlerts = False
+    ws.Delete
+    Application.DisplayAlerts = True
+    
+    Exit Sub
+    
+ErrorHandler:
+    ' MsgBox "An error occurred while trying to delete the worksheet."
+    Application.DisplayAlerts = True
+End Sub
 
 
+' make summary page
+Private Sub CommandButton4_Click()
+    Dim nofwell As Integer
+    Dim i As Integer
+    
+    nofwell = GetNumberOfWell()
+    
+    For i = 1 To nofwell
+        DuplicateQ1Page (i)
+    Next i
+End Sub
 
 
+' delete all summary page
+Private Sub CommandButton5_Click()
 
+    Dim nofwell As Integer
+    Dim i As Integer
+    
+    nofwell = GetNumberOfWell()
+    
+    For i = 1 To nofwell
+        DeleteWorksheet ("p" & i)
+    Next i
+    
+    Sheets("Q1").Activate
 
-
+End Sub
 
 
 

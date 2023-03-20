@@ -125,6 +125,9 @@ Private Sub CommandButton3_Click()
     n_sheets = sheets_count()
     result = DivideWellsBy3(n_sheets)
     
+    
+    ' result(0) = quotient
+    ' result(1) = remainder
     w3page = result(0)
     
     Select Case result(1)
@@ -154,13 +157,10 @@ End Sub
 
 
 Private Sub CommandButton2_Click()
-  
   Dim thisname, fname1, fname2, fname3 As String
   Dim cell1, cell2, cell3 As String
   Dim time1 As Date
   Dim bTemp, ec1, ec2, ec3, ph1, ph2, ph3 As Double
-  
-  
   
   cell1 = Range("d12").value
   cell2 = Range("g12").value
@@ -221,8 +221,6 @@ Private Sub CommandButton2_Click()
   Call getModDataFromYangSooTripple(thisname, fname1)
   Call getModDataFromYangSooTripple(thisname, fname2)
   Call getModDataFromYangSooTripple(thisname, fname3)
-  
-  
 End Sub
 
 
