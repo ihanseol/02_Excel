@@ -3,7 +3,7 @@ Option Explicit
 
 
 Const EXPORT_DATE As String = "2022-03-18"
-Const EXPORT_FILE_NAME As String = "d:\05_Send\datafield_for_well.xlsx"
+Const EXPORT_FILE_NAME As String = "d:\05_Send\iyong_template.xlsx"
 
 
 Sub delay(ti As Integer)
@@ -73,7 +73,7 @@ Sub Make_DataOut()
     Dim simdo, diameter, hp, capacity, tochool, Q As Double
     Dim setting As String
     
-    Dim ag_start, ag_end, sayong_gagu, sayong_ingu, sayong_ilin_geupsoo As String
+    Dim ag_start, ag_end, ag_year, sayong_gagu, sayong_ingu, sayong_ilin_geupsoo As String
     Dim usage_day, usage_month, usage_year As Double
     
     str_ = ChrW(&H2714)
@@ -122,16 +122,24 @@ Sub Make_DataOut()
                 Else
                     setting = setting & "ah,"
                 End If
+                
+                ag_start = "1"
+                ag_end = "12"
+                ag_year = "365"
             
             Case "a"
                 '농업용 : 3 ~ 11월까지
                 ag_start = "3"
                 ag_end = "11"
+                ag_year = "274"
             
             
             Case "i"
                 ' 공업용 - 연중사용
                 setting = setting & "ad,"
+                ag_start = "1"
+                ag_end = "12"
+                ag_year = "365"
                 
         End Select
         
@@ -203,7 +211,7 @@ Sub Make_DataOut()
         Debug.Print "**********************************"
         Debug.Print setting
         
-        Call PutDataSheetOut(i, setting, address, simdo, diameter, hp, capacity, tochool, Q, ag_start, ag_end, _
+        Call PutDataSheetOut(i, setting, address, simdo, diameter, hp, capacity, tochool, Q, ag_start, ag_end, ag_year, _
                              sayong_gagu, sayong_ingu, sayong_ilin_geupsoo, usage_day, usage_month, usage_year)
         
         
@@ -217,7 +225,7 @@ End Sub
 
 Sub PutDataSheetOut(ii As Variant, setting As Variant, address As Variant, simdo As Variant, diameter As Variant, hp As Variant, _
                     capacity As Variant, tochool As Variant, Q As Variant, _
-                    ag_start As Variant, ag_end As Variant, _
+                    ag_start As Variant, ag_end As Variant, ag_year As Variant, _
                     sayong_gagu As Variant, sayong_ingu As Variant, sayong_ilin_geupsoo As Variant, _
                     usage_day As Variant, usage_month As Variant, usage_year As Variant)
 
@@ -225,6 +233,12 @@ Sub PutDataSheetOut(ii As Variant, setting As Variant, address As Variant, simdo
     Dim i As Integer
     Dim index, str_, setting_1 As String
     
+    Sheets("data_out").Activate
+    
+    With Range("A" & CStr(ii) & ":BB" & CStr(ii))
+        .Value = " "
+    End With
+
     str_ = ChrW(&H2714)
     
     
@@ -238,28 +252,27 @@ Sub PutDataSheetOut(ii As Variant, setting As Variant, address As Variant, simdo
     Next i
     
     '  myString = Format(myDate, "yyyy-mm-dd")
-    Sheets("data_out").Cells(ii, "a").Value = "_" & Format(EXPORT_DATE, "yyyy-mm-dd") & "_"
+    Sheets("data_out").Cells(ii, "a").Value = " " & Format(EXPORT_DATE, "yyyy-mm-dd") & "."
     Sheets("data_out").Cells(ii, "e").Value = address
-    Sheets("data_out").Cells(ii, "aq").Value = simdo
-    Sheets("data_out").Cells(ii, "ar").Value = diameter
-    Sheets("data_out").Cells(ii, "as").Value = hp
-    Sheets("data_out").Cells(ii, "at").Value = capacity
-    Sheets("data_out").Cells(ii, "au").Value = tochool
+    Sheets("data_out").Cells(ii, "ar").Value = simdo
+    Sheets("data_out").Cells(ii, "as").Value = diameter
+    Sheets("data_out").Cells(ii, "at").Value = hp
+    Sheets("data_out").Cells(ii, "au").Value = capacity
+    Sheets("data_out").Cells(ii, "av").Value = tochool
     
     Sheets("data_out").Cells(ii, "ae").Value = ag_start
     Sheets("data_out").Cells(ii, "af").Value = ag_end
+    Sheets("data_out").Cells(ii, "ag").Value = ag_year
     
     
-    Sheets("data_out").Cells(ii, "ai").Value = sayong_gagu
-    Sheets("data_out").Cells(ii, "aj").Value = sayong_ingu
-    Sheets("data_out").Cells(ii, "ak").Value = sayong_ilin_geupsoo
+    Sheets("data_out").Cells(ii, "aj").Value = sayong_gagu
+    Sheets("data_out").Cells(ii, "ak").Value = sayong_ingu
+    Sheets("data_out").Cells(ii, "al").Value = sayong_ilin_geupsoo
     
-    Sheets("data_out").Cells(ii, "al").Value = usage_day
-    Sheets("data_out").Cells(ii, "al").NumberFormat = "#,##0.0"
-    Sheets("data_out").Cells(ii, "am").Value = usage_month
-    Sheets("data_out").Cells(ii, "am").NumberFormat = "#,##0.0"
-    Sheets("data_out").Cells(ii, "an").Value = usage_year
-    Sheets("data_out").Cells(ii, "an").NumberFormat = "#,##0.0"
+    Sheets("data_out").Cells(ii, "am").Value = Format(usage_day, "0.0")
+    Sheets("data_out").Cells(ii, "an").Value = Format(usage_month, "#,##0")
+    Sheets("data_out").Cells(ii, "ao").Value = Format(usage_year, "#,##0")
+    
 
 End Sub
                              
