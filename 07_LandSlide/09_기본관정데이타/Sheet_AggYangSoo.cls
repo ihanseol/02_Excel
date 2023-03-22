@@ -66,7 +66,7 @@ Sub GetBaseDataFromYangSoo()
     
     Dim qh() As Double ' 한계양수량
     Dim qg() As Double ' 가채수량
-    Dim Q1() As Double ' Q1
+    Dim q1() As Double ' Q1
     
     
     Dim sd1() As Double ' 1단계 수위강하량
@@ -129,7 +129,7 @@ Sub GetBaseDataFromYangSoo()
     
     ReDim sd1(1 To nofwell)
     ReDim sd2(1 To nofwell)
-    ReDim Q1(1 To nofwell)
+    ReDim q1(1 To nofwell)
     
     ReDim C(1 To nofwell)
     ReDim B(1 To nofwell)
@@ -181,7 +181,7 @@ Sub GetBaseDataFromYangSoo()
         S1(i) = Workbooks(fname).Worksheets("SkinFactor").Range("e10").value
         S2(i) = Workbooks(fname).Worksheets("SkinFactor").Range("i16").value
         
-        K(i) = Workbooks(fname).Worksheets("SkinFactor").Range("d16").value
+        K(i) = Workbooks(fname).Worksheets("SkinFactor").Range("e16").value
         time_(i) = Workbooks(fname).Worksheets("SkinFactor").Range("h16").value
         
         shultze(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c13").value
@@ -198,7 +198,7 @@ Sub GetBaseDataFromYangSoo()
         
         sd1(i) = Workbooks(fname).Worksheets("SafeYield").Range("b3").value
         sd2(i) = Workbooks(fname).Worksheets("SafeYield").Range("b4").value
-        Q1(i) = Workbooks(fname).Worksheets("SafeYield").Range("b2").value
+        q1(i) = Workbooks(fname).Worksheets("SafeYield").Range("b2").value
         
         ratio(i) = Workbooks(fname).Worksheets("SafeYield").Range("b11").value
         
@@ -266,7 +266,7 @@ Sub GetBaseDataFromYangSoo()
         
         Cells(4 + i, "aa").value = Format(qh(i), "0.")
         Cells(4 + i, "ab").value = Format(qg(i), "0.00")
-        Cells(4 + i, "ac").value = Format(Q1(i), "0.")
+        Cells(4 + i, "ac").value = Format(q1(i), "0.")
         
         Cells(4 + i, "ad").value = Format(sd1(i), "0.00")
         Cells(4 + i, "ae").value = Format(sd2(i), "0.00")
@@ -336,7 +336,7 @@ Sub FormulaChwiSoo()
     Dim formula As String
     Dim nofwell As String
     Dim i As Integer
-    Dim Q1, S1, S2, res As Double
+    Dim q1, S1, S2, res As Double
     
     nofwell = GetNumberOfWell()
     Sheets("YangSoo").Select
@@ -349,13 +349,13 @@ Sub FormulaChwiSoo()
     Debug.Print "************************************************************************************************************************************************************************************************"
     
     For i = 1 To nofwell
-        Q1 = Cells(4 + i, "ac").value
+        q1 = Cells(4 + i, "ac").value
  
         S1 = Format(Cells(4 + i, "ad").value, "0.00")
         S2 = Format(Cells(4 + i, "ae").value, "0.00")
         
         res = Cells(4 + i, "ab").value
-        formula = "W-" & i & "~~Q _{ & 2} `＝" & Q1 & "` TIMES  `(` {" & S2 & "} over {" & S1 & "} `) ^{2/3} `＝" & res & "㎥/일"
+        formula = "W-" & i & "~~Q _{ & 2} `＝" & q1 & "` TIMES  `(` {" & S2 & "} over {" & S1 & "} `) ^{2/3} `＝" & res & "㎥/일"
         
         Debug.Print formula
         Debug.Print "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"

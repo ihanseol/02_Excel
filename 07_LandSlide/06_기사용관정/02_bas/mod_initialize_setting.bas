@@ -8,7 +8,7 @@ Private Sub init_nonsan()
    
     SS(svGAJUNG, 1) = 0.173
     SS(svGAJUNG, 2) = 0.21
-    SS_CITY = 2.63
+    SS_CITY = 2.42
     
     SS(svILBAN, 1) = 3.154
     SS(svILBAN, 2) = 0.023

@@ -74,6 +74,6 @@ Private Sub ChangeCellData(ByVal nsheet As Integer, ByVal nselect As Integer)
                       ReplaceFormat:=False
     
     Range("E21").Select
-    Range("E21").Formula = "=Well!" & Cells(nsheet, "I").Address
+    Range("E21").formula = "=Well!" & Cells(nsheet, "I").Address
 End Sub
 

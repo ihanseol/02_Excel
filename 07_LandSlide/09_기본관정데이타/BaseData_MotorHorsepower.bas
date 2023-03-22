@@ -298,12 +298,12 @@ Private Sub insert_cell_function(ByVal n As Integer, ByVal position As Integer)
     round_hp = "=roundup(" & mychar & CStr(h2 + 9) & ",0)"
     theory_hp = "=round((" & mychar & CStr(h2 + 11) & "*" & mychar & CStr(h2 + 7) & "*6572.5)" & "/" & mychar & CStr(h2 + 6) & ",1)"
     
-    Range(mychar & CStr(h2 + 5)).Formula = height1        '양정고
-    Range(mychar & CStr(h2 + 6)).Formula = height        '합계
+    Range(mychar & CStr(h2 + 5)).formula = height1        '양정고
+    Range(mychar & CStr(h2 + 6)).formula = height        '합계
     
-    Range(mychar & CStr(h2 + 9)).Formula = eq
-    Range(mychar & CStr(h2 + 10)).Formula = round_hp
-    Range(mychar & CStr(h2 + 12)).Formula = theory_hp
+    Range(mychar & CStr(h2 + 9)).formula = eq
+    Range(mychar & CStr(h2 + 10)).formula = round_hp
+    Range(mychar & CStr(h2 + 12)).formula = theory_hp
     
     Debug.Print height
     Debug.Print eq
@@ -367,7 +367,7 @@ Public Sub getMotorPower()
         hp(i) = Range("c17").value
     Next i
     
-    Sheet4.Activate
+    Sheet_Recharge.Activate
     
     Call draw_motor_frame(nof_sheets, IP)
     

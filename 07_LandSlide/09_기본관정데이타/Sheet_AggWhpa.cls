@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "Sheet13"
+Attribute VB_Name = "Sheet_AggWhpa"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -31,7 +31,7 @@ Private Sub CommandButton2_Click()
 ' Collect Data
 
     Dim fname As String
-    Dim nofWell, i As Integer
+    Dim nofwell, i As Integer
     
     Dim Q() As Double
     Dim daeSoo() As Double
@@ -43,23 +43,22 @@ Private Sub CommandButton2_Click()
     Dim gradient() As Double
     
     
-    
-    nofWell = GetNumberOfWell()
+    nofwell = GetNumberOfWell()
     If ActiveSheet.name <> "aggWhpa" Then Sheets("aggWhpa").Select
     
-    ReDim Q(1 To nofWell) As Double
-    ReDim daeSoo(1 To nofWell) As Double
+    ReDim Q(1 To nofwell) As Double
+    ReDim daeSoo(1 To nofwell) As Double
     
-    ReDim T1(1 To nofWell) As Double
-    ReDim S1(1 To nofWell) As Double
+    ReDim T1(1 To nofwell) As Double
+    ReDim S1(1 To nofwell) As Double
     
-    ReDim direction(1 To nofWell) As Integer
-    ReDim gradient(1 To nofWell) As Double
+    ReDim direction(1 To nofwell) As Integer
+    ReDim gradient(1 To nofwell) As Double
       
 
     ' --------------------------------------------------------------------------------------
     
-    For i = 1 To nofWell
+    For i = 1 To nofwell
         
         Sheets(CStr(i)).Select
         
@@ -76,7 +75,7 @@ Private Sub CommandButton2_Click()
 
 
     Sheets("aggWhpa").Select
-    Call WriteWellData(Q, daeSoo, T1, S1, direction, gradient, nofWell)
+    Call WriteWellData(Q, daeSoo, T1, S1, direction, gradient, nofwell)
     
     Range("a1").Select
     Application.CutCopyMode = False
@@ -85,7 +84,7 @@ End Sub
 
 
 
-Private Sub WriteWellData(Q As Variant, daeSoo As Variant, T1 As Variant, S1 As Variant, direction As Variant, gradient As Variant, nofWell As Variant)
+Private Sub WriteWellData(Q As Variant, daeSoo As Variant, T1 As Variant, S1 As Variant, direction As Variant, gradient As Variant, ByVal nofwell As Integer)
     Dim i As Integer
     Dim t_sum As Double
     Dim daesoo_sum As Double
@@ -101,9 +100,9 @@ Private Sub WriteWellData(Q As Variant, daeSoo As Variant, T1 As Variant, S1 As 
         .value = ""
     End With
             
+    Call UnmergeAllCells
     
-    
-    For i = 1 To nofWell
+    For i = 1 To nofwell
     
         Cells(3 + i, "c").value = "W-" & CStr(i)
         
@@ -117,40 +116,44 @@ Private Sub WriteWellData(Q As Variant, daeSoo As Variant, T1 As Variant, S1 As 
         Cells(3 + i, "k").value = direction(i)
         direction_sum = direction_sum + direction(i)
         
-        Cells(3 + i, "m").value = gradient(i)
+        Cells(3 + i, "m").value = Format(gradient(i), "###0.0000")
         gradient_sum = gradient_sum + gradient(i)
         
         Cells(4, "d").value = "5년"
     
     Next i
     
+   
+    Cells(4, "g").value = Round(t_sum / nofwell, 4)
+    Cells(4, "g").NumberFormat = "0.0000"
+    Call merge_cells("d", nofwell)
+    Call merge_cells("g", nofwell)
     
-    Cells(4, "g").value = Format(Round(t_sum / nofWell, 4), "###0.0000")
-    merge_cells ("g")
-    merge_cells ("d")
+    Cells(4, "j").value = Round(daesoo_sum / nofwell, 1)
+    Cells(4, "j").NumberFormat = "0.0"
+    Call merge_cells("j", nofwell)
     
-    Cells(4, "j").value = Round(daesoo_sum / nofWell, 1)
-    merge_cells ("j")
+    Cells(4, "l").value = Round(direction_sum / nofwell, 1)
+    Cells(4, "l").NumberFormat = "0.0"
+    Call merge_cells("l", nofwell)
     
-    Cells(4, "l").value = Round(direction_sum / nofWell, 1)
-    merge_cells ("l")
-    
-    Cells(4, "n").value = Format(Round(gradient_sum / nofWell, 4), "###0.0000")
-    merge_cells ("n")
+    Cells(4, "n").value = Round(gradient_sum / nofwell, 4)
+    Cells(4, "n").NumberFormat = "0.0000"
+    Call merge_cells("n", nofwell)
     
     Cells(4, "o").value = "무경계조건"
-    merge_cells ("o")
+    Call merge_cells("o", nofwell)
     
     Cells(4, "h").value = 0.03
-    merge_cells ("h")
+    Call merge_cells("h", nofwell)
     
 End Sub
 
 
 
-Sub merge_cells(cel As String)
+Sub merge_cells(cel As String, ByVal nofwell As Integer)
 
-    Range(cel & "4:" & cel & "8").Select
+    Range(cel & CStr(nofwell + 1) & ":" & cel & CStr(nofwell + 3)).Select
     With Selection
         .HorizontalAlignment = xlCenter
         .VerticalAlignment = xlCenter
@@ -166,11 +169,25 @@ Sub merge_cells(cel As String)
     
 End Sub
 
+Sub FindMergedCellsRange()
+    Dim mergedRange As Range
+    Set mergedRange = ActiveSheet.Range("A1").MergeArea
+    MsgBox "The range of merged cells is " & mergedRange.Address
+End Sub
 
 
-
-
-
+Sub UnmergeAllCells()
+    Dim ws As Worksheet
+    Dim cell As Range
+    
+    Set ws = ActiveSheet
+    
+    For Each cell In ws.UsedRange
+        If cell.MergeCells Then
+            cell.MergeCells = False
+        End If
+    Next cell
+End Sub
 
 
 

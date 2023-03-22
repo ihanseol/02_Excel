@@ -39,21 +39,22 @@ Attribute DoCopy.VB_ProcData.VB_Invoke_Func = " \n14"
     Range("F2:H" & lastRow).Select
     Selection.Copy
     
-    Range("M2").Select
+    Range("n2").Select
     ActiveSheet.Paste
     
     
-    Range("K2:K" & lastRow).Select
+    ' ¹°·®
+    Range("L2:L" & lastRow).Select
     Selection.Copy
     
-    Range("P2").Select
+    Range("q2").Select
     Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
         :=False, Transpose:=False
         
-    Range("J2:J" & lastRow).Select
+    Range("k2:k" & lastRow).Select
     Selection.Copy
     
-    Range("Q2").Select
+    Range("r2").Select
     ActiveSheet.Paste
     
     Range("N14").Select
@@ -64,7 +65,7 @@ End Sub
 
 Private Sub CleanSection(lastRow As Long)
 
-    Range("M2:Q" & lastRow).Select
+    Range("n2:r" & lastRow).Select
     Selection.ClearContents
     Range("P14").Select
     

@@ -32,12 +32,12 @@ Sub WriteAllCharts()
     Dim nofwell, i As Integer
     
     nofwell = GetNumberOfWell()
-    If ActiveSheet.Name <> "AggChart" Then Sheets("AggChart").Select
+    If ActiveSheet.name <> "AggChart" Then Sheets("AggChart").Select
     
     ' Call DeleteAllCharts
     Call DeleteAllImages
     
-    source_name = ActiveWorkbook.Name
+    source_name = ActiveWorkbook.name
     
     For i = 1 To nofwell
         Call Write_InsertChart(i, source_name)
@@ -79,7 +79,6 @@ End Sub
 'End Sub
 
 
-
 Sub SaveAndInsertChart(well As Integer, source_name As String, chartName As String, targetRange As String)
     Dim imagePath As String
     Dim fname As String
@@ -114,8 +113,6 @@ Sub SaveAndInsertChart(well As Integer, source_name As String, chartName As Stri
         height:=picHeight
         
 End Sub
-
-
 
 
 Sub ActivateChart()

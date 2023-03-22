@@ -112,7 +112,7 @@ Private Sub JojungData(ByVal nsheet As Integer)
     
     nsheet = nsheet + 3
     '=Well!D7
-    nselect = Mid(Range("c2").Formula, 8)
+    nselect = Mid(Range("c2").formula, 8)
     
     'Debug.Print Mid(Range("c2").Formula, 8) & ":" & nselect
     
@@ -121,7 +121,7 @@ Private Sub JojungData(ByVal nsheet As Integer)
                       ReplaceFormat:=False
     
     Range("E21").Select
-    Range("E21").Formula = "=Well!" & Cells(nsheet, "I").Address
+    Range("E21").formula = "=Well!" & Cells(nsheet, "I").Address
 End Sub
 
 Private Sub SetMyTabColor(ByVal index As Integer)

@@ -368,10 +368,10 @@ Public Sub find_average()
     Range("J5").value = nDirection / n_sheets
     Range("J6").value = nGradient / n_sheets
     
-    Range("k3").Formula = "=round(j3,4)"
-    Range("k4").Formula = "=round(j4,1)"
-    Range("k5").Formula = "=round(j5,1)"
-    Range("k6").Formula = "=round(j6,4)"
+    Range("k3").formula = "=round(j3,4)"
+    Range("k4").formula = "=round(j4,1)"
+    Range("k5").formula = "=round(j5,1)"
+    Range("k6").formula = "=round(j6,4)"
     
     Call make_frame
 End Sub
@@ -406,10 +406,10 @@ Public Sub find_average2(ByVal sheet As Integer, ByVal nof_well As Integer)
     Range("J5").value = nDirection / nof_well
     Range("J6").value = nGradient / nof_well
     
-    Range("k3").Formula = "=round(j3,4)"
-    Range("k4").Formula = "=round(j4,1)"
-    Range("k5").Formula = "=round(j5,1)"
-    Range("k6").Formula = "=round(j6,4)"
+    Range("k3").formula = "=round(j3,4)"
+    Range("k4").formula = "=round(j4,1)"
+    Range("k5").formula = "=round(j5,1)"
+    Range("k6").formula = "=round(j6,4)"
     
     Call make_frame2(sheet)
 End Sub

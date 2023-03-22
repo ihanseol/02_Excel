@@ -17,8 +17,8 @@ Public Sub MalgunGothic()
     Selection.End(xlUp).Select
 End Sub
 
-Public Sub make_frame2(ByVal Sh As Integer)
-    Worksheets(CStr(Sh)).Activate
+Public Sub make_frame2(ByVal sh As Integer)
+    Worksheets(CStr(sh)).Activate
     
     Range("i3").value = "투수량계수"
     Range("i4").value = "대수층두께"
