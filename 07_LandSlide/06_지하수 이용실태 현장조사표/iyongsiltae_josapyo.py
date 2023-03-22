@@ -4,8 +4,9 @@ import os, shutil
 import win32com.client as win32
 import pandas as pd
 
-XL_INPUT = r"iyong_template.xlsx"
-HWP_INPUT = r"iyong(field).hwp"
+XL_INPUT = "iyong_template.xlsx"
+HWP_INPUT = "iyong(field).hwp"
+HWP_OUTPUT = "iyong(result).hwp"
 
 def get_desktop():
     desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
@@ -21,9 +22,9 @@ hwp = win32.gencache.EnsureDispatch("HWPFrame.HwpObject")  # 한/글 열기
 
 
 hwp.RegisterModule("FilePathCheckDLL", "FilePathCheckerModule")
-shutil.copyfile(f"{desktop}\\{HWP_INPUT}", f"{desktop}\\result.hwp")
+shutil.copyfile(f"{desktop}\\{HWP_INPUT}", f"{desktop}\\{HWP_OUTPUT}")
 
-hwp.Open(f"{desktop}\\result.hwp")
+hwp.Open(f"{desktop}\\{HWP_OUTPUT}")
 field_list = [i for i in hwp.GetFieldList().split("\x02")]
 
 print(len(field_list), field_list)
