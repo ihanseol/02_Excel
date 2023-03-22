@@ -13,6 +13,63 @@ Function CheckSubstring(str As String, chk As String) As Boolean
     End If
 End Function
 
+
+Function IsDrinking(str As String) As Boolean
+    
+    ' 가정용 - 사설
+    If CheckSubstring(str, "가정") Then
+            IsDrinking = True
+            Exit Function
+    End If
+    
+    ' 일반용 - 사설
+    If CheckSubstring(str, "일반") Then
+           IsDrinking = False
+            Exit Function
+    End If
+    
+    ' 학교용 - 공공
+    If CheckSubstring(str, "학교") Then
+             IsDrinking = True
+            Exit Function
+    End If
+        
+    ' 민방위용 - 공공
+    If CheckSubstring(str, "민방") Then
+             IsDrinking = False
+            Exit Function
+    End If
+    
+    ' 공동주택용 - 사설
+    If CheckSubstring(str, "공동") Then
+             IsDrinking = True
+            Exit Function
+    End If
+    
+    ' 간이상수도 - 공공
+    If CheckSubstring(str, "간이") Then
+             IsDrinking = True
+            Exit Function
+    End If
+    
+    ' 농생활겸용 - 사설
+    If CheckSubstring(str, "겸용") Then
+             IsDrinking = False
+            Exit Function
+    End If
+    
+    ' 기타 - 사설
+    If CheckSubstring(str, "기타") Then
+             IsDrinking = False
+            Exit Function
+    End If
+    
+    IsDrinking = False
+       
+End Function
+
+
+
 Function SS_StringCheck(str As String) As String
     
     ' 가정용 - 사설
@@ -145,7 +202,7 @@ Function SS_PublicCheck(str As String) As String
     
     ' 가정용 - 사설
     If CheckSubstring(str, "가정") Then
-            SS_PublicCheck = "ab,"
+            SS_PublicCheck = "ac,"
             Exit Function
     End If
     

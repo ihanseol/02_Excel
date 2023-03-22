@@ -6,6 +6,20 @@ Const EXPORT_DATE As String = "2022-03-18"
 Const EXPORT_FILE_NAME As String = "d:\05_Send\iyong_template.xlsx"
 
 
+'If allowType = 0 Then
+'     setting = setting & "b,"
+'     ' 허가시설
+' Else
+'     setting = setting & "c,"
+'     ' 신고시설
+' End If
+        
+Public Enum ALLOW_TYPE_VALUE
+     at_HEOGA = 0
+     at_SINGO = 1
+End Enum
+
+
 Sub delay(ti As Integer)
     Application.Wait Now + TimeSerial(0, 0, ti)
 End Sub
@@ -14,11 +28,13 @@ End Sub
 Sub MakeFieldList()
 Attribute MakeFieldList.VB_ProcData.VB_Invoke_Func = " \n14"
     Call make("ss")
+    Call ExportData
 End Sub
 
 
 Sub ExportData()
 Attribute ExportData.VB_ProcData.VB_Invoke_Func = "d\n14"
+    ' data_mid 에서, 중간과정으로 만들어진 데이타를 불러와서, 파이썬처리용 엑셀쉬트를 만든다.
     Call Make_DataOut
     Call ExportCurrentWorksheet("data_out")
 End Sub
@@ -46,6 +62,12 @@ Sub ExportCurrentWorksheet(sh As String)
             End If
         End If
     
+    
+        If Sheets(sh).Visible = False Then
+            Sheets(sh).Visible = True
+        End If
+        
+        Sheets(sh).Activate
         ActiveSheet.Copy
         ActiveWorkbook.SaveAs Filename:=filePath, FileFormat:=xlOpenXMLWorkbook, ConflictResolution:=xlLocalSessionChanges
         ActiveWorkbook.Close savechanges:=False
@@ -73,19 +95,26 @@ Sub Make_DataOut()
     Dim simdo, diameter, hp, capacity, tochool, Q As Double
     Dim setting As String
     
-    Dim ag_start, ag_end, ag_year, sayong_gagu, sayong_ingu, sayong_ilin_geupsoo As String
+    Dim ag_start, ag_end, ag_year  As String
+    Dim sayong_gagu, sayong_ingu, sayong_ilin_geupsoo As Double
     Dim usage_day, usage_month, usage_year As Double
     
     str_ = ChrW(&H2714)
     
+    
+    If Not Sheets("data_mid").Visible Then
+        Sheets("data_mid").Visible = True
+    End If
+    
     Sheets("data_mid").Activate
+    Call initialize
     lastRow = getlastrow()
     
     For i = 2 To lastRow
     
         Call GetDataFromSheet(i, id, address, allowType, simdo, diameter, hp, capacity, tochool, purpose, Q)
         
-        If allowType = 0 Then
+        If allowType = at_HEOGA Then
             setting = setting & "b,"
             ' 허가시설
         Else
@@ -103,26 +132,34 @@ Sub Make_DataOut()
             Case "a"
                 setting = setting & "u,"
                 setting = setting & AA_StringCheck(purpose)
-                setting = setting & AA_PublicCheck(purpose)
-            
-            
+                
+                If allowType = at_HEOGA Then
+                    setting = setting & "ab,"
+                Else
+                    setting = setting & AA_PublicCheck(purpose)
+                End If
+                                            
             Case "i"
                 setting = setting & "o,"
                 setting = setting & II_StringCheck(purpose)
                 setting = setting & II_PublicCheck(purpose)
+                
+                
         End Select
+        
+        ' 음용수 인가 , 먹을수있는 물인가 ?
+        If IsDrinking(purpose) Then
+            setting = setting & "ah,"
+        Else
+            setting = setting & "ai,"
+        End If
+        
         
         
         ' ad = 연중사용
         Select Case LCase(Left(id, 1))
             Case "s"
                 setting = setting & "ad,"
-                If CheckSubstring(purpose, "가정") Then
-                    setting = setting & "ag,"
-                Else
-                    setting = setting & "ah,"
-                End If
-                
                 ag_start = "1"
                 ag_end = "12"
                 ag_year = "365"
@@ -143,12 +180,31 @@ Sub Make_DataOut()
                 
         End Select
         
-         If CheckSubstring(purpose, "간이") Then
-                sayong_gagu = "30"
-                sayong_ingu = "90"
-                sayong_ilin_geupsoo = "382.7"
-        End If
         
+        '음용수, 사용가구, 사용인구, 일인급수량이 결정됨
+        If IsDrinking(purpose) Then
+                 ' 용도가, 가정용일때 ...
+                 If CheckSubstring(purpose, "가정") Then
+                        sayong_gagu = 1
+                        sayong_ingu = SS_CITY
+                        sayong_ilin_geupsoo = Q / SS_CITY
+                 End If
+                
+                 ' https://kosis.kr/statHtml/statHtml.do?orgId=110&tblId=DT_11001N_2013_A055
+                 ' 용도가 간이상수도 일때 ...
+                 If CheckSubstring(purpose, "간이") Then
+                        sayong_gagu = 30
+                        sayong_ingu = 90
+                        sayong_ilin_geupsoo = 382.7
+                End If
+        Else
+            sayong_gagu = 0
+            sayong_ingu = 0
+            sayong_ilin_geupsoo = 0
+        End If
+                
+         
+        ' 일사용량 계산
         usage_day = Q
         usage_month = Q * 29
         
@@ -164,7 +220,7 @@ Sub Make_DataOut()
         ' 관정현황 체크
         Select Case LCase(Left(id, 1))
             Case "s"
-                If allowType = 1 Then ' 신고시설이면
+                If allowType = at_SINGO Then ' 신고시설이면
                     If CheckSubstring(purpose, "일반") Then setting = setting & "aw,ay,"
                     If CheckSubstring(purpose, "간이") Then setting = setting & "av,aw,ax,ay,az,ba,"
                     If CheckSubstring(purpose, "공동") Then setting = setting & "av,aw,ay,"
@@ -178,7 +234,7 @@ Sub Make_DataOut()
                 End If
             
             Case "a"
-                If allowType = 1 Then ' 신고시설이면
+                If allowType = at_SINGO Then ' 신고시설이면
                     If CheckSubstring(purpose, "전작") Then setting = setting & "aw,ay,"
                     If CheckSubstring(purpose, "답작") Then setting = setting & "aw,ay,"
                     If CheckSubstring(purpose, "원예") Then setting = setting & "aw,ay,"
@@ -194,7 +250,7 @@ Sub Make_DataOut()
             Case "i"
                 ' 공업용 - 연중사용
                 setting = setting & "ad,"
-                If allowType = 1 Then
+                If allowType = at_SINGO Then
                     ' 신고시설이면
                     setting = setting & "aw,ay,"
                     
@@ -264,14 +320,16 @@ Sub PutDataSheetOut(ii As Variant, setting As Variant, address As Variant, simdo
     Sheets("data_out").Cells(ii, "af").Value = ag_end
     Sheets("data_out").Cells(ii, "ag").Value = ag_year
     
+    ' 음용수 일때만, 사용가구, 사용인구, 1인급수 세팅
+    If Sheets("data_out").Cells(ii, "ah").Value = ChrW(&H2714) Then
+        Sheets("data_out").Cells(ii, "aj").Value = CStr(Format(sayong_gagu, "0.00"))
+        Sheets("data_out").Cells(ii, "ak").Value = CStr(Format(sayong_ingu, "0.00"))
+        Sheets("data_out").Cells(ii, "al").Value = CStr(Format(sayong_ilin_geupsoo, "0.00"))
+    End If
     
-    Sheets("data_out").Cells(ii, "aj").Value = sayong_gagu
-    Sheets("data_out").Cells(ii, "ak").Value = sayong_ingu
-    Sheets("data_out").Cells(ii, "al").Value = sayong_ilin_geupsoo
-    
-    Sheets("data_out").Cells(ii, "am").Value = Format(usage_day, "0.0")
-    Sheets("data_out").Cells(ii, "an").Value = Format(usage_month, "#,##0")
-    Sheets("data_out").Cells(ii, "ao").Value = Format(usage_year, "#,##0")
+    Sheets("data_out").Cells(ii, "am").Value = CStr(Format(usage_day, "0.00"))
+    Sheets("data_out").Cells(ii, "an").Value = CStr(Format(usage_month, "#,##0"))
+    Sheets("data_out").Cells(ii, "ao").Value = CStr(Format(usage_year, "#,##0"))
     
 
 End Sub

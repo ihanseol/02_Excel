@@ -19,6 +19,19 @@ Private Sub CommandButton3_Click()
     Call insertRow
 End Sub
 
+Private Sub CommandButton4_Click()
+    Call ComputeQ
+    Sheets("aa").Activate
+End Sub
+
+Private Sub CommandButton5_Click()
+    ' 지하수 이용실태 현장조사표
+    ' Groundwater Availability Field Survey Sheet
+    
+    Call MakeFieldList
+    Sheets("aa").Activate
+End Sub
+
 Private Sub Worksheet_Activate()
     Call clearRowA
 End Sub

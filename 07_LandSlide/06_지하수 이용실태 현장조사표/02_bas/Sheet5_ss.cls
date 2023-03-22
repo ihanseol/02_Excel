@@ -13,11 +13,17 @@ Private Sub CommandButton1_Click()
 End Sub
 
 Private Sub CommandButton2_Click()
-' 지하수 이용실태 현장조사표
-' Groundwater Availability Field Survey Sheet
-
-Call MakeFieldList
+    ' 지하수 이용실태 현장조사표
+    ' Groundwater Availability Field Survey Sheet
     
+    Call MakeFieldList
+    Sheets("ss").Activate
+    
+End Sub
+
+Private Sub CommandButton3_Click()
+    Call ComputeQ
+    Sheets("ss").Activate
 End Sub
 
 Private Sub CommandButtonCopy_Click()

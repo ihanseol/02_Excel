@@ -54,7 +54,7 @@ for page in range(len(excel)):
         hwp.MoveToField(f'{field}{{{{{page}}}}}')
         hwp.PutFieldText(f'{field}{{{{{page}}}}}', write_data)
 
-    print(f"{page + 1}")
+    print(f'{page + 1}:{excel.ad1[page]}')
 
 
 hwp.Save()
