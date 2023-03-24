@@ -3,6 +3,7 @@ Public SS(1 To 5, 1 To 2) As Double
 Public AA(1 To 6, 1 To 2) As Double
 
 Public SS_CITY As Double
+Public ISIT_FIRST As Boolean
 
 Public Enum SS_VALUE
     svGAJUNG = 1
@@ -21,45 +22,82 @@ Public Enum AA_VALUE
     avCHICKEN = 6
 End Enum
 
-Sub initialize()
-        
-    '전라남도, 목포시, 2020 환경부 지하수업무수행지침
-    SS(svGAJUNG, 1) = 0.173
-    SS(svGAJUNG, 2) = 0.21
-    SS_CITY = 2.44
+Function CheckBoxFind(objNAME As String) As MSForms.CheckBox
     
-    SS(svILBAN, 1) = 2.119
-    SS(svILBAN, 2) = 0.021
+    Dim ws As Worksheet
+    Dim obj As OLEObject
+    Dim myCheckBox As MSForms.CheckBox
     
-    SS(svSCHOOL, 1) = 7.986
-    SS(svSCHOOL, 2) = 0.005
     
-    SS(svGONGDONG, 1) = 7.13
-    SS(svGONGDONG, 2) = 0.001
+    Set ws = ThisWorkbook.Worksheets("ss")
+    Set myCheckBox = Nothing
     
-    SS(svMAEUL, 1) = 6.463
-    SS(svMAEUL, 2) = 0.178
+    For Each obj In ws.OLEObjects
+        If TypeOf obj.Object Is MSForms.CheckBox Then
+            If obj.NAME = objNAME Then
+                Set myCheckBox = obj.Object
+                Exit For
+            End If
+        End If
+    Next obj
     
-'----------------------------------------
+    If Not (myCheckBox Is Nothing) Then
+        ' found
+        Set CheckBoxFind = myCheckBox
+    Else
+        ' not found
+        Set CheckBoxFind = Nothing
+    End If
 
-    AA(avJEONJAK, 1) = 6.964
-    AA(avJEONJAK, 2) = 0.013
+End Function
+
+Function ComboBoxFind(objNAME As String) As MSForms.ComboBox
     
-    AA(avDAPJAK, 1) = 2.089
-    AA(avDAPJAK, 2) = 0.043
+    Dim ws As Worksheet
+    Dim obj As OLEObject
+    Dim myComboBox As MSForms.ComboBox
     
-    AA(avWONYE, 1) = 2.789
-    AA(avWONYE, 2) = 0.011
     
-    AA(avCOW, 1) = 3.48
-    AA(avCOW, 2) = 0.009
+    Set ws = ThisWorkbook.Worksheets("ss")
+    Set myComboBox = Nothing
     
-    AA(avPIG, 1) = 4.719
-    AA(avPIG, 2) = 0.001
+    For Each obj In ws.OLEObjects
+        If TypeOf obj.Object Is MSForms.ComboBox Then
+            If obj.NAME = objNAME Then
+                Set myComboBox = obj.Object
+                Exit For
+            End If
+        End If
+    Next obj
     
-    AA(avCHICKEN, 1) = 5.492
-    AA(avCHICKEN, 2) = 0.041
+    If Not (myComboBox Is Nothing) Then
+        ' found
+        Set ComboBoxFind = myComboBox
+    Else
+        ' not found
+        Set ComboBoxFind = Nothing
+    End If
+
+End Function
+
+
+
+Sub initialize()
+    Dim checkboxJIYEOL As MSForms.CheckBox
+    Dim comboboxAREA As MSForms.ComboBox
+
+
+    Set checkboxJIYEOL = CheckBoxFind("chkboxJIYEOL")
+    Set comboboxAREA = ComboBoxFind("comboAREA")
     
+    Debug.Print "comboAREA", comboboxAREA.Value
+    
+    If checkboxJIYEOL.Value Then
+        Call initialize_JIYEOL(comboboxAREA.Value)
+    Else
+        Call initialize_CNU(comboboxAREA.Value)
+    End If
+
 End Sub
 
 
