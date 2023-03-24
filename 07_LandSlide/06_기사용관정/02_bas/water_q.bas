@@ -81,23 +81,71 @@ Function ComboBoxFind(objNAME As String) As MSForms.ComboBox
 End Function
 
 
-
-Sub initialize()
-    Dim checkboxJIYEOL As MSForms.CheckBox
-    Dim comboboxAREA As MSForms.ComboBox
-
-
-    Set checkboxJIYEOL = CheckBoxFind("chkboxJIYEOL")
-    Set comboboxAREA = ComboBoxFind("comboAREA")
+Function TextBoxFind(objNAME As String) As MSForms.TextBox
     
-    Debug.Print "comboAREA", comboboxAREA.Value
+    Dim ws As Worksheet
+    Dim obj As OLEObject
+    Dim myTextBox As MSForms.TextBox
     
-    If checkboxJIYEOL.Value Then
-        Call initialize_JIYEOL(comboboxAREA.Value)
+    
+    Set ws = ThisWorkbook.Worksheets("ss")
+    Set myTextBox = Nothing
+    
+    For Each obj In ws.OLEObjects
+        If TypeOf obj.Object Is MSForms.TextBox Then
+            If obj.NAME = objNAME Then
+                Set myTextBox = obj.Object
+                Exit For
+            End If
+        End If
+    Next obj
+    
+    If Not (myTextBox Is Nothing) Then
+        ' found
+        Set TextBoxFind = myTextBox
     Else
-        Call initialize_CNU(comboboxAREA.Value)
+        ' not found
+        Set TextBoxFind = Nothing
     End If
 
+End Function
+
+
+
+Function is_Jiyeol(ByVal area As String) As Boolean
+
+    Dim tbl As ListObject
+    Dim headerRowArray() As Variant
+    
+    Set tbl = Sheets("ref1").ListObjects("tableJIYEOL")
+    
+    headerRowArray = tbl.HeaderRowRange.Value
+    
+    Dim i As Integer
+    
+    For i = LBound(headerRowArray, 2) To UBound(headerRowArray, 2)
+        If headerRowArray(1, i) = area Then
+            is_Jiyeol = True
+            Exit Function
+        End If
+    Next i
+    
+    is_Jiyeol = False
+
+End Function
+
+
+Sub initialize()
+    Dim TextBox_AREA As MSForms.TextBox
+
+    Set TextBox_AREA = TextBoxFind("TextBox_AREA")
+        
+    If is_Jiyeol(TextBox_AREA.Value) Then
+        Call initialize_JIYEOL(TextBox_AREA.Value)
+    Else
+        Call initialize_CNU(TextBox_AREA.Value)
+    End If
+       
 End Sub
 
 

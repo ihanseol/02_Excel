@@ -15,18 +15,18 @@ Sub test_tableindex()
 End Sub
 
 
-Sub initialize_CNU(AREA As String)
+Sub initialize_CNU(area As String)
 
     Dim tbl As ListObject
     Set tbl = Sheets("ref").ListObjects("tableCNU")
     
     Dim values() As Variant
     
-    If AREA = "" Then
-        AREA = "default"
+    If area = "" Then
+        area = "default"
     End If
     
-    values = tbl.ListColumns(AREA).DataBodyRange.Value
+    values = tbl.ListColumns(area).DataBodyRange.Value
         
         
     '전라남도, 목포시, 2020 환경부 지하수업무수행지침
@@ -69,7 +69,7 @@ Sub initialize_CNU(AREA As String)
 End Sub
 
 
-Sub initialize_JIYEOL(AREA As String)
+Sub initialize_JIYEOL(area As String)
 
     Dim tbl As ListObject
     Set tbl = Sheets("ref1").ListObjects("tableJIYEOL")
@@ -77,11 +77,11 @@ Sub initialize_JIYEOL(AREA As String)
     Dim values() As Variant
     
     
-    If (AREA = "") Then
-        AREA = "default"
+    If (area = "") Then
+        area = "default"
     End If
     
-    values = tbl.ListColumns(AREA).DataBodyRange.Value
+    values = tbl.ListColumns(area).DataBodyRange.Value
         
         
     '전라남도, 목포시, 2020 환경부 지하수업무수행지침

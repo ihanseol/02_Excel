@@ -10,53 +10,57 @@ Attribute VB_Exposed = True
 
 Private Sub combobox_initialize()
 
-    Dim tbl As ListObject
-    Dim tableNAME, shNAME As String
-    
-    
-    If ISIT_FIRST Then
-        comboAREA.Clear
-        
-        If chkboxJIYEOL.Value = True Then
-            tableNAME = "tableJIYEOL"
-            shNAME = "ref1"
-        Else
-            tableNAME = "tableCNU"
-            shNAME = "ref"
-        End If
-        
-        Set tbl = Sheets(shNAME).ListObjects(tableNAME)
-             
-        Dim cell As Range
-        Dim i As Integer
-        Dim isFirst As Boolean: isFirst = True
-        
-        i = 0
-        For Each cell In tbl.HeaderRowRange.Cells
-            If isFirst Then
-                isFirst = False
-                GoTo NEXT_ITER
-            End If
-            
-             comboAREA.AddItem cell.Value
-NEXT_ITER:
-        Next cell
-    Else
-        ISIT_FIRST = False
-    End If
+'    Dim tbl As ListObject
+'    Dim tableNAME, shNAME As String
+'
+'    Dim cell As Range
+'    Dim i As Integer
+'    Dim isFirst As Boolean: isFirst = True
+'
+'
+'    If ISIT_FIRST Then
+'        comboAREA.Clear
+'
+'        If chkboxJIYEOL.Value = True Then
+'            tableNAME = "tableJIYEOL"
+'            shNAME = "ref1"
+'        Else
+'            tableNAME = "tableCNU"
+'            shNAME = "ref"
+'        End If
+'
+'        Set tbl = Sheets(shNAME).ListObjects(tableNAME)
+'
+'        i = 0
+'        For Each cell In tbl.HeaderRowRange.Cells
+'            If isFirst Then
+'                isFirst = False
+'                GoTo NEXT_ITER
+'            End If
+'
+'             comboAREA.AddItem cell.Value
+'NEXT_ITER:
+'        Next cell
+'    Else
+'        ISIT_FIRST = False
+'    End If
 End Sub
 
 
+Private Sub CommandButton5_Click()
+    UserForm_survey.Show
+End Sub
+
 Private Sub Worksheet_Activate()
-    Call combobox_initialize
+    ' Call combobox_initialize
     Call clearRowA
 End Sub
 
-Private Sub chkboxJIYEOL_Click()
-    ISIT_FIRST = True
-    Call combobox_initialize
-    ISIT_FIRST = False
-End Sub
+'Private Sub chkboxJIYEOL_Click()
+'    ISIT_FIRST = True
+'    Call combobox_initialize
+'    ISIT_FIRST = False
+'End Sub
 
 
 Private Sub comboAREA_DropButtonClick()
