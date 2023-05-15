@@ -21,6 +21,39 @@ Private Sub CommandButton1_Click()
 End Sub
 
 
+Private Sub CommandButton2_Click()
+    If Workbooks.Count = 1 Then
+        MsgBox "Please Open 기사용관정, 파일 ", vbOKOnly
+        Exit Sub
+    End If
+
+   WB_NAME = GetOtherFileName
+   Call DeleteHiddenSheets(WB_NAME)
+
+End Sub
+
+
+Sub DeleteHiddenSheets(ByVal fname As String)
+
+    Dim ws As Worksheet
+
+    If MsgBox("Are you sure you want to delete all hidden sheets in this workbook?", vbYesNo, "Delete Hidden Sheets?") <> vbYes Then Exit Sub
+
+    Workbooks(fname).Activate
+    
+    Application.DisplayAlerts = False
+    For Each ws In Worksheets
+        If ws.Visible = xlSheetHidden Or ws.Visible = xlSheetVeryHidden Then
+            ws.Delete
+        End If
+    Next ws
+    Application.DisplayAlerts = True
+    
+    ThisWorkbook.Activate
+
+End Sub
+
+
 Public Function MyDownPath() As String
     MyDownPath = Environ$("USERPROFILE") & "\" & "Downloads"
     Debug.Print MyDownPath
@@ -118,5 +151,4 @@ Function CheckSubstring(str As String, chk As String) As Boolean
         CheckSubstring = False
     End If
 End Function
-
 
