@@ -15,7 +15,10 @@ Private Sub CommandButton1_Click()
 
    WB_NAME = GetOtherFileName
    
-   Call mDeleteAllActiveXButtons(WB_NAME)
+   ' Call mDeleteAllActiveXButtons(WB_NAME)
+   
+   
+   Call DeleteAllActiveXControls(WB_NAME)
    Call SaveJustXLSX(WB_NAME)
 
 End Sub
@@ -77,10 +80,28 @@ Sub SaveJustXLSX(ByVal fname As String)
         xlOpenXMLWorkbook, CreateBackup:=False
         
         
-    Workbooks(fname).Close SaveChanges:=False
+    Workbooks(fname0).Close SaveChanges:=False
         
     ThisWorkbook.Activate
 End Sub
+
+Sub DeleteAllActiveXControls(ByVal fname As String)
+    Dim myControl As Object
+    
+    
+    Workbooks(fname).Activate
+    
+    For Each ws In Workbooks(fname).Worksheets
+    
+        For Each myControl In ws.OLEObjects
+            myControl.Delete
+        Next myControl
+        
+     Next ws
+    
+    ThisWorkbook.Activate
+End Sub
+
 
 
 Sub mDeleteAllActiveXButtons(ByVal fname As String)
