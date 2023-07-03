@@ -18,7 +18,7 @@ End Sub
 
 
 Private Sub CommandButton2_Click()
-    If ActiveSheet.name <> "AggStep" Then Sheets("AggStep").Select
+    If ActiveSheet.Name <> "AggStep" Then Sheets("AggStep").Select
     Call WriteStepTestData
 End Sub
 
@@ -58,7 +58,7 @@ Private Sub WriteStepTestData()
     
     ' --------------------------------------------------------------------------------------
     
-    If ActiveSheet.name <> "AggStep" Then Sheets("AggStep").Select
+    If ActiveSheet.Name <> "AggStep" Then Sheets("AggStep").Select
     
     For i = 1 To nofwell
     
@@ -88,7 +88,7 @@ Sub Write31_StepTestData(a1 As Variant, a2 As Variant, a3 As Variant, Q As Varia
 
     Dim i As Integer
         
-    Call EraseCellData("g5:k19")
+    Call EraseCellData("d5:k19")
     
     For i = 1 To nofwell
         Cells(4 + i, "c").value = "W-" & CStr(i)

@@ -21,16 +21,21 @@ Private Sub CommandButton1_Click()
 End Sub
 
 
+
+' Summary Button
+
 Private Sub CommandButton2_Click()
     Dim nofwell As Integer
     
     nofwell = GetNumberOfWell()
-    If ActiveSheet.name <> "AggSum" Then Sheets("AggSum").Select
+    If ActiveSheet.Name <> "AggSum" Then Sheets("AggSum").Select
 
 
     ' Summary, Aquifer Characterization  Appropriated Water Analysis
     Call Write23_SummaryDevelopmentPotential
     Call Write26_AquiferCharacterization(nofwell)
+    Call Write26_Right_AquiferCharacterization(nofwell)
+    
     Call Write_RadiusOfInfluence(nofwell)
     Call Write_WaterIntake(nofwell)
     Call Write_DiggingDepth(nofwell)
@@ -102,7 +107,7 @@ Sub Write_StableLevel(nofwell As Integer)
 
     For i = 1 To nofwell
         Cells(64, Chr(Asc("D") + i - 1)).value = "W-" & CStr(i)
-        Cells(65, Chr(Asc("D") + i - 1)).value = Worksheets(CStr(i)).Range("c22").value & unit
+        Cells(65, Chr(Asc("D") + i - 1)).value = Worksheets(CStr(i)).Range("c21").value & unit
     Next i
 End Sub
 
@@ -187,7 +192,9 @@ Sub Write_RadiusOfInfluence(nofwell As Integer)
         ' 양수영향반경, 이것은 보고서에 따라서 다른데,
         ' 일단은 최대값, shultz, webber, jcob 의 최대값을 선택하는것으로 한다.
         ' 그리고 필요한 부분은, 후에 추가시켜준다.
-        Cells(27 + i, "E").value = Worksheets(CStr(i)).Range("G11").value & unit
+        Cells(27 + i, "E").value = Worksheets(CStr(i)).Range("H9").value & unit
+        Cells(27 + i, "F").value = Worksheets(CStr(i)).Range("K6").value & unit
+        Cells(27 + i, "G").value = Worksheets(CStr(i)).Range("K7").value & unit
     Next i
 End Sub
 
@@ -198,22 +205,34 @@ Sub Write_DrasticIndex(nofwell As Integer)
     Call EraseCellData("h28:j40")
     For i = 1 To nofwell
         ' WellNum
-        Cells(27 + i, "H").value = "W-" & CStr(i)
-        Cells(27 + i, "I").value = Worksheets(CStr(i)).Range("k30").value
-        Cells(27 + i, "J").value = Worksheets(CStr(i)).Range("k31").value
+        Cells(27 + i, "I").value = "W-" & CStr(i)
+        Cells(27 + i, "J").value = Worksheets(CStr(i)).Range("k30").value
+        Cells(27 + i, "K").value = Worksheets(CStr(i)).Range("k31").value
     Next i
 End Sub
 
 
 Sub Write26_AquiferCharacterization(nofwell As Integer)
 ' 대수층 분석및 적정채수량 분석
-    Dim i As Integer
+    Dim i, remainder As Integer
     
     ' Cells(13 + nowfell, "F").Value = Range("well!R5C10").Value
     
     Call EraseCellData("d12:j24")
-    
+        
     For i = 1 To nofwell
+    
+        remainder = i Mod 2
+        If remainder = 0 Then
+                With Range(Cells(11 + i, "d"), Cells(11 + i, "j"))
+                    .Font.Bold = True
+                End With
+        Else
+                With Range(Cells(11 + i, "d"), Cells(11 + i, "j"))
+                    .Font.Bold = False
+                End With
+        End If
+    
         ' WellNum --(J==10) / ='1'!$F$21
         Cells(11 + i, "D").value = "W-" & CStr(i)
         ' 심도
@@ -232,6 +251,47 @@ Sub Write26_AquiferCharacterization(nofwell As Integer)
 End Sub
 
 
+Sub Write26_Right_AquiferCharacterization(nofwell As Integer)
+' 대수층 분석및 적정채수량 분석
+    Dim i, remainder As Integer
+    
+    ' Cells(13 + nowfell, "F").Value = Range("well!R5C10").Value
+    
+    Call EraseCellData("L12:S24")
+        
+    For i = 1 To nofwell
+    
+        remainder = i Mod 2
+        If remainder = 0 Then
+                With Range(Cells(11 + i, "L"), Cells(11 + i, "S"))
+                    .Font.Bold = True
+                End With
+        Else
+                With Range(Cells(11 + i, "L"), Cells(11 + i, "S"))
+                    .Font.Bold = False
+                End With
+        End If
+    
+        ' WellNum --(J==10) / ='1'!$F$21
+        Cells(11 + i, "L").value = "W-" & CStr(i)
+        ' 심도
+        Cells(11 + i, "M").value = Worksheets("Well").Cells(i + 3, 8).value
+        ' 양수량
+        Cells(11 + i, "N").value = Worksheets("Well").Cells(i + 3, 10).value
+        ' 자연수위
+        Cells(11 + i, "O").value = Worksheets(CStr(i)).Range("c20").value
+        ' 안정수위
+        Cells(11 + i, "P").value = Worksheets(CStr(i)).Range("c21").value
+        
+        '수위강하량
+        Cells(11 + i, "Q").value = Worksheets(CStr(i)).Range("c21").value - Worksheets(CStr(i)).Range("c20").value
+        
+        ' 투수량계수
+        Cells(11 + i, "R").value = Worksheets(CStr(i)).Range("E7").value
+        ' 저류계수
+        Cells(11 + i, "S").value = Worksheets(CStr(i)).Range("G7").value
+    Next i
+End Sub
 
 
 

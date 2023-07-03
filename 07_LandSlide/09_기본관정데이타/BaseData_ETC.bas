@@ -13,7 +13,7 @@ Function GetNumberOfWell() As Integer
     Dim save_name As String
     Dim n As Integer
     
-    save_name = ActiveSheet.name
+    save_name = ActiveSheet.Name
     Sheets("Well").Activate
     Sheets("Well").Range("A30").Select
     Selection.End(xlUp).Select
@@ -30,7 +30,7 @@ Public Function sheets_count() As Long
     nWell = 0
     
     For i = 1 To nSheetsCount
-        strSheetsName(i) = ThisWorkbook.Sheets(i).name
+        strSheetsName(i) = ThisWorkbook.Sheets(i).Name
         'MsgBox (strSheetsName(i))
         If (ConvertToLongInteger(strSheetsName(i)) <> 0) Then
             nWell = nWell + 1

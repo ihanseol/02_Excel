@@ -21,7 +21,7 @@ Public Sub Range_End_Method()
     lRow = Cells(Rows.count, 1).End(xlUp).Row
     
     'Find the last non-blank cell in row 1
-    lCol = Cells(1, Columns.count).End(xlToLeft).Column
+    lCol = Cells(1, Columns.count).End(xlToLeft).column
     
     MsgBox "Last Row: " & lRow & vbNewLine & _
            "Last Column: " & lCol

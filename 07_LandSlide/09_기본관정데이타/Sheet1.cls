@@ -29,7 +29,7 @@ Private Sub importRainfall()
     End If
     
     For i = 1 To Workbooks.count
-      A(i) = Workbooks(i).name
+      A(i) = Workbooks(i).Name
       If Left(A(i), Len(prefix)) = prefix Then fn = A(i)
     Next i
     

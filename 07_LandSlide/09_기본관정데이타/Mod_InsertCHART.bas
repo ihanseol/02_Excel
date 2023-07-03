@@ -32,12 +32,12 @@ Sub WriteAllCharts()
     Dim nofwell, i As Integer
     
     nofwell = GetNumberOfWell()
-    If ActiveSheet.name <> "AggChart" Then Sheets("AggChart").Select
+    If ActiveSheet.Name <> "AggChart" Then Sheets("AggChart").Select
     
     ' Call DeleteAllCharts
     Call DeleteAllImages
     
-    source_name = ActiveWorkbook.name
+    source_name = ActiveWorkbook.Name
     
     For i = 1 To nofwell
         Call Write_InsertChart(i, source_name)

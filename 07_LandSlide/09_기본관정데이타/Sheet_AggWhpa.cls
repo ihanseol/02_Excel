@@ -44,7 +44,7 @@ Private Sub CommandButton2_Click()
     
     
     nofwell = GetNumberOfWell()
-    If ActiveSheet.name <> "aggWhpa" Then Sheets("aggWhpa").Select
+    If ActiveSheet.Name <> "aggWhpa" Then Sheets("aggWhpa").Select
     
     ReDim Q(1 To nofwell) As Double
     ReDim daeSoo(1 To nofwell) As Double
@@ -76,12 +76,59 @@ Private Sub CommandButton2_Click()
 
     Sheets("aggWhpa").Select
     Call WriteWellData(Q, daeSoo, T1, S1, direction, gradient, nofwell)
+    Call DrawOutline
     
     Range("a1").Select
     Application.CutCopyMode = False
     
 End Sub
 
+Sub DrawOutline()
+
+    Application.ScreenUpdating = False
+    
+    Range("C3:O17").Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    Range("B31").Select
+    
+    Application.ScreenUpdating = True
+End Sub
 
 
 Private Sub WriteWellData(Q As Variant, daeSoo As Variant, T1 As Variant, S1 As Variant, direction As Variant, gradient As Variant, ByVal nofwell As Integer)
@@ -95,6 +142,9 @@ Private Sub WriteWellData(Q As Variant, daeSoo As Variant, T1 As Variant, S1 As 
     daesoo_sum = 0
     gradient_sum = 0
     direction_sum = 0
+    
+    
+    Application.ScreenUpdating = False
     
     With Range("c4:o17")
         .value = ""
@@ -147,13 +197,15 @@ Private Sub WriteWellData(Q As Variant, daeSoo As Variant, T1 As Variant, S1 As 
     Cells(4, "h").value = 0.03
     Call merge_cells("h", nofwell)
     
+    Application.ScreenUpdating = True
+    
 End Sub
 
 
 
 Sub merge_cells(cel As String, ByVal nofwell As Integer)
 
-    Range(cel & CStr(nofwell + 1) & ":" & cel & CStr(nofwell + 3)).Select
+    Range(cel & CStr(4) & ":" & cel & CStr(nofwell + 3)).Select
     With Selection
         .HorizontalAlignment = xlCenter
         .VerticalAlignment = xlCenter
@@ -176,6 +228,7 @@ Sub FindMergedCellsRange()
 End Sub
 
 
+
 Sub UnmergeAllCells()
     Dim ws As Worksheet
     Dim cell As Range
@@ -187,14 +240,53 @@ Sub UnmergeAllCells()
             cell.MergeCells = False
         End If
     Next cell
+    
+    Call SetBorderLine_Default
 End Sub
 
 
+Sub SetBorderLine_Default()
 
-
-
-
-
+    Range("C4:O17").Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+End Sub
 
 
 

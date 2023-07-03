@@ -22,7 +22,7 @@ Private Sub CommandButton2_Click()
   
   cell = Range("d12").value
   
-  thisname = ActiveWorkbook.name
+  thisname = ActiveWorkbook.Name
   fname = "A" & GetNumeric2(cell) & "_ge_OriginalSaveFile.xlsm"
  
   If Not IsWorkBookOpen(fname) Then
@@ -69,10 +69,11 @@ Function IsSheet(shname As String) As Boolean
     On Error GoTo ErrorHandler
     
     Set ws = ThisWorkbook.Worksheets(shname)
+    
     Application.DisplayAlerts = False
+    IsSheet = True
     Application.DisplayAlerts = True
     
-    IsSheet = True
     Exit Function
     
 ErrorHandler:
@@ -185,7 +186,7 @@ Sub DuplicateQ1Page(ByVal n As Integer)
     
     
     ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count)
-    ActiveSheet.name = "p" & n
+    ActiveSheet.Name = "p" & n
     
     With ActiveSheet.Tab
         .ThemeColor = xlThemeColorAccent3
@@ -232,6 +233,12 @@ End Sub
 Private Sub CommandButton4_Click()
     Dim nofwell As Integer
     Dim i As Integer
+    
+    If IsSheet("p1") Then
+        MsgBox "Sheet P1 Exist .... Delete First ... ", vbOKOnly
+        Exit Sub
+    End If
+       
     
     nofwell = GetNumberOfWell()
     

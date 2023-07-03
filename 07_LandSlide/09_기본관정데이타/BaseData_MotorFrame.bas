@@ -58,7 +58,7 @@ Private Sub alignTitle(ByVal nof_sheets As Integer, ByVal po As Integer)
     Selection.Font.Italic = True
     Selection.Font.Italic = False
     With Selection.Font
-        .name = "¸¼Àº °íµñ"
+        .Name = "¸¼Àº °íµñ"
         .Size = 12
         .Underline = xlUnderlineStyleNone
         .ThemeColor = xlThemeColorLight1
@@ -69,7 +69,7 @@ Private Sub alignTitle(ByVal nof_sheets As Integer, ByVal po As Integer)
     Range("A" & CStr(po + 2) & ":" & "A" & CStr(po + 12)).Select
     
     With Selection.Font
-        .name = "¸¼Àº °íµñ"
+        .Name = "¸¼Àº °íµñ"
         .Size = 11
         .ThemeColor = xlThemeColorLight1
         .TintAndShade = 0
@@ -99,7 +99,7 @@ Private Sub decorationPumpHP(ByVal nof_sheets As Integer, ByVal po As Integer)
         .MergeCells = False
     End With
     With Selection.Font
-        .name = "¸¼Àº °íµñ"
+        .Name = "¸¼Àº °íµñ"
         .Size = 12
         .ThemeColor = xlThemeColorLight1
         .TintAndShade = 0
@@ -134,7 +134,7 @@ Private Sub decorationPumpHP(ByVal nof_sheets As Integer, ByVal po As Integer)
     Range("B" & CStr(po + 10) & ":" & mychar & CStr(po + 10)).Select
     Selection.Font.Bold = True
     With Selection.Font
-        .name = "¸¼Àº °íµñ"
+        .Name = "¸¼Àº °íµñ"
         .Size = 14
         .Italic = True
         .ThemeColor = xlThemeColorLight1

@@ -65,6 +65,12 @@ Sub SetWellPropertyRest(ByVal wselect As Integer, ByVal w3page As Integer)
         ActiveSheet.Range("G12") = "W-" & CStr(firstwell + 1)
         ActiveSheet.Range("H29") = "W-" & CStr(firstwell + 1)
     Else
+    
+        ActiveSheet.Shapes.Range(Array("CommandButton4")).Select
+        Selection.Delete
+        ActiveSheet.Shapes.Range(Array("CommandButton5")).Select
+        Selection.Delete
+    
         ActiveSheet.Range("D12") = "W-" & CStr(firstwell)
         ActiveSheet.Range("H12") = "W-" & CStr(firstwell)
     End If
@@ -76,7 +82,7 @@ Sub DuplicateQ3Page(ByVal n As Integer)
     
     For i = 1 To n
         ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count)
-        ActiveSheet.name = "p" & i
+        ActiveSheet.Name = "p" & i
         
         With ActiveSheet.Tab
             .ThemeColor = xlThemeColorAccent3
@@ -94,7 +100,7 @@ Sub DuplicateRest(ByVal wselect As Integer, ByVal w3page As Integer)
     Set ws = ThisWorkbook.Sheets("Q" & CStr(wselect))
     
     ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count)
-    ActiveSheet.name = "p" & CStr(w3page + 1)
+    ActiveSheet.Name = "p" & CStr(w3page + 1)
     
     With ActiveSheet.Tab
         .ThemeColor = xlThemeColorAccent3
@@ -122,6 +128,12 @@ Private Sub CommandButton3_Click()
     'wselect = 1 --> only w1
     'wselect = 2 --> w1, w2
     
+    
+    If IsSheet("p1") Then
+        MsgBox "Sheet P1 Exist .... Delete First ... ", vbOKOnly
+        Exit Sub
+    End If
+       
     n_sheets = sheets_count()
     result = DivideWellsBy3(n_sheets)
     
@@ -167,7 +179,7 @@ Private Sub CommandButton2_Click()
   cell3 = Range("j12").value
   
   
-  thisname = ActiveWorkbook.name
+  thisname = ActiveWorkbook.Name
   fname1 = "A" & GetNumeric2(cell1) & "_ge_OriginalSaveFile.xlsm"
   fname2 = "A" & GetNumeric2(cell2) & "_ge_OriginalSaveFile.xlsm"
   fname3 = "A" & GetNumeric2(cell3) & "_ge_OriginalSaveFile.xlsm"
@@ -268,16 +280,17 @@ ErrorHandler:
     Application.DisplayAlerts = True
 End Sub
 
-Function IsSheet(shname As String) As Boolean
+Private Function IsSheet(shname As String) As Boolean
     Dim ws As Worksheet
     
     On Error GoTo ErrorHandler
     
     Set ws = ThisWorkbook.Worksheets(shname)
+    
     Application.DisplayAlerts = False
+    IsSheet = True
     Application.DisplayAlerts = True
     
-    IsSheet = True
     Exit Function
     
 ErrorHandler:
@@ -296,6 +309,8 @@ Private Sub CommandButton4_Click()
         
     nofwell = GetNumberOfWell()
     pn = (nofwell \ 3) + (nofwell Mod 3)
+    
+    Sheets("Q3").Activate
     
     response = MsgBox("Do you deletel all water well?", vbYesNo)
     If response = vbYes Then

@@ -1,7 +1,7 @@
 Attribute VB_Name = "BaseData_MotorHorsepower"
 Option Explicit
 
-Public IP  As Long
+Public ip  As Long
 
 Private Function nColorsInArray(ByRef array_tabcolor() As Variant, ByVal check As Variant) As Integer
     ' array_tabcolor :
@@ -336,7 +336,7 @@ Public Sub getMotorPower()
     ReDim efficiency(1 To nof_sheets)
     ReDim hp(1 To nof_sheets)
     
-    IP = lastRow() + 4
+    ip = lastRow() + 4
     
     Application.ScreenUpdating = False
     
@@ -369,19 +369,32 @@ Public Sub getMotorPower()
     
     Sheet_Recharge.Activate
     
-    Call draw_motor_frame(nof_sheets, IP)
+    Call draw_motor_frame(nof_sheets, ip)
     
     For i = 1 To nof_sheets
-        Call insert_basic_entry(title(i), simdo(i), pump_q(i), motor_depth(i), efficiency(i), hp(i), i, IP)
-        Call insert_cell_function(i, IP)
+        Call insert_basic_entry(title(i), simdo(i), pump_q(i), motor_depth(i), efficiency(i), hp(i), i, ip)
+        Call insert_cell_function(i, ip)
     Next i
     
     Application.ScreenUpdating = True
 End Sub
 
-Private Sub insert_basic_entry(title As Variant, simdo As Variant, Q As Variant, motor_depth As Variant, e As Variant, hp As Variant, _
-        ByVal i As Integer, ByVal po As Variant)
-    Dim mychar
+
+Sub SetFontMalgun(ByVal col As String, ByVal ip As Integer)
+    With Range("col" & CStr(ip) & ":" & col & CStr((ip + 11))).Font
+        .Name = "Arial"
+        .Size = 12
+        .Bold = True
+        .Italic = True
+    End With
+End Sub
+
+
+'ip : insertion point
+
+Private Sub insert_basic_entry(title As Variant, simdo As Variant, Q As Variant, motor_depth As Variant, _
+                                e As Variant, hp As Variant, ByVal i As Integer, ByVal po As Variant)
+    Dim mychar As String
     
     mychar = Chr(65 + i)
     
@@ -391,5 +404,8 @@ Private Sub insert_basic_entry(title As Variant, simdo As Variant, Q As Variant,
     Range(mychar & CStr(po + 4)).value = motor_depth
     Range(mychar & CStr(po + 7)).value = e / 100
     Range(mychar & CStr(po + 11)).value = hp
+    
+    Call SetFontMalgun(mychar, ip)
+    
 End Sub
 

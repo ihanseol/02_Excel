@@ -11,17 +11,17 @@ Private Sub CommandButton1_Click()
 UserFormTS.Show
 End Sub
 
-
 Function IsSheet(shname As String) As Boolean
     Dim ws As Worksheet
     
     On Error GoTo ErrorHandler
     
     Set ws = ThisWorkbook.Worksheets(shname)
+    
     Application.DisplayAlerts = False
+    IsSheet = True
     Application.DisplayAlerts = True
     
-    IsSheet = True
     Exit Function
     
 ErrorHandler:
@@ -30,7 +30,6 @@ ErrorHandler:
     IsSheet = False
     Application.DisplayAlerts = True
 End Function
-
 
 
 Private Sub CommandButton5_Click()
@@ -184,7 +183,7 @@ Sub DuplicateQ2Page(ByVal n As Integer)
     
     For i = 1 To n
         ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count)
-        ActiveSheet.name = "p" & i
+        ActiveSheet.Name = "p" & i
         
         With ActiveSheet.Tab
             .ThemeColor = xlThemeColorAccent3
@@ -235,7 +234,7 @@ Sub DuplicateRest(ByVal w2page As Integer)
     Set ws = ThisWorkbook.Sheets("Q1")
     
     ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count)
-    ActiveSheet.name = "p" & CStr(w2page + 1)
+    ActiveSheet.Name = "p" & CStr(w2page + 1)
     
     With ActiveSheet.Tab
         .ThemeColor = xlThemeColorAccent3
@@ -255,7 +254,13 @@ Function DivideWellsBy2(ByVal numberOfWells As Integer) As Integer()
     quotient = (numberOfWells - 1) \ 2
     remainder = numberOfWells Mod 2
     
-    result(0) = quotient
+    
+    If remainder = 0 Then
+        result(0) = quotient + 1
+    Else
+        result(0) = quotient
+    End If
+    
     result(1) = remainder
     
     DivideWellsBy2 = result
@@ -268,6 +273,13 @@ Private Sub CommandButton3_Click()
     Dim result() As Integer
     Dim w2page, wselect, restpage As Integer
     'wselect = 1 --> only w1
+       
+    If IsSheet("p1") Then
+        MsgBox "Sheet P1 Exist .... Delete First ... ", vbOKOnly
+        Exit Sub
+    End If
+       
+       
        
     result = DivideWellsBy2(sheets_count())
     
@@ -301,7 +313,7 @@ Private Sub CommandButton2_Click()
   cell1 = Range("d12").value
   cell2 = Range("g12").value
   
-  thisname = ActiveWorkbook.name
+  thisname = ActiveWorkbook.Name
   fname1 = "A" & GetNumeric2(cell1) & "_ge_OriginalSaveFile.xlsm"
   fname2 = "A" & GetNumeric2(cell2) & "_ge_OriginalSaveFile.xlsm"
   

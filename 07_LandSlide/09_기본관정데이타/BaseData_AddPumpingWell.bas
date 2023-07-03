@@ -4,16 +4,23 @@ Option Explicit
 
 '쉬트를 생성할때에는 전체 관정데이타를 건들지 않고, 우선먼저 쉬트복제를 누르는것이 기본으로 정해져 있다.
 Private Sub deleteCommandButton()
-    ActiveSheet.Shapes.Range(Array("CommandButton1")).Select
-    Selection.Delete
+
+    ' ActiveSheet.Shapes.Range(Array("CommandButton1")).Select
+    ' Selection.Delete
+    ' CommandButton1 --> GetAverage
+    
     ActiveSheet.Shapes.Range(Array("CommandButton2")).Select
     Selection.Delete
-    ActiveSheet.Shapes.Range(Array("CommandButton3")).Select
-    Selection.Delete
-    ActiveSheet.Shapes.Range(Array("CommandButton4")).Select
-    Selection.Delete
-    ActiveSheet.Shapes.Range(Array("CommandButton7")).Select
-    Selection.Delete
+    
+    ' ActiveSheet.Shapes.Range(Array("CommandButton4")).Select
+    ' Selection.Delete
+    ' CommandButton1 --> Clear
+    
+    ' ActiveSheet.Shapes.Range(Array("CommandButton3")).Select
+    ' Selection.Delete
+    ' ActiveSheet.Shapes.Range(Array("CommandButton7")).Select
+    ' Selection.Delete
+        
 End Sub
 
 Public Sub CopyOneSheet()
@@ -33,7 +40,7 @@ Public Sub CopyOneSheet()
         Sheets("2").Copy Before:=Sheets("Q1")
     End If
     
-    ActiveSheet.name = CStr(n_sheets + 1)
+    ActiveSheet.Name = CStr(n_sheets + 1)
     Range("b2").value = "W-" & (n_sheets + 1)
     Range("e15").value = CStr(n_sheets + 1)
     

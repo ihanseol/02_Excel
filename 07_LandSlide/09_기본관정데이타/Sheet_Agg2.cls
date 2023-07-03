@@ -245,9 +245,11 @@ Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As V
         
         Cells(34 + (i - 1) * 3, "E").value = TA(i)
         Cells(34 + (i - 1) * 3, "E").NumberFormat = "0.0000"
+        Cells(34 + (i - 1) * 3, "E").Font.Bold = True
         
         Cells(32 + (i - 1) * 3, "F").value = S2(i)
         Cells(34 + (i - 1) * 3, "F").value = S2(i)
+        Cells(34 + (i - 1) * 3, "F").Font.Bold = True
     Next i
 End Sub
 

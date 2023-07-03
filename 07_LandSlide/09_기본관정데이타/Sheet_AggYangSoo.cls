@@ -136,7 +136,7 @@ Sub GetBaseDataFromYangSoo()
     
     ReDim ratio(1 To nofwell)
     
-    Call EraseCellData("a5:ae19")
+    Call EraseCellData("a5:ah19")
     
     For i = 1 To nofwell
     
