@@ -1,7 +1,7 @@
 Attribute VB_Name = "BaseData_MotorHorsepower"
 Option Explicit
 
-Public ip  As Long
+Public ip, ip2  As Long
 
 Private Function nColorsInArray(ByRef array_tabcolor() As Variant, ByVal check As Variant) As Integer
     ' array_tabcolor :
@@ -289,7 +289,7 @@ Private Sub insert_cell_function(ByVal n As Integer, ByVal position As Integer)
     h2 = position
     
     mychar = Chr(65 + n)
-    Debug.Print mychar
+    ' Debug.Print mychar
     
     height = "=" & mychar & CStr(h1) & "+" & mychar & CStr(h1 + 1)
     height1 = "=round(" & mychar & CStr(h2 + 4) & "/10,1)"
@@ -305,11 +305,12 @@ Private Sub insert_cell_function(ByVal n As Integer, ByVal position As Integer)
     Range(mychar & CStr(h2 + 10)).formula = round_hp
     Range(mychar & CStr(h2 + 12)).formula = theory_hp
     
-    Debug.Print height
-    Debug.Print eq
-    Debug.Print round_hp
-    Debug.Print theory_hp
+    ' Debug.Print height
+    ' Debug.Print eq
+    ' Debug.Print round_hp
+    ' Debug.Print theory_hp
 End Sub
+
 
 Public Sub getMotorPower()
     Dim r_ans()     As Variant
@@ -337,6 +338,7 @@ Public Sub getMotorPower()
     ReDim hp(1 To nof_sheets)
     
     ip = lastRow() + 4
+    ip2 = ip + 17
     
     Application.ScreenUpdating = False
     
@@ -376,8 +378,99 @@ Public Sub getMotorPower()
         Call insert_cell_function(i, ip)
     Next i
     
+    For i = 1 To nof_sheets
+        ' -----------------------------------
+        ' 2023-07-15
+        ' -----------------------------------
+        Call insert_newentry(pump_q(i), motor_depth(i), efficiency(i), title(i), ip2 + i - 1)
+     Next i
+    
+    
     Application.ScreenUpdating = True
 End Sub
+
+
+Public Sub insert_newentry(pump_q As Variant, motor_simdo As Variant, e As Variant, title As Variant, ByVal po As Integer)
+    Dim tenper As Double
+    Dim sum_simdo As Double
+    
+    
+    tenper = Round(motor_simdo / 10, 1)
+    sum_simdo = motor_simdo + tenper
+    
+    Cells(po, "A").value = title
+    Cells(po, "B").value = pump_q
+    Cells(po, "C").value = motor_simdo
+    Cells(po, "D").value = tenper
+    Cells(po, "E").value = sum_simdo
+    Cells(po, "F").value = e
+    Cells(po, "G").value = "-"
+    Cells(po, "H").value = Round((pump_q * (motor_simdo + tenper)) / (6572.5 * (e / 100)), 4)
+    Cells(po, "I").value = find_P2(Cells(po, "H").value)
+    
+    
+    Debug.Print "{ " & pump_q & " TIMES " & sum_simdo & "} over { " & "6,572.5" & " TIMES " & (e / 100) & "}"
+
+End Sub
+
+
+Function RoundUpNumber(ByVal num As Double)
+    Dim roundedNum As Double
+    roundedNum = Application.WorksheetFunction.RoundUp(num, 0)
+    RoundUpNumber = roundedNum
+End Function
+
+
+Function find_P2(ByVal num As Double)
+
+    Dim upnum As Double
+    ' 1, 2, 3, 5, 7.5, 10, 15, 20, 25, 30
+    
+    upnum = RoundUpNumber(num)
+    
+    If upnum < 4 Then
+        find_P2 = upnum
+        Exit Function
+    End If
+    
+    If upnum <= 5 Then
+        find_P2 = 5
+        Exit Function
+    End If
+    
+    If num <= 7.5 Then
+        find_P2 = 7.5
+        Exit Function
+    End If
+    
+    If upnum <= 10 Then
+        find_P2 = 10
+        Exit Function
+    End If
+    
+    If upnum <= 15 Then
+        find_P2 = 15
+        Exit Function
+    End If
+    
+    If upnum <= 20 Then
+        find_P2 = 20
+        Exit Function
+    End If
+    
+    If upnum <= 25 Then
+        find_P2 = 25
+        Exit Function
+    End If
+    
+    If upnum <= 30 Then
+        find_P2 = 30
+        Exit Function
+    End If
+    
+    find_P2 = upnum
+
+End Function
 
 
 Sub SetFontMalgun(ByVal col As String, ByVal ip As Integer)
@@ -408,4 +501,6 @@ Private Sub insert_basic_entry(title As Variant, simdo As Variant, Q As Variant,
     Call SetFontMalgun(mychar, ip)
     
 End Sub
+
+
 
