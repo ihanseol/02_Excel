@@ -3,7 +3,7 @@ Option Explicit
 
 Public ip, ip2  As Long
 
-Private Function nColorsInArray(ByRef array_tabcolor() As Variant, ByVal check As Variant) As Integer
+Private Function nColorsInArray(ByRef array_tabcolor() As Variant, ByVal CHECK As Variant) As Integer
     ' array_tabcolor :
     ' check : color값
     ' 관정에 지정하는 색갈은 모두 달라야 한다.
@@ -15,7 +15,7 @@ Private Function nColorsInArray(ByRef array_tabcolor() As Variant, ByVal check A
     limit = UBound(array_tabcolor, 1)
     
     For i = 1 To limit
-        If array_tabcolor(i) = check Then
+        If array_tabcolor(i) = CHECK Then
             count = count + 1
         End If
     Next i
@@ -173,109 +173,100 @@ Sub delete_allWhpaData()
     Next i
 End Sub
 
+
+'@2023-7-15 , Refactor
+
 Private Function get_efficiency_A(ByVal Q As Variant) As Variant
-    Dim result      As Variant
+    Dim thresholds As Variant
+    Dim results As Variant
     
-    If (Q < 57.6) Then
-        result = 40
-    ElseIf (Q < 72) Then
-        result = 40
-    ElseIf (Q < 86.4) Then
-        result = 42
-    ElseIf (Q < 115.2) Then
-        result = 45
-    ElseIf (Q < 144) Then
-        result = 48
-    ElseIf (Q < 216) Then
-        result = 50
-    ElseIf (Q < 288) Then
-        result = 52
-    ElseIf (Q < 432) Then
-        result = 54
-    ElseIf (Q < 576) Then
-        result = 57
-    ElseIf (Q < 720) Then
-        result = 59
-    ElseIf (Q < 864) Then
-        result = 61
-    ElseIf (Q < 1152) Then
-        result = 62
-    ElseIf (Q < 1440) Then
-        result = 64
-    Else
-        result = 65
-    End If
+    Dim i, result As Integer
+    Dim CHECK As Boolean
     
+    CHECK = True
+    
+    thresholds = Array(57.6, 72, 86.4, 115.2, 144, 216, 288, 432, 576, 720, 864, 1152, 1440)
+    results = Array(40, 42, 45, 48, 50, 52, 54, 57, 59, 61, 62, 64, 65)
+    
+    result = results(0)
+
+    For i = 1 To UBound(thresholds)
+        If Q >= thresholds(i - 1) And Q < thresholds(i) Then
+            result = results(i - 1)
+            CHECK = False
+            Exit For
+        End If
+    Next i
+        
     get_efficiency_A = result
+    
+    If Q < 57.6 Then get_efficiency_A = 40
+    If Q > 1440 Then get_efficiency_A = 65
+    
 End Function
+
+
+
+'@2023-7-15 , Refactor
 
 Private Function get_efficiency_B(ByVal Q As Variant) As Variant
-    Dim result      As Variant
+    Dim thresholds As Variant
+    Dim results As Variant
     
-    If (Q < 72) Then
-        result = 34
-    ElseIf (Q < 86.4) Then
-        result = 36
-    ElseIf (Q < 115.2) Then
-        result = 38
-    ElseIf (Q < 144) Then
-        result = 41
-    ElseIf (Q < 216) Then
-        result = 42
-    ElseIf (Q < 288) Then
-        result = 44
-    ElseIf (Q < 432) Then
-        result = 46
-    ElseIf (Q < 576) Then
-        result = 58
-    ElseIf (Q < 720) Then
-        result = 50
-    ElseIf (Q < 864) Then
-        result = 52
-    ElseIf (Q < 1152) Then
-        result = 53
-    ElseIf (Q < 1440) Then
-        result = 54
-    Else
-        result = 55
-    End If
+    Dim i, result As Integer
+    Dim CHECK As Boolean
     
+    CHECK = True
+    
+    thresholds = Array(57.6, 72, 86.4, 115.2, 144, 216, 288, 432, 576, 720, 864, 1152, 1440)
+    results = Array(34, 36, 38, 41, 42, 44, 46, 48, 50, 52, 53, 54, 55)
+    
+    result = results(0)
+
+    For i = 1 To UBound(thresholds)
+        If Q >= thresholds(i - 1) And Q < thresholds(i) Then
+            result = results(i - 1)
+            CHECK = False
+            Exit For
+        End If
+    Next i
+        
     get_efficiency_B = result
+    
+    If Q < 57.6 Then get_efficiency_B = 34
+    If Q > 1440 Then get_efficiency_B = 55
+    
 End Function
 
+
+
+'@2023-7-15 , Refactor
+
 Private Function get_efficiency_dongho(ByVal Q As Variant) As Variant
-    Dim result      As Variant
+    Dim results As Variant
+    Dim thresholds As Variant
+    Dim i, result As Integer
     
-    If (Q < 72) Then
-        result = 38
-    ElseIf (Q < 86.4) Then
-        result = (42 + 45 + 36 + 38) / 4
-    ElseIf (Q < 115.2) Then
-        result = (45 + 48 + 38 + 41) / 4
-    ElseIf (Q < 144) Then
-        result = (48 + 50 + 41 + 42) / 4
-    ElseIf (Q < 216) Then
-        result = (50 + 52 + 42 + 44) / 4
-    ElseIf (Q < 288) Then
-        result = (52 + 54 + 44 + 46) / 4
-    ElseIf (Q < 432) Then
-        result = (54 + 57 + 46 + 48) / 4
-    ElseIf (Q < 576) Then
-        result = (57 + 59 + 48 + 50) / 4
-    ElseIf (Q < 720) Then
-        result = (59 + 61 + 50 + 52) / 4
-    ElseIf (Q < 864) Then
-        result = (61 + 62 + 52 + 53) / 4
-    ElseIf (Q < 1152) Then
-        result = (62 + 64 + 53 + 54) / 4
-    ElseIf (Q < 1440) Then
-        result = (64 + 65 + 54 + 55) / 4
-    Else
-        result = 60
-    End If
+    
+    thresholds = Array(72, 86.4, 115.2, 144, 216, 288, 432, 576, 720, 864, 1152, 1440)
+    results = Array(38, 40.25, 43, 45.25, 47, 49, 51.25, 53.5, 55.5, 57, 58.25, 59.5)
+        
+    result = results(0)
+
+    For i = 1 To UBound(thresholds)
+        If Q >= thresholds(i - 1) And Q < thresholds(i) Then
+            result = results(i)
+            Exit For
+        End If
+    Next i
+    
     
     get_efficiency_dongho = result
+    If Q < 57.6 Then get_efficiency_dongho = 37
+    If Q > 1440 Then get_efficiency_dongho = 60
+    
 End Function
+
 
 Private Sub insert_cell_function(ByVal n As Integer, ByVal position As Integer)
     'height1 : 양정고
@@ -304,11 +295,7 @@ Private Sub insert_cell_function(ByVal n As Integer, ByVal position As Integer)
     Range(mychar & CStr(h2 + 9)).formula = eq
     Range(mychar & CStr(h2 + 10)).formula = round_hp
     Range(mychar & CStr(h2 + 12)).formula = theory_hp
-    
-    ' Debug.Print height
-    ' Debug.Print eq
-    ' Debug.Print round_hp
-    ' Debug.Print theory_hp
+
 End Sub
 
 
@@ -409,7 +396,7 @@ Public Sub insert_newentry(pump_q As Variant, motor_simdo As Variant, e As Varia
     Cells(po, "I").value = find_P2(Cells(po, "H").value)
     
     
-    Debug.Print "{ " & pump_q & " TIMES " & sum_simdo & "} over { " & "6,572.5" & " TIMES " & (e / 100) & "}"
+    Debug.Print "{ " & pump_q & " TIMES " & sum_simdo & " } over { " & "6,572.5" & " TIMES " & (e / 100) & " }"
 
 End Sub
 
@@ -421,55 +408,21 @@ Function RoundUpNumber(ByVal num As Double)
 End Function
 
 
-Function find_P2(ByVal num As Double)
-
-    Dim upnum As Double
-    ' 1, 2, 3, 5, 7.5, 10, 15, 20, 25, 30
+Function find_P2(ByVal num As Double) As Double
     
-    upnum = RoundUpNumber(num)
+    Dim thresholds As Variant
+    Dim i As Integer
+    thresholds = Array(1, 2, 3, 5, 7.5, 10, 15, 20, 25, 30)
     
-    If upnum < 4 Then
-        find_P2 = upnum
-        Exit Function
-    End If
+    find_P2 = thresholds(0)
     
-    If upnum <= 5 Then
-        find_P2 = 5
-        Exit Function
-    End If
+    For i = 1 To UBound(thresholds)
+        If num >= thresholds(i - 1) And num < thresholds(i) Then
+            find_P2 = thresholds(i)
+            Exit For
+        End If
+    Next i
     
-    If num <= 7.5 Then
-        find_P2 = 7.5
-        Exit Function
-    End If
-    
-    If upnum <= 10 Then
-        find_P2 = 10
-        Exit Function
-    End If
-    
-    If upnum <= 15 Then
-        find_P2 = 15
-        Exit Function
-    End If
-    
-    If upnum <= 20 Then
-        find_P2 = 20
-        Exit Function
-    End If
-    
-    If upnum <= 25 Then
-        find_P2 = 25
-        Exit Function
-    End If
-    
-    If upnum <= 30 Then
-        find_P2 = 30
-        Exit Function
-    End If
-    
-    find_P2 = upnum
-
 End Function
 
 
