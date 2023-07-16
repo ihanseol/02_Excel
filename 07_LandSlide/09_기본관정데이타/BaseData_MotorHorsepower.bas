@@ -268,36 +268,6 @@ Private Function get_efficiency_dongho(ByVal Q As Variant) As Variant
 End Function
 
 
-Private Sub insert_cell_function(ByVal n As Integer, ByVal position As Integer)
-    'height1 : 양정고
-    'height : 높이합계
-    
-    Dim mychar
-    Dim height, height1, eq, round_hp, theory_hp As String
-    Dim h1, h2      As Integer
-    
-    h1 = position + 4
-    h2 = position
-    
-    mychar = Chr(65 + n)
-    ' Debug.Print mychar
-    
-    height = "=" & mychar & CStr(h1) & "+" & mychar & CStr(h1 + 1)
-    height1 = "=round(" & mychar & CStr(h2 + 4) & "/10,1)"
-    
-    eq = "=round((" & mychar & CStr(h2 + 3) & "*" & mychar & CStr(h2 + 6) & ")/(6572.5*" & mychar & CStr(h2 + 7) & "),4)"
-    round_hp = "=roundup(" & mychar & CStr(h2 + 9) & ",0)"
-    theory_hp = "=round((" & mychar & CStr(h2 + 11) & "*" & mychar & CStr(h2 + 7) & "*6572.5)" & "/" & mychar & CStr(h2 + 6) & ",1)"
-    
-    Range(mychar & CStr(h2 + 5)).formula = height1        '양정고
-    Range(mychar & CStr(h2 + 6)).formula = height        '합계
-    
-    Range(mychar & CStr(h2 + 9)).formula = eq
-    Range(mychar & CStr(h2 + 10)).formula = round_hp
-    Range(mychar & CStr(h2 + 12)).formula = theory_hp
-
-End Sub
-
 
 Public Sub getMotorPower()
     Dim r_ans()     As Variant
@@ -325,7 +295,7 @@ Public Sub getMotorPower()
     ReDim hp(1 To nof_sheets)
     
     ip = lastRow() + 4
-    ip2 = ip + 17
+    ip2 = ip + 15
     
     Application.ScreenUpdating = False
     
@@ -365,19 +335,22 @@ Public Sub getMotorPower()
         Call insert_cell_function(i, ip)
     Next i
     
-    For i = 1 To nof_sheets
-        ' -----------------------------------
-        ' 2023-07-15
-        ' -----------------------------------
-        Call insert_newentry(pump_q(i), motor_depth(i), efficiency(i), title(i), ip2 + i - 1)
-     Next i
     
+    ' -----------------------------------
+    ' 2023-07-15
+    ' -----------------------------------
+    
+    For i = 1 To nof_sheets
+        Call insert_downform(pump_q(i), motor_depth(i), efficiency(i), title(i), ip2 + i - 1)
+    Next i
+    
+    Call DecoLine(i, ip2)
     
     Application.ScreenUpdating = True
 End Sub
 
 
-Public Sub insert_newentry(pump_q As Variant, motor_simdo As Variant, e As Variant, title As Variant, ByVal po As Integer)
+Public Sub insert_downform(pump_q As Variant, motor_simdo As Variant, e As Variant, title As Variant, ByVal po As Integer)
     Dim tenper As Double
     Dim sum_simdo As Double
     
@@ -401,15 +374,7 @@ Public Sub insert_newentry(pump_q As Variant, motor_simdo As Variant, e As Varia
 End Sub
 
 
-Function RoundUpNumber(ByVal num As Double)
-    Dim roundedNum As Double
-    roundedNum = Application.WorksheetFunction.RoundUp(num, 0)
-    RoundUpNumber = roundedNum
-End Function
-
-
 Function find_P2(ByVal num As Double) As Double
-    
     Dim thresholds As Variant
     Dim i As Integer
     thresholds = Array(1, 2, 3, 5, 7.5, 10, 15, 20, 25, 30)
@@ -422,17 +387,95 @@ Function find_P2(ByVal num As Double) As Double
             Exit For
         End If
     Next i
-    
 End Function
 
 
-Sub SetFontMalgun(ByVal col As String, ByVal ip As Integer)
-    With Range("col" & CStr(ip) & ":" & col & CStr((ip + 11))).Font
+
+Sub DecoLine(ByVal i As Integer, ByVal po As Integer)
+    Rows(po & ":" & (po + i - 2)).Select
+    
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+    End With
+    
+    With Selection.Font
         .Name = "Arial"
         .Size = 12
-        .Bold = True
         .Italic = True
     End With
+    
+        
+    Range("A" & po & ":I" & (po + i - 2)).Select
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .Weight = xlMedium
+    End With
+    
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .Weight = xlMedium
+    End With
+    
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .Weight = xlMedium
+    End With
+    
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .Weight = xlMedium
+    End With
+        
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlDot
+        .Weight = xlThin
+    End With
+    
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlDot
+        .Weight = xlThin
+    End With
+    
+    Range("C62").Select
+End Sub
+
+    
+Function RoundUpNumber(ByVal num As Double)
+    Dim roundedNum As Double
+    roundedNum = Application.WorksheetFunction.RoundUp(num, 0)
+    RoundUpNumber = roundedNum
+End Function
+
+
+Private Sub insert_cell_function(ByVal n As Integer, ByVal position As Integer)
+    'height1 : 양정고
+    'height : 높이합계
+    
+    Dim mychar
+    Dim height, height1, eq, round_hp, theory_hp As String
+    Dim h1, h2      As Integer
+    
+    h1 = position + 4
+    h2 = position
+    
+    mychar = Chr(65 + n)
+    ' Debug.Print mychar
+    
+    height = "=" & mychar & CStr(h1) & "+" & mychar & CStr(h1 + 1)
+    height1 = "=round(" & mychar & CStr(h2 + 4) & "/10,1)"
+    
+    eq = "=round((" & mychar & CStr(h2 + 3) & "*" & mychar & CStr(h2 + 6) & ")/(6572.5*" & mychar & CStr(h2 + 7) & "),4)"
+    round_hp = "=roundup(" & mychar & CStr(h2 + 9) & ",0)"
+    theory_hp = "=round((" & mychar & CStr(h2 + 11) & "*" & mychar & CStr(h2 + 7) & "*6572.5)" & "/" & mychar & CStr(h2 + 6) & ",1)"
+    
+    Range(mychar & CStr(h2 + 5)).formula = height1        '양정고
+    Range(mychar & CStr(h2 + 6)).formula = height        '합계
+    
+    Range(mychar & CStr(h2 + 9)).formula = eq
+    Range(mychar & CStr(h2 + 10)).formula = round_hp
+    Range(mychar & CStr(h2 + 12)).formula = theory_hp
+
 End Sub
 
 
@@ -443,7 +486,6 @@ Private Sub insert_basic_entry(title As Variant, simdo As Variant, Q As Variant,
     Dim mychar As String
     
     mychar = Chr(65 + i)
-    
     Range(mychar & CStr(po + 1)).value = title
     Range(mychar & CStr(po + 2)).value = simdo
     Range(mychar & CStr(po + 3)).value = Q
@@ -452,7 +494,15 @@ Private Sub insert_basic_entry(title As Variant, simdo As Variant, Q As Variant,
     Range(mychar & CStr(po + 11)).value = hp
     
     Call SetFontMalgun(mychar, ip)
-    
+End Sub
+
+Sub SetFontMalgun(ByVal col As String, ByVal ip As Integer)
+    With Range("col" & CStr(ip) & ":" & col & CStr((ip + 11))).Font
+        .Name = "Arial"
+        .Size = 12
+        .Bold = True
+        .Italic = True
+    End With
 End Sub
 
 

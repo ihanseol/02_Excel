@@ -12,7 +12,7 @@ Private Sub CommandButton1_Click()
 End Sub
 
 Private Sub CommandButton2_Click()
-    Rows("36:53").Select
+    Rows("36:90").Select
     Selection.Delete Shift:=xlUp
     Range("g34").Select
 End Sub

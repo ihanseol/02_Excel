@@ -84,257 +84,154 @@ End Sub
 
 ' 1, 지하수위에 대한 등급의 계산
 Private Function Rating_UnderGroundWater(ByVal water_level As Single) As Integer
-    Dim result      As Integer
-    
-    If (water_level < 1.52) Then
-        result = 10
-    ElseIf (water_level < 4.57) Then
-        result = 9
-    ElseIf (water_level < 9.14) Then
-        result = 7
-    ElseIf (water_level < 15.24) Then
-        result = 5
-    ElseIf (water_level < 22.86) Then
-        result = 3
-    ElseIf (water_level < 30.48) Then
-        result = 2
-    Else
-        result = 1
-    End If
-    
-    Rating_UnderGroundWater = result
+    Select Case water_level
+        Case Is < 1.52
+            Rating_UnderGroundWater = 10
+        Case Is < 4.57
+            Rating_UnderGroundWater = 9
+        Case Is < 9.14
+            Rating_UnderGroundWater = 7
+        Case Is < 15.24
+            Rating_UnderGroundWater = 5
+        Case Is < 22.86
+            Rating_UnderGroundWater = 3
+        Case Is < 30.48
+            Rating_UnderGroundWater = 2
+        Case Else
+            Rating_UnderGroundWater = 1
+    End Select
 End Function
+
 
 '2, 강수의 지하함양량
 Private Function Rating_NetRecharge(ByVal value As Single) As Integer
-    Dim result      As Integer
-    
-    If (value < 5.08) Then
-        result = 1
-    ElseIf (value < 10.16) Then
-        result = 3
-    ElseIf (value < 17.78) Then
-        result = 6
-    ElseIf (value < 25.4) Then
-        result = 8
-    Else
-        result = 9
-    End If
-    
-    Rating_NetRecharge = result
+    Select Case value
+        Case Is < 5.08
+            Rating_NetRecharge = 1
+        Case Is < 10.16
+            Rating_NetRecharge = 3
+        Case Is < 17.78
+            Rating_NetRecharge = 6
+        Case Is < 25.4
+            Rating_NetRecharge = 8
+        Case Else
+            Rating_NetRecharge = 9
+    End Select
 End Function
+
+
 
 '3, 대수층
-
 Private Function Rating_AqMedia(ByVal value As String) As Integer
-    If StrComp(value, "Massive Shale") = 0 Then
-        Rating_AqMedia = 2
-        Exit Function
-    End If
+    Dim ratings As New Dictionary
     
-    If StrComp(value, "Metamorphic/Igneous") = 0 Then
-        Rating_AqMedia = 3
-        Exit Function
-    End If
-    
-    If StrComp(value, "Weathered Metamorphic / Igneous") = 0 Then
-        Rating_AqMedia = 4
-        Exit Function
-    End If
-    
-    If StrComp(value, "Glacial Till") = 0 Then
-        Rating_AqMedia = 5
-        Exit Function
-    End If
-    
-    If StrComp(value, "Bedded SandStone") = 0 Then
-        Rating_AqMedia = 6
-        Exit Function
-    End If
-    
-    If StrComp(value, "Massive Sandstone") = 0 Then
-        Rating_AqMedia = 6
-        Exit Function
-    End If
-    
-    If StrComp(value, "Massive Limestone") = 0 Then
-        Rating_AqMedia = 6
-        Exit Function
-    End If
-    
-    If StrComp(value, "Sand And Gravel") = 0 Then
-        Rating_AqMedia = 8
-        Exit Function
-    End If
-    
-    If StrComp(value, "Basalt") = 0 Then
-        Rating_AqMedia = 9
-        Exit Function
-    End If
-    
-    If StrComp(value, "Karst Limestone") = 0 Then
-        Rating_AqMedia = 10
-        Exit Function
+    ratings.Add "Massive Shale", 2
+    ratings.Add "Metamorphic/Igneous", 3
+    ratings.Add "Weathered Metamorphic / Igneous", 4
+    ratings.Add "Glacial Till", 5
+    ratings.Add "Bedded SandStone", 6
+    ratings.Add "Massive Sandstone", 6
+    ratings.Add "Massive Limestone", 6
+    ratings.Add "Sand And Gravel", 8
+    ratings.Add "Basalt", 9
+    ratings.Add "Karst Limestone", 10
+
+    If ratings.Exists(value) Then
+        Rating_AqMedia = ratings(value)
+    Else
+        Rating_AqMedia = 0
     End If
 End Function
+
 
 '4 토양특성에 대한 등급
 
 Private Function Rating_SoilMedia(ByVal value As String) As Integer
-    If StrComp(value, "Thin Or Absecnt") = 0 Then
-        Rating_SoilMedia = 10
-        Exit Function
-    End If
-    
-    If StrComp(value, "Gravel") = 0 Then
-        Rating_SoilMedia = 10
-        Exit Function
-    End If
-    
-    If StrComp(value, "Sand") = 0 Then
-        Rating_SoilMedia = 9
-        Exit Function
-    End If
-    
-    If StrComp(value, "Peat") = 0 Then
-        Rating_SoilMedia = 8
-        Exit Function
-    End If
-    
-    If StrComp(value, "Shringing Or Aggregated Clay") = 0 Then
-        Rating_SoilMedia = 7
-        Exit Function
-    End If
-    
-    If StrComp(value, "Sandy Loam") = 0 Then
-        Rating_SoilMedia = 6
-        Exit Function
-    End If
-    
-    If StrComp(value, "Loam") = 0 Then
-        Rating_SoilMedia = 5
-        Exit Function
-    End If
-    
-    If StrComp(value, "Silty Loam") = 0 Then
-        Rating_SoilMedia = 4
-        Exit Function
-    End If
-    
-    If StrComp(value, "Clay Loam") = 0 Then
-        Rating_SoilMedia = 3
-        Exit Function
-    End If
-    
-    If StrComp(value, "Mud") = 0 Then
-        Rating_SoilMedia = 2
-        Exit Function
-    End If
-    
-    If StrComp(value, "Nonshrinking And Nonaggregated Clay") = 0 Then
-        Rating_SoilMedia = 1
-        Exit Function
-    End If
+    Select Case value
+        Case "Thin Or Absent", "Gravel"
+            Rating_SoilMedia = 10
+        Case "Sand"
+            Rating_SoilMedia = 9
+        Case "Peat"
+            Rating_SoilMedia = 8
+        Case "Shrinking Or Aggregated Clay"
+            Rating_SoilMedia = 7
+        Case "Sandy Loam"
+            Rating_SoilMedia = 6
+        Case "Loam"
+            Rating_SoilMedia = 5
+        Case "Silty Loam"
+            Rating_SoilMedia = 4
+        Case "Clay Loam"
+            Rating_SoilMedia = 3
+        Case "Mud"
+            Rating_SoilMedia = 2
+        Case "Nonshrinking And Nonaggregated Clay"
+            Rating_SoilMedia = 1
+    End Select
 End Function
+
 
 ' 5, 지형구배
 Private Function Rating_Topo(ByVal value As Single) As Integer
-    Dim result      As Integer
-    
-    If (value < 2) Then
-        result = 10
-    ElseIf (value < 6) Then
-        result = 9
-    ElseIf (value < 12) Then
-        result = 5
-    ElseIf (value < 18) Then
-        result = 3
-    Else
-        result = 1
-    End If
-    
-    Rating_Topo = result
+    Select Case value
+        Case Is < 2
+            Rating_Topo = 10
+        Case Is < 6
+            Rating_Topo = 9
+        Case Is < 12
+            Rating_Topo = 5
+        Case Is < 18
+            Rating_Topo = 3
+        Case Else
+            Rating_Topo = 1
+    End Select
 End Function
+
+
 
 '6 비포화대의 영향에 대한 등급 Ir
-
+'
 Private Function Rating_Vadose(ByVal value As String) As Integer
-    If StrComp(value, "Confining Layer") = 0 Then
-        Rating_Vadose = 1
-        Exit Function
-    End If
-    
-    If StrComp(value, "Silt/Clay") = 0 Then
-        Rating_Vadose = 3
-        Exit Function
-    End If
-    
-    If StrComp(value, "Shale") = 0 Then
-        Rating_Vadose = 3
-        Exit Function
-    End If
-    
-    If StrComp(value, "Limestone") = 0 Then
-        Rating_Vadose = 6
-        Exit Function
-    End If
-    
-    If StrComp(value, "Sandstone") = 0 Then
-        Rating_Vadose = 6
-        Exit Function
-    End If
-    
-    If StrComp(value, "Bedded Limestone, Sandstone, Shale") = 0 Then
-        Rating_Vadose = 6
-        Exit Function
-    End If
-    
-    If StrComp(value, "Sand And Gravel With Significant Silt And Clay") = 0 Then
-        Rating_Vadose = 6
-        Exit Function
-    End If
-    
-    If StrComp(value, "Metamorphic/Igneous") = 0 Then
-        Rating_Vadose = 4
-        Exit Function
-    End If
-    
-    If StrComp(value, "Sand And Gravel") = 0 Then
-        Rating_Vadose = 8
-        Exit Function
-    End If
-    
-    If StrComp(value, "Basalt") = 0 Then
-        Rating_Vadose = 9
-        Exit Function
-    End If
-    
-    If StrComp(value, "Karst Limestone") = 0 Then
-        Rating_Vadose = 10
-        Exit Function
-    End If
+    Select Case value
+        Case "Confining Layer"
+            Rating_Vadose = 1
+        Case "Silt/Clay", "Shale"
+            Rating_Vadose = 3
+        Case "Limestone", "Sandstone", "Bedded Limestone, Sandstone, Shale", "Sand And Gravel With Significant Silt And Clay"
+            Rating_Vadose = 6
+        Case "Metamorphic/Igneous"
+            Rating_Vadose = 4
+        Case "Sand And Gravel"
+            Rating_Vadose = 8
+        Case "Basalt"
+            Rating_Vadose = 9
+        Case "Karst Limestone"
+            Rating_Vadose = 10
+    End Select
 End Function
+
 
 ' 7, 대수층의 수리전도도에 대한 등급 : Cr
+
 Private Function Rating_EC(ByVal value As Double) As Integer
-    Dim result      As Integer
-    
-    If (value < 0.0000472) Then
-        result = 1
-    ElseIf (value < 0.000142) Then
-        result = 2
-    ElseIf (value < 0.00033) Then
-        result = 4
-    ElseIf (value < 0.000472) Then
-        result = 6
-    ElseIf (value < 0.000944) Then
-        result = 8
-    Else
-        result = 10
-    End If
-    
-    Rating_EC = result
+    Select Case value
+        Case Is < 0.0000472
+            Rating_EC = 1
+        Case Is < 0.000142
+            Rating_EC = 2
+        Case Is < 0.00033
+            Rating_EC = 4
+        Case Is < 0.000472
+            Rating_EC = 6
+        Case Is < 0.000944
+            Rating_EC = 8
+        Case Else
+            Rating_EC = 10
+    End Select
 End Function
+
+
 
 Public Sub find_average()
     ' 2019/10/18 일 작성함
@@ -474,35 +371,39 @@ Sub main_drasticindex()
     Next i
 End Sub
 
-Function check_drasticindex(ByVal dmMode As Integer) As String
+
+Function check_DrasticIndex(ByVal dmMode As Integer) As String
     ' dmGENERAL = 0
     ' dmCHEMICAL = 1
     
-    Dim value       As Integer
-    Dim result      As String
+    Dim value As Integer
+    Dim result As String
     
-    If (dmMode = dmGENERAL) Then
-        value = Range("k30").value
+    If dmMode = dmGENERAL Then
+        value = Range("K30").value
     Else
-        value = Range("k31").value
+        value = Range("K31").value
     End If
     
-    If (value <= 100) Then
-        result = "매우낮음"
-    ElseIf (value <= 120) Then
-        result = "낮 음"
-    ElseIf (value <= 140) Then
-        result = "비교적낮음"
-    ElseIf (value <= 160) Then
-        result = "중간정도"
-    ElseIf (value <= 180) Then
-        result = "높 음"
-    Else
-        result = "매우높음"
-    End If
+    Select Case value
+        Case Is <= 100
+            result = "매우낮음"
+        Case Is <= 120
+            result = "낮음"
+        Case Is <= 140
+            result = "비교적낮음"
+        Case Is <= 160
+            result = "중간정도"
+        Case Is <= 180
+            result = "높음"
+        Case Else
+            result = "매우높음"
+    End Select
     
-    check_drasticindex = result
+    check_DrasticIndex = result
 End Function
+
+
 
 Public Sub print_drastic_string()
     Dim n_sheets    As Integer
@@ -512,8 +413,8 @@ Public Sub print_drastic_string()
     
     For i = 1 To n_sheets
         Worksheets(CStr(i)).Activate
-        Range("k26").value = check_drasticindex(dmGENERAL)
-        Range("k27").value = check_drasticindex(dmCHEMICAL)
+        Range("k26").value = check_DrasticIndex(dmGENERAL)
+        Range("k27").value = check_DrasticIndex(dmCHEMICAL)
     Next i
 End Sub
 
