@@ -1,18 +1,14 @@
 Attribute VB_Name = "mod_MakeFieldList"
 Option Explicit
 
+' 이곳에다가 기본적인 설정값을 세팅해준다.
+' 파일이름과, 조사일같은것들을 ...
 
 Const EXPORT_DATE As String = "2022-03-18"
+Const EXPORT_ADDR_HEADER As String = "전라남도 "
 Const EXPORT_FILE_NAME As String = "d:\05_Send\iyong_template.xlsx"
-
-
-'If allowType = 0 Then
-'     setting = setting & "b,"
-'     ' 허가시설
-' Else
-'     setting = setting & "c,"
-'     ' 신고시설
-' End If
+        
+        
         
 Public Enum ALLOW_TYPE_VALUE
      at_HEOGA = 0
@@ -107,6 +103,7 @@ Sub Make_DataOut()
     End If
     
     Sheets("data_mid").Activate
+    
     Call initialize
     lastRow = getlastrow()
     
@@ -380,7 +377,7 @@ Sub LastRowFindAll(row_ss As Variant, row_aa As Variant, row_ii As Variant)
 End Sub
 
 ' allowType = 1 - 신고공
-' allowType = 1 - 허가공
+' allowType = 0 - 허가공
 Public Sub make(wtype As String)
     Dim i, j, row_end As Integer
     Dim newAddress, id, purpose As String
@@ -398,7 +395,8 @@ Public Sub make(wtype As String)
     For i = 1 To row_ss
     
         id = Cells(i + 1, "a").Value
-        newAddress = "전라남도 " & Cells(i + 1, "c") & " " & Cells(i + 1, "d") & " " & Cells(i + 1, "e") & " , " & id
+        ' 주소헤더, 지역에 따라 값을 다시 설정해주어야 한다.
+        newAddress = EXPORT_ADDR_HEADER & Cells(i + 1, "c") & " " & Cells(i + 1, "d") & " " & Cells(i + 1, "e") & " , " & id
         
         If Cells(i + 1, "b").Value = "신고공" Then
             allowType = 1
