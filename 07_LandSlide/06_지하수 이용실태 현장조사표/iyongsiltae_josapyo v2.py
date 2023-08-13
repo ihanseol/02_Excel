@@ -59,7 +59,7 @@ def copy_work(hwp, excel, field_list):
             hwp.MoveToField(f'{field}{{{{{page}}}}}')
             hwp.PutFieldText(f'{field}{{{{{page}}}}}', write_data)
 
-        print(f'{page + 1}:{excel.ad1[page]}')
+        print(f'{page + 1}:{excel.address[page]}')
 
 
 def end_work(hwp, excel):
