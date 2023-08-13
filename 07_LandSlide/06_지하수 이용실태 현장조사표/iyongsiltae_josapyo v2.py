@@ -1,5 +1,6 @@
 
-import os, shutil
+import os
+import shutil
 import win32com.client as win32
 import pandas as pd
 
@@ -66,8 +67,6 @@ def end_work(hwp, excel):
     hwp.Save()
     hwp.Quit()
 
-
-
 def main():
     hwp, excel = initial_work()
     field_list = initial_opencopy(hwp, excel)
@@ -78,4 +77,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
