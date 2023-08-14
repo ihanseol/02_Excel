@@ -4,11 +4,12 @@ Option Explicit
 ' 이곳에다가 기본적인 설정값을 세팅해준다.
 ' 파일이름과, 조사일같은것들을 ...
 
-Const EXPORT_DATE As String = "2022-03-18"
-Const EXPORT_ADDR_HEADER As String = "전라남도 "
+Const EXPORT_DATE As String = "2023-08-14"
+Const EXPORT_ADDR_HEADER As String = "충청남도 부여군 "
 Const EXPORT_FILE_NAME As String = "d:\05_Send\iyong_template.xlsx"
         
-        
+' 1인 1일당 급수량, 엑셀파일을 보고 검사
+Const ONEMAN_WATER_SUPPLY As Double = 382.7
         
 Public Enum ALLOW_TYPE_VALUE
      at_HEOGA = 0
@@ -192,7 +193,7 @@ Sub Make_DataOut()
                  If CheckSubstring(purpose, "간이") Then
                         sayong_gagu = 30
                         sayong_ingu = 90
-                        sayong_ilin_geupsoo = 382.7
+                        sayong_ilin_geupsoo = ONEMAN_WATER_SUPPLY
                 End If
         Else
             sayong_gagu = 0
@@ -422,7 +423,7 @@ Public Sub make(wtype As String)
     For i = 1 To row_aa
     
         id = Cells(i + 1, "a").Value
-        newAddress = "전라남도 " & Cells(i + 1, "c") & " " & Cells(i + 1, "d") & " " & Cells(i + 1, "e") & " , " & id
+        newAddress = EXPORT_ADDR_HEADER & Cells(i + 1, "c") & " " & Cells(i + 1, "d") & " " & Cells(i + 1, "e") & " , " & id
         
         If Cells(i + 1, "b").Value = "신고공" Then
             allowType = 1
@@ -448,7 +449,7 @@ Public Sub make(wtype As String)
     For i = 1 To row_ii
     
         id = Cells(i + 1, "a").Value
-        newAddress = "전라남도 " & Cells(i + 1, "c") & " " & Cells(i + 1, "d") & " " & Cells(i + 1, "e") & " , " & id
+        newAddress = EXPORT_ADDR_HEADER & Cells(i + 1, "c") & " " & Cells(i + 1, "d") & " " & Cells(i + 1, "e") & " , " & id
         
         If Cells(i + 1, "b").Value = "신고공" Then
             allowType = 1
