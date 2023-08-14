@@ -23,14 +23,12 @@ End Sub
 
 
 Sub MakeFieldList()
-Attribute MakeFieldList.VB_ProcData.VB_Invoke_Func = " \n14"
-    Call make("ss")
+    Call make
     Call ExportData
 End Sub
 
 
 Sub ExportData()
-Attribute ExportData.VB_ProcData.VB_Invoke_Func = "d\n14"
     ' data_mid 에서, 중간과정으로 만들어진 데이타를 불러와서, 파이썬처리용 엑셀쉬트를 만든다.
     Call Make_DataOut
     Call ExportCurrentWorksheet("data_out")
@@ -377,9 +375,15 @@ Sub LastRowFindAll(row_ss As Variant, row_aa As Variant, row_ii As Variant)
     
 End Sub
 
+Sub EraseSheetData()
+    Worksheets("data_mid").Range("A2:J1000").Delete
+    Worksheets("data_out").Range("A1:BB1000").Delete
+End Sub
+
+
 ' allowType = 1 - 신고공
 ' allowType = 0 - 허가공
-Public Sub make(wtype As String)
+Public Sub make()
     Dim i, j, row_end As Integer
     Dim newAddress, id, purpose As String
     Dim allowType As Integer
@@ -390,6 +394,9 @@ Public Sub make(wtype As String)
 
     
     Call LastRowFindAll(row_ss, row_aa, row_ii)
+    Call EraseSheetData
+    
+    
     
     Sheets("ss").Activate
     ' Debug.Print row_end
@@ -487,6 +494,8 @@ Sub putdata(i As Variant, id As Variant, newAddress As Variant, allowType As Var
     Sheets("data_mid").Cells(i + 1, "j").Value = Q
     
 End Sub
+
+
 
 
 
