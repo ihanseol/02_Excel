@@ -38,6 +38,8 @@ Private Sub CommandButton2_Click()
     
     Call Write_RadiusOfInfluence(nofwell)
     Call Write_WaterIntake(nofwell)
+    Call Check_DI
+    
     Call Write_DiggingDepth(nofwell)
     Call Write_MotorPower(nofwell)
     Call Write_DrasticIndex(nofwell)
@@ -75,6 +77,7 @@ Sub Write23_SummaryDevelopmentPotential()
 End Sub
 
 Sub Write_NaturalLevel(nofwell As Integer)
+' 자연수위
     Dim i As Integer
     Dim unit As String
     
@@ -93,6 +96,7 @@ Sub Write_NaturalLevel(nofwell As Integer)
 End Sub
 
 Sub Write_StableLevel(nofwell As Integer)
+' 안정수위
     Dim i As Integer
     Dim unit As String
     
@@ -115,6 +119,7 @@ End Sub
 
 
 Sub Write_DiggingDepth(nofwell As Integer)
+' 굴착심도
     Dim i As Integer
     Dim unit As String
     
@@ -134,6 +139,7 @@ End Sub
 
 
 Sub Write_MotorPower(nofwell As Integer)
+' 모터마력
     Dim i As Integer
     Dim unit As String
     
@@ -174,11 +180,12 @@ End Sub
 
 
 Sub Write_RadiusOfInfluence(nofwell As Integer)
+' 양수영향반경
     Dim i As Integer
     Dim unit As String
     
-    Call EraseCellData("d28:f40")
-    
+    Call EraseCellData("d28:g40")
+        
     If Sheets("AggSum").CheckBox1.value = True Then
             unit = " m"
         Else
@@ -200,9 +207,11 @@ End Sub
 
 
 Sub Write_DrasticIndex(nofwell As Integer)
+' 드라스틱 인덱스
     Dim i As Integer
     
-    Call EraseCellData("h28:j40")
+    Call EraseCellData("i28:k40")
+    
     For i = 1 To nofwell
         ' WellNum
         Cells(27 + i, "I").value = "W-" & CStr(i)
@@ -211,6 +220,36 @@ Sub Write_DrasticIndex(nofwell As Integer)
     Next i
 End Sub
 
+Function CheckDrasticIndex(val As Integer) As String
+    
+    Dim value As Integer
+    Dim result As String
+    
+    Select Case val
+        Case Is <= 100
+            result = "매우낮음"
+        Case Is <= 120
+            result = "낮음"
+        Case Is <= 140
+            result = "비교적낮음"
+        Case Is <= 160
+            result = "중간정도"
+        Case Is <= 180
+            result = "높음"
+        Case Else
+            result = "매우높음"
+    End Select
+    
+    CheckDrasticIndex = result
+End Function
+
+
+Sub Check_DI()
+    
+    Range("n28").value = CheckDrasticIndex(Range("M28"))
+    Range("n29").value = CheckDrasticIndex(Range("M29"))
+
+End Sub
 
 Sub Write26_AquiferCharacterization(nofwell As Integer)
 ' 대수층 분석및 적정채수량 분석
