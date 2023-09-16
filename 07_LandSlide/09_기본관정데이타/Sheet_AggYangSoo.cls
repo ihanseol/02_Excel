@@ -295,6 +295,8 @@ End Sub
 
 
 Private Sub CommandButton3_Click()
+' Formula Button
+
     Dim formula1, formula2 As String
     Dim nofwell As String
     Dim i As Integer
@@ -317,7 +319,9 @@ Private Sub CommandButton3_Click()
         skin = Cells(4 + i, "y").value
         er = Cells(4 + i, "z").value
         
+        ' 스킨계수
         formula1 = "W-" & i & "~~ sigma  _{w-" & i & "} = {2 pi  TIMES  " & T & " TIMES  " & delta_s & " } over {" & Q & "} -1.15 TIMES  log {2.25 TIMES  " & T & " TIMES  (1/1440)} over {0.0005 TIMES  (" & radius & " TIMES  " & radius & ")} =`" & skin
+        ' 유효우물반경
         formula2 = "W-" & i & "~~r _{e-" & i & "} `=~r _{w} e ^{- sigma  _{w-" & i & "}} =" & radius & " TIMES e ^{-(" & skin & ")} =" & er & "m"
         Debug.Print formula1
         Debug.Print formula2
@@ -328,11 +332,16 @@ Private Sub CommandButton3_Click()
     Debug.Print "************************************************************************************************************************************************************************************************"
     
     Call FormulaChwiSoo
+    ' 3-7, 적정취수량
+    
     Call FormulaRadiusOfInfluence
+    ' 양수영향반경
 End Sub
 
 
 Sub FormulaChwiSoo()
+' 3-7, 적정취수량
+
     Dim formula As String
     Dim nofwell As String
     Dim i As Integer
@@ -366,6 +375,7 @@ End Sub
 
 
 Sub FormulaRadiusOfInfluence()
+' 양수영향반경
 
     Dim formula1, formula2, formula3 As String
     ' 슐츠, 웨버, 제이콥
@@ -391,10 +401,13 @@ Sub FormulaRadiusOfInfluence()
         
         T = CStr(Cells(4 + i, "q").value)
         S = CStr(Cells(4 + i, "s").value)
-        K = CStr(Cells(4 + i, "t").value)
+        K = CStr(Format(Cells(4 + i, "t").value, "0.0000"))
     
         delta_h = CStr(Cells(4 + i, "f").value)
-        time_ = CStr(Cells(4 + i, "u").value)
+        time_ = CStr(Format(Cells(4 + i, "u").value, "0.0000"))
+        
+        
+        ' Cells(4 + i, "y").value = Format(skin(i), "0.0000")
         
         formula1 = "W-" & i & "호공~~R _{W-" & i & "} ``=`` sqrt {6 TIMES  " & delta_h & " TIMES  " & K & " TIMES  " & time_ & "/" & S & "} ``=~" & shultze & "m"
         formula2 = "W-" & i & "호공~~R _{W-" & i & "} ``=3`` sqrt {" & delta_h & " TIMES " & K & " TIMES " & time_ & "/" & S & "} `=`" & webber & "`m"
