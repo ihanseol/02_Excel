@@ -48,7 +48,7 @@ End Function
 
 Sub CopyFromGWAN_JUNG(ByVal fname As String, ByVal cpRange As String)
 
-    Workbooks(fname).Activate
+    Workbooks(fname).Worksheets("ss").Activate
     Workbooks(fname).Worksheets("ss").Range(cpRange).Select
     Selection.Copy
     
