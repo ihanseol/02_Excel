@@ -399,7 +399,7 @@ Sub FormulaRadiusOfInfluence()
         webber = CStr(Cells(4 + i, "w").value)
         jacob = CStr(Cells(4 + i, "x").value)
         
-        T = CStr(Cells(4 + i, "q").value)
+        T = CStr(Format(Cells(4 + i, "q").value, "0.0000"))
         S = CStr(Cells(4 + i, "s").value)
         K = CStr(Format(Cells(4 + i, "t").value, "0.0000"))
     
