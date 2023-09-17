@@ -93,43 +93,7 @@ Private Sub CommandButton2_Click()
             
             
     For i = 1 To nofwell
-    
-'        fname = "A" & CStr(i) & "_ge_OriginalSaveFile.xlsm"
-'        If Not IsWorkBookOpen(fname) Then
-'            MsgBox "Please open the yangsoo data ! " & fname
-'            Exit Sub
-'        End If
-'
-'        Q(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c4").value
-'        natural(i) = Workbooks(fname).Worksheets("SkinFactor").Range("i4").value
-'        stable(i) = Workbooks(fname).Worksheets("SkinFactor").Range("i6").value
-'        recover(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c10").value
-'
-'        radius(i) = Workbooks(fname).Worksheets("SkinFactor").Range("e4").value
-'
-'        deltas(i) = Workbooks(fname).Worksheets("SkinFactor").Range("b4").value
-'        deltah(i) = Workbooks(fname).Worksheets("SkinFactor").Range("b16").value
-'        daeSoo(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c16").value
-'
-'
-'        T1(i) = Workbooks(fname).Worksheets("SkinFactor").Range("d5").value
-'        T2(i) = Workbooks(fname).Worksheets("SkinFactor").Range("h13").value
-'        TA(i) = Workbooks(fname).Worksheets("SkinFactor").Range("d16").value
-'
-'        time_(i) = Workbooks(fname).Worksheets("SkinFactor").Range("h16").value
-'
-'        S1(i) = Workbooks(fname).Worksheets("SkinFactor").Range("e10").value
-'        S2(i) = Workbooks(fname).Worksheets("SkinFactor").Range("i16").value
-'        K(i) = Workbooks(fname).Worksheets("SkinFactor").Range("E16").value
-'
-'        shultz(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c13").value
-'        webber(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c18").value
-'        jcob(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c23").value
-'
-'
-'        skin(i) = Workbooks(fname).Worksheets("SkinFactor").Range("g6").value
-'        er(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c8").value
-
+   
         Q(i) = Worksheets("YangSoo").Cells(4 + i, "k").value
         
         natural(i) = Worksheets("YangSoo").Cells(4 + i, "b").value
@@ -175,55 +139,64 @@ Private Sub CommandButton2_Click()
 End Sub
 
 
-Sub Formula_RadiusOfInfluence(well As Integer)
-
-' "W-" & well & "호공~~R _{W-" & well & "} ``=`` sqrt {6 TIMES  " & delta_h & " TIMES  " & K & " TIMES  " & time & "/" & S & "} ``=~" & schultze & "m"
-
-
-
+' 3-3, 3-4, 3-5 결과출력
+Sub WriteWellData(Q As Variant, natural As Variant, stable As Variant, recover As Variant, radius As Variant, deltas As Variant, daeSoo As Variant, T1 As Variant, S1 As Variant, ByVal nofwell As Integer)
+    
+    Dim i As Integer
+    
+    For i = 1 To nofwell
+    
+        ' 3-3, 장기양수시험결과 (Collect from yangsoo data)
+        Range("D" & (i + 2)).value = "W-" & i
+        
+        Range("e" & (i + 2)).value = Q(i)
+        Range("l" & (i + 2)).value = Q(i)
+        
+        Range("f" & (i + 2)).value = natural(i)
+        Range("g" & (i + 2)).value = stable(i)
+        Range("h" & (i + 2)).value = stable(i) - natural(i)
+        
+        Range("i" & (i + 2)).value = radius(i)
+        Range("j" & (i + 2)).value = deltas(i)
+        
+        
+        ' 3-4, aqtesolv 해석결과
+        Range("m" & (i + 2)).value = radius(i)
+        Range("n" & (i + 2)).value = radius(i)
+        Range("o" & (i + 2)).value = daeSoo(i)
+        Range("p" & (i + 2)).value = T1(i)
+        Range("q" & (i + 2)).value = S1(i)
+        
+        
+        '3-5, 수위회복시험 결과
+        Range("s" & (i + 2)).value = stable(i)
+        Range("t" & (i + 2)).value = recover(i)
+        Range("u" & (i + 2)).value = stable(i) - recover(i)
+    Next i
+   
 End Sub
 
 
+
+' 3.4 스킨계수
 Sub Wrote34_SkinFactor(skin As Variant, er As Variant, nofwell As Variant)
     Dim i As Integer
     
     Call EraseCellData("o32:q45")
     
     For i = 1 To nofwell
-        Cells(32 + (i - 1), "o").value = "W-" & CStr(i)
+        Cells(32 + (i - 1), "p").value = "W-" & CStr(i)
            
-        Cells(32 + (i - 1), "p").value = skin(i)
-        Cells(32 + (i - 1), "p").NumberFormat = "0.0000"
+        Cells(32 + (i - 1), "q").value = skin(i)
+        Cells(32 + (i - 1), "q").NumberFormat = "0.0000"
         
-        Cells(32 + (i - 1), "q").value = er(i)
-        Cells(32 + (i - 1), "q").NumberFormat = "0.000"
+        Cells(32 + (i - 1), "r").value = er(i)
+        Cells(32 + (i - 1), "r").NumberFormat = "0.000"
     Next i
 End Sub
 
-Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob As Variant, nofwell As Variant)
 
-    Dim i As Integer
-    Dim sum, average As Double
-    
-    Call EraseCellData("h32:m45")
-    
-    For i = 1 To nofwell
-        Cells(32 + (i - 1), "h").value = "W-" & CStr(i)
-        Cells(32 + (i - 1), "i").value = shultz(i)
-        Cells(32 + (i - 1), "i").NumberFormat = "0.0"
-        
-        Cells(32 + (i - 1), "j").value = webber(i)
-        Cells(32 + (i - 1), "j").NumberFormat = "0.0"
-        
-        Cells(32 + (i - 1), "k").value = jcob(i)
-        Cells(32 + (i - 1), "k").NumberFormat = "0.0"
-    
-        Cells(32 + (i - 1), "l").value = Round((shultz(i) + webber(i) + jcob(i)) / 3, 1)
-        Cells(32 + (i - 1), "m").value = Application.WorksheetFunction.max(shultz(i), webber(i), jcob(i))
-    Next i
-
-End Sub
-
+' 3-6, 수리상수산정결과
 Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As Variant, nofwell As Variant)
     Dim i As Integer
     
@@ -254,7 +227,7 @@ Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As V
 End Sub
 
 
-
+' 3-7, 조사공별 수리상수
 Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, time_ As Variant, deltah As Variant, daeSoo As Variant, nofwell As Variant)
 
     Dim i As Integer
@@ -278,43 +251,33 @@ Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, ti
 
 End Sub
 
+'3.8 영향반경
+Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob As Variant, nofwell As Variant)
 
-Sub WriteWellData(Q As Variant, natural As Variant, stable As Variant, recover As Variant, radius As Variant, deltas As Variant, daeSoo As Variant, T1 As Variant, S1 As Variant, ByVal nofwell As Integer)
-    
     Dim i As Integer
+    Dim sum, average As Double
+    
+    Call EraseCellData("h32:m45")
     
     For i = 1 To nofwell
-        Range("D" & (i + 2)).value = "W-" & i
+        Cells(32 + (i - 1), "h").value = "W-" & CStr(i)
+        Cells(32 + (i - 1), "i").value = shultz(i)
+        Cells(32 + (i - 1), "i").NumberFormat = "0.0"
         
-        Range("e" & (i + 2)).value = Q(i)
-        Range("l" & (i + 2)).value = Q(i)
+        Cells(32 + (i - 1), "j").value = webber(i)
+        Cells(32 + (i - 1), "j").NumberFormat = "0.0"
         
-        Range("f" & (i + 2)).value = natural(i)
-        Range("g" & (i + 2)).value = stable(i)
-        Range("h" & (i + 2)).value = stable(i) - natural(i)
-        
-        Range("i" & (i + 2)).value = radius(i)
-        Range("j" & (i + 2)).value = deltas(i)
-        
-        Range("m" & (i + 2)).value = radius(i)
-        Range("n" & (i + 2)).value = radius(i)
-        Range("o" & (i + 2)).value = daeSoo(i)
-        Range("p" & (i + 2)).value = T1(i)
-        Range("q" & (i + 2)).value = S1(i)
-        
-        Range("s" & (i + 2)).value = stable(i)
-        Range("t" & (i + 2)).value = recover(i)
-        Range("u" & (i + 2)).value = stable(i) - recover(i)
+        Cells(32 + (i - 1), "k").value = jcob(i)
+        Cells(32 + (i - 1), "k").NumberFormat = "0.0"
+    
+        Cells(32 + (i - 1), "l").value = Round((shultz(i) + webber(i) + jcob(i)) / 3, 1)
+        Cells(32 + (i - 1), "m").value = Application.WorksheetFunction.max(shultz(i), webber(i), jcob(i))
+        Cells(32 + (i - 1), "n").value = Application.WorksheetFunction.min(shultz(i), webber(i), jcob(i))
     Next i
-   
+
 End Sub
 
-Private Sub CommandButton3_Click()
-    Range("d3:u16").Select
-    Selection.ClearContents
-    
-    Range("B24").Select
-    Application.CutCopyMode = False
-End Sub
+
+
 
 
