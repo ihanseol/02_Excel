@@ -1,5 +1,7 @@
 Attribute VB_Name = "modDataChungNam"
-' year 2023
+'***********************
+'Year 2023
+'***********************
 'data_GEUMSAN
 'data_BORYUNG
 'data_DAEJEON
@@ -7,6 +9,10 @@ Attribute VB_Name = "modDataChungNam"
 'data_SEOSAN
 'data_CHEONAN
 'data_CHEUNGJU
+'***********************
+'data_HONGSUNG
+'data_SEJONG
+'***********************
 
 Function data_TEMP() As Variant
 
@@ -16,6 +22,18 @@ Function data_TEMP() As Variant
     data_TEMP = myArray
 
 End Function
+
+
+
+Function data_HONGSUNG() As Variant
+
+    Dim myArray() As Variant
+    ReDim myArray(1 To 30, 1 To 13)
+    
+    data_HONGSUNG = myArray
+
+End Function
+
 
 
 Function data_CHEUNGJU() As Variant
