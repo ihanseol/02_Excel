@@ -68,7 +68,7 @@ Sub ListOpenWorkbookNames()
     workbookNames = ""
     
     For Each Workbook In Application.Workbooks
-        workbookNames = workbookNames & Workbook.Name & vbCrLf
+        workbookNames = workbookNames & Workbook.name & vbCrLf
     Next
     
     Cells(1, 1).value = workbookNames
@@ -82,18 +82,18 @@ Function GetOtherFileName() As String
     workbookNames = ""
     
     For Each Workbook In Application.Workbooks
-        If StrComp(ThisWorkbook.Name, Workbook.Name, vbTextCompare) = 0 Then
+        If StrComp(ThisWorkbook.name, Workbook.name, vbTextCompare) = 0 Then
             GoTo NEXT_ITERATION
         End If
         
-        If CheckSubstring(Workbook.Name, "관정") Then
+        If CheckSubstring(Workbook.name, "관정") Then
             Exit For
         End If
         
 NEXT_ITERATION:
     Next
     
-    GetOtherFileName = Workbook.Name
+    GetOtherFileName = Workbook.name
 End Function
 
 

@@ -32,12 +32,12 @@ Sub WriteAllCharts()
     Dim nofwell, i As Integer
     
     nofwell = GetNumberOfWell()
-    If ActiveSheet.Name <> "AggChart" Then Sheets("AggChart").Select
+    If ActiveSheet.name <> "AggChart" Then Sheets("AggChart").Select
     
     ' Call DeleteAllCharts
     Call DeleteAllImages
     
-    source_name = ActiveWorkbook.Name
+    source_name = ActiveWorkbook.name
     
     For i = 1 To nofwell
         Call Write_InsertChart(i, source_name)
@@ -61,22 +61,6 @@ Sub Write_InsertChart(well As Integer, source_name As String)
     Call SaveAndInsertChart(well, source_name, "Chart 7", "j" & CStr(3 + 16 * (well - 1)))
     Call SaveAndInsertChart(well, source_name, "Chart 9", "p" & CStr(3 + 16 * (well - 1)))
 End Sub
-
-'Sub SaveAndInsertChart(well As Integer, source_name As String, chartName As String, targetRange As String)
-'    Dim imagePath As String
-'    Dim fname As String
-'    imagePath = Environ("TEMP") & "\tempChartImage.png"
-'
-'    fname = "A" & CStr(well) & "_ge_OriginalSaveFile.xlsm"
-'
-'    Windows(fname).Activate
-'    Worksheets("Input").ChartObjects(chartName).Activate
-'    ActiveChart.Export Filename:=imagePath, FilterName:="PNG"
-'
-'    Windows(source_name).Activate
-'    Sheets("AggChart").Range(targetRange).Select
-'    ActiveSheet.Pictures.Insert(imagePath).Select
-'End Sub
 
 
 Sub SaveAndInsertChart(well As Integer, source_name As String, chartName As String, targetRange As String)

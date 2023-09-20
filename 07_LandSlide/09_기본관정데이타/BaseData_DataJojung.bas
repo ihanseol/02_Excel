@@ -46,14 +46,14 @@ Private Sub initialize_wellstyle()
     End With
     
     With Selection.Font
-        .Name = "¸¼Àº °íµñ"
+        .name = "¸¼Àº °íµñ"
         .Size = 10
         .ThemeColor = xlThemeColorLight1
     End With
     
     Range("E19:G19").Select
     With Selection.Font
-        .Name = "¸¼Àº °íµñ"
+        .name = "¸¼Àº °íµñ"
         .Size = 12
         .ThemeColor = xlThemeColorLight1
         .ThemeFont = xlThemeFontNone
@@ -61,7 +61,7 @@ Private Sub initialize_wellstyle()
     
     Range("E21:G21").Select
     With Selection.Font
-        .Name = "¸¼Àº °íµñ"
+        .name = "¸¼Àº °íµñ"
         .Size = 12
         .ThemeColor = xlThemeColorLight1
         .TintAndShade = 0
@@ -70,7 +70,7 @@ Private Sub initialize_wellstyle()
     
     Range("B25:K29").Select
     With Selection.Font
-        .Name = "¸¼Àº °íµñ"
+        .name = "¸¼Àº °íµñ"
         .Size = 11
         .TintAndShade = 0
         .ThemeFont = xlThemeFontNone

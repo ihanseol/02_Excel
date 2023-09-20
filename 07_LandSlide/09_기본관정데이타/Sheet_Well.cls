@@ -77,6 +77,11 @@ Private Sub CommandButton8_Click()
     Dim nofwell As Integer
     nofwell = GetNumberOfWell()
     
+    If nofwell = 1 Then
+        MsgBox "Last is not delete ... ", vbOK
+        Exit Sub
+    End If
+    
     Rows(nofwell + 3).Delete
     Call DeleteWorksheet(nofwell)
     Call DecorateWellBorder(nofwell - 1)

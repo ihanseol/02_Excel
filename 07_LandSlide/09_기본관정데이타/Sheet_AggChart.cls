@@ -17,7 +17,7 @@ End Sub
 
 
 Private Sub CommandButton2_Click()
-    If ActiveSheet.Name <> "AggChart" Then Sheets("AggChart").Select
+    If ActiveSheet.name <> "AggChart" Then Sheets("AggChart").Select
     Call WriteAllCharts
 End Sub
 

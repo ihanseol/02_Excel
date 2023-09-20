@@ -400,7 +400,7 @@ Sub DecoLine(ByVal i As Integer, ByVal po As Integer)
     End With
     
     With Selection.Font
-        .Name = "Arial"
+        .name = "Arial"
         .Size = 12
         .Italic = True
     End With
@@ -498,7 +498,7 @@ End Sub
 
 Sub SetFontMalgun(ByVal col As String, ByVal ip As Integer)
     With Range("col" & CStr(ip) & ":" & col & CStr((ip + 11))).Font
-        .Name = "Arial"
+        .name = "Arial"
         .Size = 12
         .Bold = True
         .Italic = True

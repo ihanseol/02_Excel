@@ -5,7 +5,7 @@ Public Sub MalgunGothic()
     Cells.Select
     Range("A200").Activate
     With Selection.Font
-        .Name = "¸¼Àº °íµñ"
+        .name = "¸¼Àº °íµñ"
     End With
     
     Range("C186").Select
@@ -34,7 +34,7 @@ Public Sub make_frame2(ByVal sh As Integer)
     End With
     
     With Selection.Font
-        .Name = "¸¼Àº °íµñ"
+        .name = "¸¼Àº °íµñ"
         .Size = 11
     End With
     
@@ -111,7 +111,7 @@ Public Sub make_frame()
     End With
     
     With Selection.Font
-        .Name = "¸¼Àº °íµñ"
+        .name = "¸¼Àº °íµñ"
         .Size = 11
         .ThemeColor = xlThemeColorLight1
         .TintAndShade = 0

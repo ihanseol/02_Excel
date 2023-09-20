@@ -24,7 +24,7 @@ Function GetER_Mode(ByVal WB_NAME As String) As Integer
     If r = "F" Then
         GetER_Mode = 0
     Else
-        GetER_Mode = Val(r)
+        GetER_Mode = val(r)
     End If
 End Function
 

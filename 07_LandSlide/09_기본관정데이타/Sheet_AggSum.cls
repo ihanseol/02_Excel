@@ -28,7 +28,7 @@ Private Sub CommandButton2_Click()
     Dim nofwell As Integer
     
     nofwell = GetNumberOfWell()
-    If ActiveSheet.Name <> "AggSum" Then Sheets("AggSum").Select
+    If ActiveSheet.name <> "AggSum" Then Sheets("AggSum").Select
 
 
     ' Summary, Aquifer Characterization  Appropriated Water Analysis

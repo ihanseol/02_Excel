@@ -22,7 +22,7 @@ Private Sub CommandButton2_Click()
   
   cell = Range("d12").value
   
-  thisname = ActiveWorkbook.Name
+  thisname = ActiveWorkbook.name
   fname = "A" & GetNumeric2(cell) & "_ge_OriginalSaveFile.xlsm"
  
   If Not IsWorkBookOpen(fname) Then
@@ -186,7 +186,7 @@ Sub DuplicateQ1Page(ByVal n As Integer)
     
     
     ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count)
-    ActiveSheet.Name = "p" & n
+    ActiveSheet.name = "p" & n
     
     With ActiveSheet.Tab
         .ThemeColor = xlThemeColorAccent3

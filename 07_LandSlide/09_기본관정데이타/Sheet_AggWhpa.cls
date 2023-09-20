@@ -44,7 +44,7 @@ Private Sub CommandButton2_Click()
     
     
     nofwell = GetNumberOfWell()
-    If ActiveSheet.Name <> "aggWhpa" Then Sheets("aggWhpa").Select
+    If ActiveSheet.name <> "aggWhpa" Then Sheets("aggWhpa").Select
     
     ReDim Q(1 To nofwell) As Double
     ReDim daeSoo(1 To nofwell) As Double

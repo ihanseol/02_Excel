@@ -82,7 +82,7 @@ Sub DuplicateQ3Page(ByVal n As Integer)
     
     For i = 1 To n
         ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count)
-        ActiveSheet.Name = "p" & i
+        ActiveSheet.name = "p" & i
         
         With ActiveSheet.Tab
             .ThemeColor = xlThemeColorAccent3
@@ -100,7 +100,7 @@ Sub DuplicateRest(ByVal wselect As Integer, ByVal w3page As Integer)
     Set ws = ThisWorkbook.Sheets("Q" & CStr(wselect))
     
     ws.Copy After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.count)
-    ActiveSheet.Name = "p" & CStr(w3page + 1)
+    ActiveSheet.name = "p" & CStr(w3page + 1)
     
     With ActiveSheet.Tab
         .ThemeColor = xlThemeColorAccent3
@@ -179,7 +179,7 @@ Private Sub CommandButton2_Click()
   cell3 = Range("j12").value
   
   
-  thisname = ActiveWorkbook.Name
+  thisname = ActiveWorkbook.name
   fname1 = "A" & GetNumeric2(cell1) & "_ge_OriginalSaveFile.xlsm"
   fname2 = "A" & GetNumeric2(cell2) & "_ge_OriginalSaveFile.xlsm"
   fname3 = "A" & GetNumeric2(cell3) & "_ge_OriginalSaveFile.xlsm"

@@ -18,7 +18,7 @@ End Sub
 
 
 Private Sub CommandButton2_Click()
-    If ActiveSheet.Name <> "AggStep" Then Sheets("AggStep").Select
+    If ActiveSheet.name <> "AggStep" Then Sheets("AggStep").Select
     Call WriteStepTestData
 End Sub
 
@@ -58,7 +58,7 @@ Private Sub WriteStepTestData()
     
     ' --------------------------------------------------------------------------------------
     
-    If ActiveSheet.Name <> "AggStep" Then Sheets("AggStep").Select
+    If ActiveSheet.name <> "AggStep" Then Sheets("AggStep").Select
     
     For i = 1 To nofwell
     

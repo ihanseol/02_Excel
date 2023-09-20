@@ -351,7 +351,7 @@ Sub FormulaChwiSoo()
     Sheets("YangSoo").Select
         
         
-    For i = 1 To 7
+    For i = 1 To 3
         Debug.Print " "
     Next i
     
@@ -388,7 +388,7 @@ Sub FormulaRadiusOfInfluence()
     Sheets("YangSoo").Select
         
         
-    For i = 1 To 7
+    For i = 1 To 3
         Debug.Print " "
     Next i
     
@@ -400,7 +400,7 @@ Sub FormulaRadiusOfInfluence()
         jacob = CStr(Cells(4 + i, "x").value)
         
         T = CStr(Format(Cells(4 + i, "q").value, "0.0000"))
-        S = CStr(Cells(4 + i, "s").value)
+        S = CStr(Format(Cells(4 + i, "s").value, "0.0000000"))
         K = CStr(Format(Cells(4 + i, "t").value, "0.0000"))
     
         delta_h = CStr(Cells(4 + i, "f").value)
