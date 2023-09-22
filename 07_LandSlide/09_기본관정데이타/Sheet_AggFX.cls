@@ -7,6 +7,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
+
+
 Private Sub CommandButton1_Click()
     Sheets("YangSoo").Visible = False
     Sheets("Well").Select
@@ -52,6 +54,13 @@ Sub GetBaseDataFromYangSoo()
     
     Dim S1() As Double      ' S1
     Dim S2() As Double      ' S2 - 스킨팩터 해석, s값
+    
+    Dim T0() As Double         ' 단계양수시험의 T값
+    Dim S0() As Double         ' S값, 0.005: 피압대수층, 0.001: 누수대수층, 0.1: 자유면대수층
+    Dim ER_MODE() As String    ' 영향반경산정공식 선정
+    Dim ER1() As Double
+    Dim ER2() As Double
+    Dim ER3() As Double
     
     Dim K() As Double
     Dim time_() As Double   ' 안정수위도달시간
@@ -122,6 +131,9 @@ Sub GetBaseDataFromYangSoo()
     ReDim skin(1 To nofwell)
     ReDim er(1 To nofwell)
         
+    ReDim ER1(1 To nofwell)
+    ReDim ER2(1 To nofwell)
+    ReDim ER3(1 To nofwell)
     
     ReDim qh(1 To nofwell)
     ReDim qg(1 To nofwell)
@@ -135,6 +147,11 @@ Sub GetBaseDataFromYangSoo()
     ReDim B(1 To nofwell)
     
     ReDim ratio(1 To nofwell)
+    
+    
+    ReDim T0(1 To nofwell)         ' 단계양수시험의 T값
+    ReDim S0(1 To nofwell)         ' S값, 0.005: 피압대수층, 0.001: 누수대수층, 0.1: 자유면대수층
+    ReDim ER_MODE(1 To nofwell)
     
     Call EraseCellData("a5:ah19")
     
@@ -174,6 +191,10 @@ Sub GetBaseDataFromYangSoo()
         
         '----------------------------------------------------------------------------------
         
+        T0(i) = Workbooks(fname).Worksheets("SkinFactor").Range("d4").value
+        S0(i) = Workbooks(fname).Worksheets("SkinFactor").Range("f4").value
+        ER_MODE(i) = Workbooks(fname).Worksheets("SkinFactor").Range("h10").value
+        
         T1(i) = Workbooks(fname).Worksheets("SkinFactor").Range("d5").value
         T2(i) = Workbooks(fname).Worksheets("SkinFactor").Range("h13").value
         TA(i) = (T1(i) + T2(i)) / 2
@@ -190,6 +211,12 @@ Sub GetBaseDataFromYangSoo()
         
         skin(i) = Workbooks(fname).Worksheets("SkinFactor").Range("g6").value
         er(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c8").value
+        
+        
+        ' 경험식, 1번, 2번, 3번의 유효우물반경
+        ER1(i) = Workbooks(fname).Worksheets("SkinFactor").Range("K8").value
+        ER2(i) = Workbooks(fname).Worksheets("SkinFactor").Range("K9").value
+        ER3(i) = Workbooks(fname).Worksheets("SkinFactor").Range("K10").value
         
         '----------------------------------------------------------------------------------
         
@@ -277,6 +304,16 @@ Sub GetBaseDataFromYangSoo()
         Cells(4 + i, "ah").value = ratio(i)
         Cells(4 + i, "ah").NumberFormat = "0.0%"
         
+        
+        ' 2023/09/22 새로 추가한 값들 ...
+        Cells(4 + i, "AI").value = Format(T0(i), "0.0000")
+        Cells(4 + i, "AJ").value = Format(S0(i), "0.0000")
+        Cells(4 + i, "AK").value = ER_MODE(i)
+        
+        Cells(4 + i, "AL").value = Format(ER1(i), "0.0000")
+        Cells(4 + i, "AM").value = Format(ER2(i), "0.0000")
+        Cells(4 + i, "AN").value = Format(ER3(i), "0.0000")
+        
     Next i
 End Sub
 
@@ -294,48 +331,104 @@ Public Sub MyDebug(sPrintStr As String, Optional bClear As Boolean = False)
 End Sub
 
 
+'0 : skin factor, cell, C8
+'1 : Re1,         cell, E8
+'2 : Re2,         cell, H8
+'3 : Re3,         cell, G10
+
+Function DetermineEffectiveRadius(ERMode As String) As Integer
+    Dim er, r As String
+    
+    er = ERMode
+    'MsgBox er
+    r = Mid(er, 5, 1)
+    
+    If r = "F" Then
+        DetermineEffectiveRadius = erRE0
+    Else
+        DetermineEffectiveRadius = val(r)
+    End If
+End Function
+
+
+
 Private Sub CommandButton3_Click()
 ' Formula Button
 
-    Dim formula1, formula2 As String
-    Dim nofwell As String
-    Dim i As Integer
-    Dim T, Q, radius, skin, er As Double
+Dim formula1, formula2 As String
+Dim nofwell As String
+Dim i As Integer
+Dim T, Q, radius, skin, er As Double
+Dim T0, S0 As Double
+Dim ERMode As String
+Dim ER1, ER2, ER3, B, S1 As Double
+
+
+
+nofwell = GetNumberOfWell()
+Sheets("YangSoo").Select
     
-    nofwell = GetNumberOfWell()
-    Sheets("YangSoo").Select
+    
+Call MyDebug("Formula SkinFactor ... ", True)
+
+Debug.Print "************************************************************************************************************************************************************************************************"
+
+For i = 1 To nofwell
+
+    T = Format(Cells(4 + i, "o").value, "0.0000")
+    Q = Cells(4 + i, "k").value
+    
+    T0 = Format(Cells(4 + i, "AI").value, "0.0000")
+    S0 = Format(Cells(4 + i, "AJ").value, "0.0000")
+    S1 = Cells(4 + i, "R").value
+            
+    delta_s = Format(Cells(4 + i, "l").value, "0.00")
+    radius = Format(Cells(4 + i, "h").value, "0.000")
+    skin = Cells(4 + i, "y").value
+    er = Cells(4 + i, "z").value
+    
+    
+    B = Format(Cells(4 + i, "AG").value, "0.0000")
+    ER1 = Cells(4 + i, "AL").value
+    ER2 = Cells(4 + i, "AM").value
+    ER3 = Cells(4 + i, "AN").value
+    
+    
+    Select Case DetermineEffectiveRadius(Cells(4 + i, "AK").value)
+    ' 경험식 1번
+    Case erRE1
+        formula1 = "W-" & i & "호공~~r _{e-" & i & "} `=~ sqrt {{2.25 TIMES  " & T0 & " TIMES  0.0833333} over {" & S0 & " TIMES  10 ^{5.46 TIMES  " & T & " TIMES  " & B & "}}} `=~" & ER1 & "m"
+        formula2 = "erRE1, 경험식 1번"
         
+    ' 경험식 2번
+    Case erRE2
+        formula1 = "W-" & i & "호공~~r _{e-" & i & "} `=~ sqrt {{2.25 TIMES  " & T0 & " TIMES  0.0833333} over {" & S0 & " TIMES  10 ^{4 pi TIMES " & T & " TIMES  " & B & "}}} `=~" & ER2 & "m"
+        formula2 = "erRE2, 경험식 2번"
+    ' 경험식 3번
+    Case erRE3
+        formula1 = "W-" & i & "호공~~r _{e-" & i & "} `=~" & radius & " TIMES  sqrt {{" & S1 & "} over {" & S0 & "}} `=~" & ER3 & "m"
+        formula2 = "erRE3, 경험식 3번"
         
-    Call MyDebug("Formula SkinFactor ... ", True)
-    
-    Debug.Print "************************************************************************************************************************************************************************************************"
-    
-    For i = 1 To nofwell
-    
-        T = Format(Cells(4 + i, "o").value, "0.0000")
-        Q = Cells(4 + i, "k").value
-        delta_s = Format(Cells(4 + i, "l").value, "0.00")
-        radius = Format(Cells(4 + i, "h").value, "0.000")
-        skin = Cells(4 + i, "y").value
-        er = Cells(4 + i, "z").value
-        
+    Case Else
         ' 스킨계수
         formula1 = "W-" & i & "호공~~ sigma  _{w-" & i & "} = {2 pi  TIMES  " & T & " TIMES  " & delta_s & " } over {" & Q & "} -1.15 TIMES  log {2.25 TIMES  " & T & " TIMES  (1/1440)} over {0.0005 TIMES  (" & radius & " TIMES  " & radius & ")} =`" & skin
         ' 유효우물반경
         formula2 = "W-" & i & "호공~~r _{e-" & i & "} `=~r _{w} e ^{- sigma  _{w-" & i & "}} =" & radius & " TIMES e ^{-(" & skin & ")} =" & er & "m"
-        Debug.Print formula1
-        Debug.Print formula2
-        Debug.Print "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+    End Select
     
-    Next i
-    
-    Debug.Print "************************************************************************************************************************************************************************************************"
-    
-    Call FormulaChwiSoo
-    ' 3-7, 적정취수량
-    
-    Call FormulaRadiusOfInfluence
-    ' 양수영향반경
+    Debug.Print formula1
+    Debug.Print formula2
+    Debug.Print "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+Next i
+
+Debug.Print "************************************************************************************************************************************************************************************************"
+
+Call FormulaChwiSoo
+' 3-7, 적정취수량
+
+Call FormulaRadiusOfInfluence
+' 양수영향반경
 End Sub
 
 
