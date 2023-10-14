@@ -34,11 +34,12 @@ Attribute SeperateVH.VB_ProcData.VB_Invoke_Func = "d\n14"
 
 
     result = SplitText(ActiveCell.Value)
-
+    
+    
     Debug.Print result(0), result(1)
     
-    Range("c7").Value = result(0)
-    Range("d7").Value = result(1)
+    Range("c" & ActiveCell.Row).Value = result(0)
+    Range("d" & ActiveCell.Row).Value = result(1)
 
 
 End Sub
