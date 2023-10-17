@@ -169,14 +169,26 @@ Private Sub CommandButton8_Click()
     
     ' 자연수위, 안정수위, 케이싱 심도 결정
     Range("c20") = nl
+    Range("c20").NumberFormat = "0.00"
+    
     Range("c21") = sl
+    Range("c21").NumberFormat = "0.00"
+    
     Range("c10") = 5
     Range("c11") = casing - 5
         
     Range("E5") = T1
+    Range("E5").NumberFormat = "0.0000"
+     
     Range("E6") = T2
+    Range("E6").NumberFormat = "0.0000"
+    
     Range("g5") = S2
+    Range("g5").NumberFormat = "0.0000000"
+    
     Range("h7") = S1
+    
+    
     Range("h6") = ir 'find influence radius
     
     Range("e10") = RI1
