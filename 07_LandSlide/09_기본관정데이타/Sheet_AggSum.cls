@@ -278,14 +278,22 @@ Sub Write26_AquiferCharacterization(nofwell As Integer)
         Cells(11 + i, "E").value = Worksheets("Well").Cells(i + 3, 8).value
         ' 양수량
         Cells(11 + i, "F").value = Worksheets("Well").Cells(i + 3, 10).value
+        
         ' 자연수위
         Cells(11 + i, "G").value = Worksheets(CStr(i)).Range("c20").value
+        Cells(11 + i, "G").NumberFormat = "0.00"
+        
         ' 안정수위
         Cells(11 + i, "H").value = Worksheets(CStr(i)).Range("c21").value
+        Cells(11 + i, "H").NumberFormat = "0.00"
+        
         ' 투수량계수
         Cells(11 + i, "I").value = Worksheets(CStr(i)).Range("E7").value
+        Cells(11 + i, "I").NumberFormat = "0.0000"
+        
         ' 저류계수
         Cells(11 + i, "J").value = Worksheets(CStr(i)).Range("G7").value
+        Cells(11 + i, "J").NumberFormat = "0.0000000"
     Next i
 End Sub
 
@@ -317,18 +325,26 @@ Sub Write26_Right_AquiferCharacterization(nofwell As Integer)
         Cells(11 + i, "M").value = Worksheets("Well").Cells(i + 3, 8).value
         ' 양수량
         Cells(11 + i, "N").value = Worksheets("Well").Cells(i + 3, 10).value
+        
         ' 자연수위
         Cells(11 + i, "O").value = Worksheets(CStr(i)).Range("c20").value
+        Cells(11 + i, "O").NumberFormat = "0.00"
+        
         ' 안정수위
         Cells(11 + i, "P").value = Worksheets(CStr(i)).Range("c21").value
+        Cells(11 + i, "P").NumberFormat = "0.00"
         
         '수위강하량
         Cells(11 + i, "Q").value = Worksheets(CStr(i)).Range("c21").value - Worksheets(CStr(i)).Range("c20").value
+        Cells(11 + i, "Q").NumberFormat = "0.00"
         
         ' 투수량계수
         Cells(11 + i, "R").value = Worksheets(CStr(i)).Range("E7").value
+        Cells(11 + i, "R").NumberFormat = "0.0000"
+         
         ' 저류계수
         Cells(11 + i, "S").value = Worksheets(CStr(i)).Range("G7").value
+        Cells(11 + i, "S").NumberFormat = "0.0000000"
     Next i
 End Sub
 
