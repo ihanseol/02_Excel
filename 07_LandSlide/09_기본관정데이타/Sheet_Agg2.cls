@@ -221,7 +221,10 @@ Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As V
         Cells(34 + (i - 1) * 3, "E").Font.Bold = True
         
         Cells(32 + (i - 1) * 3, "F").value = S2(i)
+        Cells(32 + (i - 1) * 3, "F").NumberFormat = "0.0000000"
+        
         Cells(34 + (i - 1) * 3, "F").value = S2(i)
+        Cells(34 + (i - 1) * 3, "F").NumberFormat = "0.0000000"
         Cells(34 + (i - 1) * 3, "F").Font.Bold = True
     Next i
 End Sub
@@ -244,8 +247,14 @@ Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, ti
         
         
         Cells(24, Chr(Asc("D") + i)).value = S2(i)
+        Cells(24, Chr(Asc("D") + i)).NumberFormat = "0.0000000"
+        
         Cells(25, Chr(Asc("D") + i)).value = time_(i)
+        Cells(25, Chr(Asc("D") + i)).NumberFormat = "0.0000"
+        
         Cells(26, Chr(Asc("D") + i)).value = deltah(i)
+        Cells(26, Chr(Asc("D") + i)).NumberFormat = "0.00"
+        
         Cells(27, Chr(Asc("D") + i)).value = daeSoo(i)
     Next i
 
@@ -261,6 +270,8 @@ Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob 
     
     For i = 1 To nofwell
         Cells(32 + (i - 1), "h").value = "W-" & CStr(i)
+        Cells(32 + (i - 1), "h").NumberFormat = "0.0"
+        
         Cells(32 + (i - 1), "i").value = shultz(i)
         Cells(32 + (i - 1), "i").NumberFormat = "0.0"
         
@@ -271,8 +282,13 @@ Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob 
         Cells(32 + (i - 1), "k").NumberFormat = "0.0"
     
         Cells(32 + (i - 1), "l").value = Round((shultz(i) + webber(i) + jcob(i)) / 3, 1)
+        Cells(32 + (i - 1), "l").NumberFormat = "0.0"
+        
         Cells(32 + (i - 1), "m").value = Application.WorksheetFunction.max(shultz(i), webber(i), jcob(i))
+        Cells(32 + (i - 1), "m").NumberFormat = "0.0"
+        
         Cells(32 + (i - 1), "n").value = Application.WorksheetFunction.min(shultz(i), webber(i), jcob(i))
+        Cells(32 + (i - 1), "n").NumberFormat = "0.0"
     Next i
 
 End Sub
