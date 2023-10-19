@@ -81,8 +81,11 @@ Sub SaveJustXLSX(ByVal fname As String)
         
         
     On Error Resume Next
-    Workbooks(fname0).Close SaveChanges:=False
+    'Workbooks(fname0).Close SaveChanges:=False
+    Workbooks("'" & fname0 & "'").Close SaveChanges:=False
     On Error GoTo 0
+    
+    
     
     ThisWorkbook.Activate
 End Sub
