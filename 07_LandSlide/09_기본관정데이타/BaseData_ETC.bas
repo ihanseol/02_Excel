@@ -9,35 +9,70 @@ Public Enum cellLowHi
     cellHI = 1
 End Enum
 
+'Function GetNumberOfWell() As Integer
+'    Dim save_name As String
+'    Dim n As Integer
+'
+'    save_name = ActiveSheet.Name
+'    Sheets("Well").Activate
+'    Sheets("Well").Range("A30").Select
+'    Selection.End(xlUp).Select
+'    n = CInt(GetNumeric2(Selection.value))
+'
+'    GetNumberOfWell = n
+'End Function
+
 Function GetNumberOfWell() As Integer
     Dim save_name As String
     Dim n As Integer
     
-    save_name = ActiveSheet.name
-    Sheets("Well").Activate
-    Sheets("Well").Range("A30").Select
-    Selection.End(xlUp).Select
-    n = CInt(GetNumeric2(Selection.value))
+    save_name = ActiveSheet.Name
+    With Sheets("Well")
+        n = .Cells(.Rows.count, "A").End(xlUp).Row
+        n = CInt(GetNumeric2(.Cells(n, "A").value))
+    End With
     
     GetNumberOfWell = n
 End Function
 
+
+'Public Function sheets_count() As Long
+'    Dim i, nSheetsCount, nWell  As Integer
+'    Dim strSheetsName(50) As String
+'
+'    nSheetsCount = ThisWorkbook.Sheets.count
+'    nWell = 0
+'
+'    For i = 1 To nSheetsCount
+'        strSheetsName(i) = ThisWorkbook.Sheets(i).Name
+'        'MsgBox (strSheetsName(i))
+'        If (ConvertToLongInteger(strSheetsName(i)) <> 0) Then
+'            nWell = nWell + 1
+'        End If
+'    Next
+'
+'    'MsgBox (CStr(nWell))
+'    sheets_count = nWell
+'End Function
+
 Public Function sheets_count() As Long
-    Dim i, nSheetsCount, nWell  As Integer
-    Dim strSheetsName(50) As String
-    
+    Dim i As Integer
+    Dim nSheetsCount As Long
+    Dim nWell As Long
+    Dim strSheetsName() As String
+
     nSheetsCount = ThisWorkbook.Sheets.count
     nWell = 0
-    
+
+    ReDim strSheetsName(1 To nSheetsCount)
+
     For i = 1 To nSheetsCount
-        strSheetsName(i) = ThisWorkbook.Sheets(i).name
-        'MsgBox (strSheetsName(i))
-        If (ConvertToLongInteger(strSheetsName(i)) <> 0) Then
+        strSheetsName(i) = ThisWorkbook.Sheets(i).Name
+        If ConvertToLongInteger(strSheetsName(i)) <> 0 Then
             nWell = nWell + 1
         End If
-    Next
-    
-    'MsgBox (CStr(nWell))
+    Next i
+
     sheets_count = nWell
 End Function
 
