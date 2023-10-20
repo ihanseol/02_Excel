@@ -141,40 +141,93 @@ Sub ListOpenWorkbookNames()
     Cells(1, 1).Value = workbookNames
 End Sub
 
-Function GetOtherFileName() As String
-    Dim Workbook As Workbook
-    Dim workbookNames As String
-    Dim bool As Boolean
-    Dim i As Long
+'Function GetOtherFileName() As String
+'    Dim Workbook As Workbook
+'    Dim workbookNames As String
+'    Dim bool As Boolean
+'    Dim i As Long
+'
+'    workbookNames = ""
+'    bool = False
+'
+'    For Each Workbook In Application.Workbooks
+'        If StrComp(ThisWorkbook.Name, Workbook.Name, vbTextCompare) = 0 Then
+'            bool = True
+'            GoTo NEXT_ITERATION
+'        End If
+'
+'        If bool Then
+'            Exit For
+'        End If
+'
+'NEXT_ITERATION:
+'    Next
+'
+'    GetOtherFileName = Workbook.Name
+'End Function
 
-    workbookNames = ""
-    bool = False
+
+Function GetOtherFileName() As String
+' refactor by instr function
+
+    Dim OtherWorkbook As Workbook
+    Dim ThisWorkbookName As String
+    Dim OtherWorkbookName As String
+
+    ThisWorkbookName = ThisWorkbook.Name
     
-    For Each Workbook In Application.Workbooks
-        If StrComp(ThisWorkbook.Name, Workbook.Name, vbTextCompare) = 0 Then
-            bool = True
-            GoTo NEXT_ITERATION
-        End If
-        
-        If bool Then
+    For Each OtherWorkbook In Application.Workbooks
+        If InStr(1, OtherWorkbook.Name, ThisWorkbookName, vbTextCompare) = 0 Then
+            OtherWorkbookName = OtherWorkbook.Name
             Exit For
         End If
-        
-NEXT_ITERATION:
-    Next
+    Next OtherWorkbook
     
-    GetOtherFileName = Workbook.Name
+    GetOtherFileName = OtherWorkbookName
 End Function
+
+
+'
+' refactor function
+'
+'Function GetOtherFileName() As String
+'    Dim OtherWorkbook As Workbook
+'    Dim ThisWorkbookName As String
+'    Dim OtherWorkbookName As String
+'
+'    ThisWorkbookName = ThisWorkbook.Name
+'
+'    For Each OtherWorkbook In Application.Workbooks
+'        If StrComp(ThisWorkbookName, OtherWorkbook.Name, vbTextCompare) <> 0 Then
+'            OtherWorkbookName = OtherWorkbook.Name
+'            Exit For
+'        End If
+'    Next OtherWorkbook
+'
+'    GetOtherFileName = OtherWorkbookName
+'End Function
+'
+
+
+
+
+'Function CheckSubstring(str As String, chk As String) As Boolean
+'
+'    If InStr(str, chk) > 0 Then
+'        ' The string contains "chk"
+'        CheckSubstring = True
+'    Else
+'        ' The string does not contain "chk"
+'        CheckSubstring = False
+'    End If
+'End Function
+
 
 
 Function CheckSubstring(str As String, chk As String) As Boolean
-    
-    If InStr(str, chk) > 0 Then
-        ' The string contains "chk"
-        CheckSubstring = True
-    Else
-        ' The string does not contain "chk"
-        CheckSubstring = False
-    End If
+    CheckSubstring = (InStr(str, chk) > 0)
 End Function
+
+
+
 
