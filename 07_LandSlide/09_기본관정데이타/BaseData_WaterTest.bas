@@ -32,14 +32,12 @@ Public Sub ShowNumberOfRowsInSheet1Selection()
     End If
 End Sub
 
+
+' Refactor 2023/10/20
 Function myRandBetween(i As Integer, j As Integer, Optional div As Integer = 100) As Single
     Dim SIGN        As Integer
     
-    If WorksheetFunction.RandBetween(0, 1) Then
-        SIGN = 1
-    Else
-        SIGN = -1
-    End If
+    SIGN = IIf(WorksheetFunction.RandBetween(0, 1), 1, -1)
     
     myRandBetween = (WorksheetFunction.RandBetween(i, j) / div) * SIGN
 End Function
@@ -50,23 +48,23 @@ Function myRandBetween2(i As Integer, j As Integer, Optional div As Integer = 10
     myRandBetween = (WorksheetFunction.RandBetween(i, j) / div)
 End Function
 
+
+' Refactor 2023/10/20
 Public Sub rnd_between()
-    Dim i, SIGN     As Integer
+    Dim i As Integer
     
     For i = 14 To 24
-        
-        If WorksheetFunction.RandBetween(0, 1) Then
-            SIGN = 1
-        Else
-            SIGN = -1
-        End If
+        Dim SIGN As Integer
+        SIGN = IIf(WorksheetFunction.RandBetween(0, 1), 1, -1)
         
         Cells(i, 14).value = (WorksheetFunction.RandBetween(7, 12) / 100) * SIGN
         
-        Cells(i, 14).HorizontalAlignment = xlCenter
-        Cells(i, 14).VerticalAlignment = xlCenter
-        Cells(i, 14).NumberFormatLocal = "0.00"
-        
+        With Cells(i, 14)
+            .HorizontalAlignment = xlCenter
+            .VerticalAlignment = xlCenter
+            .NumberFormatLocal = "0.00"
+        End With
     Next i
 End Sub
+
 
