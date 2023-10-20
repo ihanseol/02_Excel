@@ -75,7 +75,8 @@ End Sub
 ' delete last
 Private Sub CommandButton8_Click()
     Dim nofwell As Integer
-    nofwell = GetNumberOfWell()
+    'nofwell = GetNumberOfWell()
+    nofwell = sheets_count()
     
     If nofwell = 1 Then
         MsgBox "Last is not delete ... ", vbOK
