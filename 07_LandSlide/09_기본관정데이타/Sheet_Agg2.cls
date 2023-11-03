@@ -182,7 +182,7 @@ End Sub
 Sub Wrote34_SkinFactor(skin As Variant, er As Variant, nofwell As Variant)
     Dim i As Integer
     
-    Call EraseCellData("o32:q45")
+    Call EraseCellData("o32:r45")
     
     For i = 1 To nofwell
         Cells(32 + (i - 1), "p").value = "W-" & CStr(i)
@@ -266,7 +266,7 @@ Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob 
     Dim i As Integer
     Dim sum, average As Double
     
-    Call EraseCellData("h32:m45")
+    Call EraseCellData("h32:n45")
     
     For i = 1 To nofwell
         Cells(32 + (i - 1), "h").value = "W-" & CStr(i)

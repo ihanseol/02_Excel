@@ -63,24 +63,6 @@ Private Sub CommandButton2_Click()
     
     
     For i = 1 To nofwell
-'        fname = "A" & CStr(i) & "_ge_OriginalSaveFile.xlsm"
-'        If Not IsWorkBookOpen(fname) Then
-'            MsgBox "Please open the yangsoo data ! " & fname
-'            Exit Sub
-'        End If
-        
-'        q1(i) = Workbooks(fname).Worksheets("SafeYield").Range("b13").value  ' 한계양수량
-'        q2(i) = Workbooks(fname).Worksheets("SafeYield").Range("b7").value   ' 가채수량
-'        q3(i) = Workbooks(fname).Worksheets("SafeYield").Range("b15").value   ' 취수계획량
-'        ratio(i) = Workbooks(fname).Worksheets("SafeYield").Range("b11").value
-'
-'        S1(i) = Workbooks(fname).Worksheets("SafeYield").Range("b3").value   ' sd1
-'        S2(i) = Workbooks(fname).Worksheets("SafeYield").Range("b4").value   ' sd2
-'
-'        C(i) = Workbooks(fname).Worksheets("Input").Range("A31").value
-'        B(i) = Workbooks(fname).Worksheets("Input").Range("B31").value
-
-
         q1(i) = Worksheets("YangSoo").Cells(4 + i, "aa").value
         q2(i) = Worksheets("YangSoo").Cells(4 + i, "ab").value
         q3(i) = Worksheets("YangSoo").Cells(4 + i, "k").value
