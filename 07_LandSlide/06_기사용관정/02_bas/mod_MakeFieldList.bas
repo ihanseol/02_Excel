@@ -118,6 +118,13 @@ Sub Make_DataOut()
             ' 신고시설
         End If
         
+      ' 충적관정인지, 암반관정인지를 검사해서 추가해줌 ...
+       If (diameter >= 150) And (hp >= 1#) Then
+            setting = setting & "aq,"
+       Else
+            setting = setting & "ap,"
+       End If
+       
        
         Select Case LCase(Left(id, 1))
             Case "s"
@@ -226,7 +233,7 @@ Sub Make_DataOut()
                     If CheckSubstring(purpose, "공사") Then setting = setting & "av,aw,ay,"
                     If CheckSubstring(purpose, "겸용") Then setting = setting & "av,aw,ay,"
                 Else ' 허가시설이면
-                    setting = setting & "av,aw,ax,ay,az,ba,"
+                    setting = setting & "av,aw,ax,ay,az,ba"
                 End If
             
             Case "a"
@@ -239,7 +246,7 @@ Sub Make_DataOut()
                     If CheckSubstring(purpose, "축산") Then setting = setting & "aw,ay,"
                     If CheckSubstring(purpose, "기타") Then setting = setting & "aw,ay,"
                 Else ' 허가시설이면
-                    setting = setting & "av,aw,ax,ay,az,ba,"
+                    setting = setting & "av,aw,ax,ay,az,ba"
                 End If
             
             
@@ -252,7 +259,7 @@ Sub Make_DataOut()
                     
                 Else
                     ' 허가시설이면
-                    setting = setting & "av,aw,ax,ay,az,ba,"
+                    setting = setting & "av,aw,ax,ay,az,ba"
                 End If
                 
         End Select
@@ -377,7 +384,7 @@ End Sub
 
 Sub EraseSheetData()
     Worksheets("data_mid").Range("A2:J1000").Delete
-    Worksheets("data_out").Range("A1:BB1000").Delete
+    Worksheets("data_out").Range("A2:BD1000").Delete
 End Sub
 
 
