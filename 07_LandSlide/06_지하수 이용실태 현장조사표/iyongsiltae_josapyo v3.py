@@ -16,15 +16,13 @@ def get_desktop():
 def initial_work():
     desktop = get_desktop()
     excel = pd.read_excel(f"{desktop}\\{XL_INPUT}")
-    app = App()
+    app = App(None, False)
     return app, excel
 
 
 def initial_opencopy(app, excel):
     desktop = get_desktop()
     shutil.copyfile(f"{desktop}\\{HWP_INPUT}", f"{desktop}\\{HWP_OUTPUT}")
-
-    app.set_visible(False)
     app.open(f"{desktop}\\{HWP_OUTPUT}")
     hwp = app.api
 
