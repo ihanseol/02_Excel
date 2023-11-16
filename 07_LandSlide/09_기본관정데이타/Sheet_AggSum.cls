@@ -28,7 +28,7 @@ Private Sub CommandButton2_Click()
     Dim nofwell As Integer
     
     nofwell = GetNumberOfWell()
-    If ActiveSheet.name <> "AggSum" Then Sheets("AggSum").Select
+    If ActiveSheet.Name <> "AggSum" Then Sheets("AggSum").Select
 
 
     ' Summary, Aquifer Characterization  Appropriated Water Analysis
@@ -46,6 +46,11 @@ Private Sub CommandButton2_Click()
     
     Call Write_NaturalLevel(nofwell)
     Call Write_StableLevel(nofwell)
+    
+    
+    Call Write_MotorTochool(nofwell)
+    Call Write_MotorSimdo(nofwell)
+
     
 End Sub
 
@@ -81,7 +86,7 @@ Sub Write_NaturalLevel(nofwell As Integer)
     Dim i As Integer
     Dim unit As String
     
-    Call EraseCellData("d59:p60")
+    Call EraseCellData("d59:o60")
     
     If Sheets("AggSum").CheckBox1.value = True Then
             unit = " m"
@@ -100,7 +105,7 @@ Sub Write_StableLevel(nofwell As Integer)
     Dim i As Integer
     Dim unit As String
     
-    Call EraseCellData("d64:p65")
+    Call EraseCellData("d64:o65")
 
     If Sheets("AggSum").CheckBox1.value = True Then
             unit = " m"
@@ -115,6 +120,73 @@ Sub Write_StableLevel(nofwell As Integer)
     Next i
 End Sub
 
+
+
+' Write_MotorTochool
+' Write_MotorSimdo
+
+
+
+Sub Write_MotorPower(nofwell As Integer)
+' 모터마력
+    Dim i As Integer
+    Dim unit As String
+    
+    Call EraseCellData("d54:o55")
+    
+    If Sheets("AggSum").CheckBox1.value = True Then
+            unit = " Hp"
+        Else
+            unit = ""
+    End If
+
+    For i = 1 To nofwell
+        Cells(54, Chr(Asc("D") + i - 1)).value = "W-" & CStr(i)
+        Cells(55, Chr(Asc("D") + i - 1)).value = Worksheets(CStr(i)).Range("c17").value & unit
+    Next i
+End Sub
+
+
+Sub Write_MotorSimdo(nofwell As Integer)
+' 모터심도
+    Dim i As Integer
+    Dim unit As String
+    
+    Call EraseCellData("d74:o75")
+
+    If Sheets("AggSum").CheckBox1.value = True Then
+            unit = " m"
+        Else
+            unit = ""
+    End If
+
+
+    For i = 1 To nofwell
+        Cells(74, Chr(Asc("D") + i - 1)).value = "W-" & CStr(i)
+        Cells(75, Chr(Asc("D") + i - 1)).value = Worksheets(CStr(i)).Range("c18").value & unit
+    Next i
+End Sub
+
+
+Sub Write_MotorTochool(nofwell As Integer)
+' 토출구경
+    Dim i As Integer
+    Dim unit As String
+    
+    Call EraseCellData("d69:o70")
+
+    If Sheets("AggSum").CheckBox1.value = True Then
+            unit = " mm"
+        Else
+            unit = ""
+    End If
+
+
+    For i = 1 To nofwell
+        Cells(69, Chr(Asc("D") + i - 1)).value = "W-" & CStr(i)
+        Cells(70, Chr(Asc("D") + i - 1)).value = Worksheets(CStr(i)).Range("c19").value & unit
+    Next i
+End Sub
 
 
 
@@ -138,32 +210,13 @@ Sub Write_DiggingDepth(nofwell As Integer)
 End Sub
 
 
-Sub Write_MotorPower(nofwell As Integer)
-' 모터마력
-    Dim i As Integer
-    Dim unit As String
-    
-    Call EraseCellData("d54:p55")
-    
-    If Sheets("AggSum").CheckBox1.value = True Then
-            unit = " Hp"
-        Else
-            unit = ""
-    End If
-
-    For i = 1 To nofwell
-        Cells(54, Chr(Asc("D") + i - 1)).value = "W-" & CStr(i)
-        Cells(55, Chr(Asc("D") + i - 1)).value = Worksheets(CStr(i)).Range("c17").value & unit
-    Next i
-End Sub
-
 
 Sub Write_WaterIntake(nofwell As Integer)
 ' 취수계획량
     Dim i As Integer
     Dim unit As String
     
-    Call EraseCellData("d44:p45")
+    Call EraseCellData("d44:o45")
     
     If Sheets("AggSum").CheckBox1.value = True Then
             unit = Sheets("drastic").Range("a16").value
