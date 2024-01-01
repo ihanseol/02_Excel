@@ -37,7 +37,11 @@ Public Function StringToDoubleArray(str As String) As Variant
 End Function
 
 
-Sub delete_ignore_error()
+'
+' minhwasoo, 2024-01-01
+' error checking
+'
+Private Sub delete_ignore_error()
     
     Dim rg1 As Range
     
@@ -45,15 +49,35 @@ Sub delete_ignore_error()
             If rg1.Errors.Item(xlOmittedCells).Ignore = False Then
                 rg1.Errors.Item(xlOmittedCells).Ignore = True
             End If
+            
+            rg1.Errors.Item(xlInconsistentFormula).Ignore = True
+             
+            Debug.Print "a"
     Next rg1
 
     For Each rg1 In Range("o44:o53")
             If rg1.Errors.Item(xlOmittedCells).Ignore = False Then
                 rg1.Errors.Item(xlOmittedCells).Ignore = True
             End If
+            
+            rg1.Errors.Item(xlInconsistentFormula).Ignore = True
     Next rg1
 
 End Sub
+
+'쉬트를 순회하면서, 에러를 지운다.
+Sub deleteall_igonre_error()
+
+    Dim ws As Worksheet
+
+    For Each ws In ThisWorkbook.Sheets
+        'MsgBox ws.name
+        ws.Activate
+        Call delete_ignore_error
+    Next ws
+
+End Sub
+
 
 Sub ChangeFormat()
     
