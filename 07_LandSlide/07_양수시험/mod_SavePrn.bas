@@ -7,7 +7,16 @@ Public Function MyDocsPath() As String
 End Function
 
 Public Function WB_HEAD() As String
-    WB_HEAD = MyDocsPath + "\" + Left(ThisWorkbook.name, 5)
+    Dim num As Integer
+    
+    num = GetNumbers(Worksheets("Input").Range("I54").Value)
+    
+    If num >= 10 Then
+        WB_HEAD = MyDocsPath + "\" + Left(ThisWorkbook.name, 6)
+    Else
+        WB_HEAD = MyDocsPath + "\" + Left(ThisWorkbook.name, 5)
+    End If
+    
     Debug.Print WB_HEAD
 End Function
 
@@ -42,4 +51,6 @@ Sub save_original()
     ActiveWorkbook.SaveAs Filename:=WB_HEAD + "_OriginalSaveFile", FileFormat:= _
                           xlOpenXMLWorkbookMacroEnabled, CreateBackup:=False
 End Sub
+
+
 
