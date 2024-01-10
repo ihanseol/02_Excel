@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub CommandButton1_Click()
     Call getMotorPower
+    Call FindMaxMin
 End Sub
 
 Private Sub CommandButton2_Click()
@@ -17,10 +18,39 @@ Private Sub CommandButton2_Click()
     Range("g34").Select
 End Sub
 
+Private Sub FindMaxMin()
+
+    Dim nWell As Integer
+    Dim maxVal, minVal As Double
+    Dim qMax, qMin As Double
+    
+    
+    nWell = GetNumberOfWell()
+    
+    If nWell <= 1 Then
+        Exit Sub
+    End If
+    
+    maxVal = Application.WorksheetFunction.max(Range("B46:" & Chr(Asc("B") + nWell - 1) & "46"))
+    minVal = Application.WorksheetFunction.min(Range("B46:" & Chr(Asc("B") + nWell - 1) & "46"))
+    
+    qMax = Application.WorksheetFunction.max(Range("B40:" & Chr(Asc("B") + nWell - 1) & "40"))
+    qMin = Application.WorksheetFunction.min(Range("B40:" & Chr(Asc("B") + nWell - 1) & "40"))
+    
+    
+    Range("k52") = minVal
+    Range("k53") = maxVal
+    
+    Range("l52") = qMin
+    Range("l53") = qMax
+
+End Sub
+
 Private Sub ShowLocation_Click()
       Sheets("location").Visible = True
       Sheets("location").Activate
 End Sub
+
 
 
 Private Sub CommandButton3_Click()
