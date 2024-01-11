@@ -52,11 +52,13 @@ Sub ExportCurrentWorksheet(sh As String)
     If VarType(filePath) = vbString Then
     
         If Dir(filePath) <> "" Then
+            ' Delete the file
+            Kill filePath
     
-            If MsgBox("The file " & filePath & " already exists. Do you want to overwrite it?", _
-                      vbQuestion + vbYesNo, "Confirm Overwrite") = vbNo Then
-                Exit Sub
-            End If
+'            If MsgBox("The file " & filePath & " already exists. Do you want to overwrite it?", _
+'                      vbQuestion + vbYesNo, "Confirm Overwrite") = vbNo Then
+'                Exit Sub
+'            End If
         End If
     
     
@@ -70,6 +72,19 @@ Sub ExportCurrentWorksheet(sh As String)
         ActiveWorkbook.Close savechanges:=False
     End If
 End Sub
+
+
+Private Sub DeleteFile(filePath As String)
+    ' Check if the file exists before attempting to delete
+    If Dir(filePath) <> "" Then
+        ' Delete the file
+        Kill filePath
+        ' MsgBox "File deleted successfully.", vbInformation
+    Else
+        ' MsgBox "File not found.", vbExclamation
+    End If
+End Sub
+
 
 
 Function ActivateSheet(sh As String) As Boolean
