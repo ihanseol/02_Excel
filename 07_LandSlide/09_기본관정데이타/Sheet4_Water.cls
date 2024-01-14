@@ -19,12 +19,27 @@ Private Sub CommandButton2_Click()
         MsgBox "Please Open 기사용관정, 파일 ", vbOKOnly
         Exit Sub
     End If
-    
+   
     
     WB_NAME = GetOtherFileName
     
     cpRange = GetCopyPoint(WB_NAME)
     Call CopyFromGWAN_JUNG(WB_NAME, cpRange)
+    Call FormulaInjection
+    
+End Sub
+
+' 2024-01-14
+' inject formula ...
+
+Private Sub FormulaInjection()
+    Dim nofwell, i As Integer
+    
+    nofwell = GetNumberOfWell()
+    For i = 4 To nofwell + 3
+        Sheets("Well").Cells(i, "O").formula = "=ROUND(water!$F$7, 1)"
+    Next i
+
 End Sub
 
 '
@@ -68,7 +83,7 @@ Sub ListOpenWorkbookNames()
     workbookNames = ""
     
     For Each Workbook In Application.Workbooks
-        workbookNames = workbookNames & Workbook.name & vbCrLf
+        workbookNames = workbookNames & Workbook.Name & vbCrLf
     Next
     
     Cells(1, 1).value = workbookNames
@@ -82,18 +97,18 @@ Function GetOtherFileName() As String
     workbookNames = ""
     
     For Each Workbook In Application.Workbooks
-        If StrComp(ThisWorkbook.name, Workbook.name, vbTextCompare) = 0 Then
+        If StrComp(ThisWorkbook.Name, Workbook.Name, vbTextCompare) = 0 Then
             GoTo NEXT_ITERATION
         End If
         
-        If CheckSubstring(Workbook.name, "관정") Then
+        If CheckSubstring(Workbook.Name, "관정") Then
             Exit For
         End If
         
 NEXT_ITERATION:
     Next
     
-    GetOtherFileName = Workbook.name
+    GetOtherFileName = Workbook.Name
 End Function
 
 
