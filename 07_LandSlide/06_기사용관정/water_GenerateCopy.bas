@@ -2,27 +2,21 @@ Attribute VB_Name = "water_GenerateCopy"
 Option Explicit
 
 Private Function lastRowByKey(cell As String) As Long
-
     lastRowByKey = Range(cell).End(xlDown).row
-
 End Function
 
 
 Private Function lastRowByRowsCount(cell As String) As Long
-
     lastRowByRowsCount = Cells(Rows.Count, cell).End(xlUp).row
-
 End Function
 
 Public Sub clearRowA()
-
     Columns("A:A").Select
     Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
         SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
         ReplaceFormat:=False
         
     Range("m2").Select
-
 End Sub
 
 Private Function lastRowByFind() As Long
@@ -34,7 +28,6 @@ Private Function lastRowByFind() As Long
 End Function
 
 Private Sub DoCopy(lastRow As Long)
-
     Range("F2:H" & lastRow).Select
     Selection.Copy
     
@@ -58,12 +51,11 @@ Private Sub DoCopy(lastRow As Long)
     
     Range("N14").Select
     Application.CutCopyMode = False
-    
 End Sub
 
 
+' return letter of range ...
 Function Alpha_Column(Cell_Add As Range) As String
-
     Dim No_of_Rows As Integer
     Dim No_of_Cols As Integer
     Dim Num_Column As Integer
@@ -82,11 +74,12 @@ Function Alpha_Column(Cell_Add As Range) As String
     Else
         Alpha_Column = Chr(Int(Num_Column / 26) + 64) & Chr((Num_Column Mod 26) + 64)
     End If
-    
 End Function
 
-Sub ToggleOX()
 
+' Ctrl+D , Toggle OX, Toggle SINGO, HEOGA
+Sub ToggleOX()
+Attribute ToggleOX.VB_ProcData.VB_Invoke_Func = "d\n14"
     Dim activeCellColumn, activeCellRow As String
     Dim row As Long
     Dim col As Long
@@ -125,53 +118,55 @@ Sub ToggleOX()
             Selection.Font.Bold = False
         End If
     End If
-
-
 End Sub
 
 
 Sub MainMoudleGenerateCopy()
-
     Dim lastRow As Long
         
     lastRow = lastRowByKey("A1")
     Call DoCopy(lastRow)
-
-
 End Sub
 
 
 Sub SubModuleInitialClear()
-
     Dim lastRow As Long
-        
+    Dim userChoice As VbMsgBoxResult
+    
     lastRow = lastRowByKey("A1")
+  
+    userChoice = MsgBox("Do you want to continue?", vbOKCancel, "Confirmation")
+
+    If userChoice <> vbOK Then
+        Exit Sub
+    End If
+    
     Range("e2:j" & lastRow).Select
     Selection.ClearContents
     Range("n2:r" & lastRow).Select
     Selection.ClearContents
     Range("P14").Select
-
-
+    
+    
+    If lastRow >= 23 Then
+        Rows("23:" & lastRow).Select
+        Selection.Delete Shift:=xlUp
+    End If
 End Sub
 
 Sub SubModuleCleanCopySection()
-
     Dim lastRow As Long
         
     lastRow = lastRowByKey("A1")
     Range("n2:r" & lastRow).Select
     Selection.ClearContents
     Range("P14").Select
-    
-    
 End Sub
 
 
 ' 2023/4/19 - copy modify
 
 Sub insertRow()
-
     Dim lastRow As Long, i As Long, j As Long
     Dim selection_origin, selection_target As String
     
@@ -205,8 +200,6 @@ Sub insertRow()
     ActiveWindow.LargeScroll Down:=-1
     ActiveWindow.LargeScroll Down:=-1
     ActiveWindow.LargeScroll Down:=-1
-
-
 End Sub
 
 

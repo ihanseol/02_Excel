@@ -23,7 +23,6 @@ Public Enum AA_VALUE
 End Enum
 
 Function CheckBoxFind(objNAME As String) As MSForms.CheckBox
-    
     Dim ws As Worksheet
     Dim obj As OLEObject
     Dim myCheckBox As MSForms.CheckBox
@@ -48,11 +47,9 @@ Function CheckBoxFind(objNAME As String) As MSForms.CheckBox
         ' not found
         Set CheckBoxFind = Nothing
     End If
-
 End Function
 
 Function ComboBoxFind(objNAME As String) As MSForms.ComboBox
-    
     Dim ws As Worksheet
     Dim obj As OLEObject
     Dim myComboBox As MSForms.ComboBox
@@ -77,12 +74,10 @@ Function ComboBoxFind(objNAME As String) As MSForms.ComboBox
         ' not found
         Set ComboBoxFind = Nothing
     End If
-
 End Function
 
 
 Function TextBoxFind(objNAME As String) As MSForms.TextBox
-    
     Dim ws As Worksheet
     Dim obj As OLEObject
     Dim myTextBox As MSForms.TextBox
@@ -107,13 +102,11 @@ Function TextBoxFind(objNAME As String) As MSForms.TextBox
         ' not found
         Set TextBoxFind = Nothing
     End If
-
 End Function
 
 
 
 Function is_Jiyeol(ByVal area As String) As Boolean
-
     Dim tbl As ListObject
     Dim headerRowArray() As Variant
     
@@ -131,7 +124,6 @@ Function is_Jiyeol(ByVal area As String) As Boolean
     Next i
     
     is_Jiyeol = False
-
 End Function
 
 
@@ -150,9 +142,7 @@ End Sub
 
 
 Private Function lastRowByKey(cell As String) As Long
-
-    lastRowByKey = Range(cell).End(xlDown).Row
-
+    lastRowByKey = Range(cell).End(xlDown).row
 End Function
 
 
@@ -248,14 +238,12 @@ Function ss_water(ByVal qhp As Integer, ByVal strPurpose As String, Optional ByV
     End If
     
    ss_water = 900
-      
 End Function
 
 
 
 
 Function aa_water(qhp As Integer, strPurpose As String, Optional ByVal nhead As Integer = 30) As Double
-
     'nhead - 축산업의 두수 ....
 
     ' 전작용
@@ -301,9 +289,7 @@ Function aa_water(qhp As Integer, strPurpose As String, Optional ByVal nhead As 
         Exit Function
     End If
     
-    
    aa_water = 900
-      
 End Function
 
 

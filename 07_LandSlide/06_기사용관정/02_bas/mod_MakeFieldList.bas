@@ -4,12 +4,13 @@ Option Explicit
 ' 이곳에다가 기본적인 설정값을 세팅해준다.
 ' 파일이름과, 조사일같은것들을 ...
 
-Const EXPORT_DATE As String = "2023-08-14"
-Const EXPORT_ADDR_HEADER As String = "충청남도 부여군 "
+Const EXPORT_DATE As String = "2023-12-20"
+Const EXPORT_ADDR_HEADER As String = "서울특별시 "
 Const EXPORT_FILE_NAME As String = "d:\05_Send\iyong_template.xlsx"
         
 ' 1인 1일당 급수량, 엑셀파일을 보고 검사
-Const ONEMAN_WATER_SUPPLY As Double = 382.7
+' 서울특별시 강북구
+Const ONEMAN_WATER_SUPPLY As Double = 265.16
         
 Public Enum ALLOW_TYPE_VALUE
      at_HEOGA = 0
@@ -23,7 +24,8 @@ End Sub
 
 
 Sub MakeFieldList()
-    Call make
+    Call make_datamid
+    Call Delete_Outside_Boundary
     Call ExportData
 End Sub
 
@@ -50,11 +52,13 @@ Sub ExportCurrentWorksheet(sh As String)
     If VarType(filePath) = vbString Then
     
         If Dir(filePath) <> "" Then
+            ' Delete the file
+            Kill filePath
     
-            If MsgBox("The file " & filePath & " already exists. Do you want to overwrite it?", _
-                      vbQuestion + vbYesNo, "Confirm Overwrite") = vbNo Then
-                Exit Sub
-            End If
+'            If MsgBox("The file " & filePath & " already exists. Do you want to overwrite it?", _
+'                      vbQuestion + vbYesNo, "Confirm Overwrite") = vbNo Then
+'                Exit Sub
+'            End If
         End If
     
     
@@ -68,6 +72,19 @@ Sub ExportCurrentWorksheet(sh As String)
         ActiveWorkbook.Close savechanges:=False
     End If
 End Sub
+
+
+Private Sub DeleteFile(filePath As String)
+    ' Check if the file exists before attempting to delete
+    If Dir(filePath) <> "" Then
+        ' Delete the file
+        Kill filePath
+        ' MsgBox "File deleted successfully.", vbInformation
+    Else
+        ' MsgBox "File not found.", vbExclamation
+    End If
+End Sub
+
 
 
 Function ActivateSheet(sh As String) As Boolean
@@ -118,13 +135,15 @@ Sub Make_DataOut()
             ' 신고시설
         End If
         
-      ' 충적관정인지, 암반관정인지를 검사해서 추가해줌 ...
-       If (diameter >= 150) And (hp >= 1#) Then
-            setting = setting & "aq,"
-       Else
-            setting = setting & "ap,"
-       End If
-       
+'       충적관정인지, 암반관정인지를 검사해서 추가해줌 ...
+'       If (diameter >= 150) And (hp >= 1#) Then
+'            setting = setting & "aq,"
+'       Else
+'            setting = setting & "ap,"
+'       End If
+
+        setting = setting & IIf(diameter >= 150 And hp >= 1#, "aq,", "ap,")
+
        
         Select Case LCase(Left(id, 1))
             Case "s"
@@ -359,26 +378,37 @@ End Sub
 
 Function getlastrow() As Integer
     ' ActiveSheet.Cells(Rows.Count, 1).End(xlUp).Row
-    getlastrow = ActiveSheet.Range("A3333").End(xlUp).Row
+    getlastrow = ActiveSheet.Range("A3333").End(xlUp).row
 End Function
 
 
-Sub LastRowFindAll(row_ss As Variant, row_aa As Variant, row_ii As Variant)
+' 2024-1-11 , modify last cell check
+' using cell reference SUM_SS, SUM_AA, SUM_II
 
-    Sheets("ss").Activate
-    row_ss = getlastrow() - 1
+Sub LastRowFindAll(row_ss As Variant, row_aa As Variant, row_ii As Variant)
     
-    Sheets("aa").Activate
-    row_aa = getlastrow() - 1
+    If Range("SUM_SS").Value = 0 Then
+        row_ss = 0
+    Else
+        Sheets("ss").Activate
+        row_ss = getlastrow() - 1
+    End If
+           
+    If Range("SUM_AA").Value = 0 Then
+        row_aa = 0
+    Else
+        Sheets("aa").Activate
+        row_aa = getlastrow() - 1
+    End If
+      
     
-    
-    If Sheets("ii").Range("l2").Value = 0 Then
+    If Range("SUM_II").Value = 0 Then
         row_ii = 0
         Exit Sub
+    Else
+        Sheets("ii").Activate
+        row_ii = getlastrow() - 1
     End If
-    
-    Sheets("ii").Activate
-    row_ii = getlastrow() - 1
     
 End Sub
 
@@ -390,25 +420,21 @@ End Sub
 
 ' allowType = 1 - 신고공
 ' allowType = 0 - 허가공
-Public Sub make()
+Public Sub make_datamid()
     Dim i, j, row_end As Integer
     Dim newAddress, id, purpose As String
     Dim allowType As Integer
     Dim well_data(1 To 5) As Double
     Dim Q As Double
+    Dim boundary As String
     Dim row_ss, row_aa, row_ii As Integer
-       
-
     
     Call LastRowFindAll(row_ss, row_aa, row_ii)
     Call EraseSheetData
     
-    
-    
     Sheets("ss").Activate
     ' Debug.Print row_end
     For i = 1 To row_ss
-    
         id = Cells(i + 1, "a").Value
         ' 주소헤더, 지역에 따라 값을 다시 설정해주어야 한다.
         newAddress = EXPORT_ADDR_HEADER & Cells(i + 1, "c") & " " & Cells(i + 1, "d") & " " & Cells(i + 1, "e") & " , " & id
@@ -427,8 +453,9 @@ Public Sub make()
         
         purpose = Cells(i + 1, "k").Value
         Q = Cells(i + 1, "l").Value
+        boundary = Cells(i + 1, "s").Value
         
-        Call putdata(i, id, newAddress, allowType, well_data, purpose, Q)
+        Call putdata(i, id, newAddress, allowType, well_data, purpose, Q, boundary)
     Next i
     
     
@@ -453,8 +480,9 @@ Public Sub make()
         
         purpose = Cells(i + 1, "k").Value
         Q = Cells(i + 1, "l").Value
+        boundary = Cells(i + 1, "s").Value
         
-        Call putdata(i + row_ss, id, newAddress, allowType, well_data, purpose, Q)
+        Call putdata(i + row_ss, id, newAddress, allowType, well_data, purpose, Q, boundary)
     Next i
     
     Sheets("ii").Activate
@@ -479,16 +507,40 @@ Public Sub make()
         
         purpose = Cells(i + 1, "k").Value
         Q = Cells(i + 1, "l").Value
+        boundary = Cells(i + 1, "s").Value
         
-        Call putdata(i + row_ss + row_aa, id, newAddress, allowType, well_data, purpose, Q)
+        Call putdata(i + row_ss + row_aa, id, newAddress, allowType, well_data, purpose, Q, boundary)
     Next i
-    
     
 End Sub
 
-Sub putdata(i As Variant, id As Variant, newAddress As Variant, allowType As Variant, well_data As Variant, purpose As Variant, Q As Variant)
+' 2024-1-11
+' delete outside boundary
+
+Private Sub Delete_Outside_Boundary()
+
+    Dim row_ss, row_aa, row_ii As Integer
+    Dim i, j As Integer
+        
+    j = 2
+    Sheets("data_mid").Activate
     
-    ' Sheets("data_mid").Activate
+    For i = 1 To getlastrow()
+        
+        If Cells(j, "K").Value = "O" Then
+            j = j + 1
+        Else
+            Rows(j & ":" & j).Select
+            Selection.Delete Shift:=xlUp
+        End If
+    
+    Next i
+
+End Sub
+
+Sub putdata(i As Variant, id As Variant, newAddress As Variant, allowType As Variant, well_data As Variant, _
+            purpose As Variant, Q As Variant, boundary As Variant)
+        
     Sheets("data_mid").Cells(i + 1, "a").Value = id
     Sheets("data_mid").Cells(i + 1, "b").Value = newAddress
     Sheets("data_mid").Cells(i + 1, "c").Value = allowType
@@ -499,8 +551,13 @@ Sub putdata(i As Variant, id As Variant, newAddress As Variant, allowType As Var
     Sheets("data_mid").Cells(i + 1, "h").Value = well_data(5)
     Sheets("data_mid").Cells(i + 1, "i").Value = purpose
     Sheets("data_mid").Cells(i + 1, "j").Value = Q
+    Sheets("data_mid").Cells(i + 1, "k").Value = boundary
     
 End Sub
+
+
+
+
 
 
 

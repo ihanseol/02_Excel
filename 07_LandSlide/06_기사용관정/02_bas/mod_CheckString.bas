@@ -3,7 +3,6 @@ Option Explicit
 
 
 Function CheckSubstring(str As String, chk As String) As Boolean
-    
     If InStr(str, chk) > 0 Then
         ' The string contains "chk"
         CheckSubstring = True
@@ -15,8 +14,7 @@ End Function
 
 
 Function IsDrinking(str As String) As Boolean
-    
-    ' 가정용 - 사설
+   ' 가정용 - 사설
     If CheckSubstring(str, "가정") Then
             IsDrinking = True
             Exit Function
@@ -65,13 +63,11 @@ Function IsDrinking(str As String) As Boolean
     End If
     
     IsDrinking = False
-       
 End Function
 
 
 
 Function SS_StringCheck(str As String) As String
-    
     ' 가정용 - 사설
     If CheckSubstring(str, "가정") Then
             SS_StringCheck = "g,"
@@ -121,9 +117,6 @@ Function SS_StringCheck(str As String) As String
     End If
     
     SS_StringCheck = "n,"
-    
-    
-
 End Function
 
 Function AA_StringCheck(str As String) As String
@@ -160,12 +153,10 @@ Function AA_StringCheck(str As String) As String
     End If
     
     AA_StringCheck = "aa,"
-    
 End Function
 
 
 Function II_StringCheck(str As String) As String
-    
     ' 극가, 지방, 농공 - 공공
     If CheckSubstring(str, "국가") Then
             II_StringCheck = "p,"
@@ -199,7 +190,6 @@ End Function
 
 
 Function SS_PublicCheck(str As String) As String
-    
     ' 가정용 - 사설
     If CheckSubstring(str, "가정") Then
             SS_PublicCheck = "ac,"
@@ -249,11 +239,9 @@ Function SS_PublicCheck(str As String) As String
     End If
     
     SS_PublicCheck = "ac,"
-
 End Function
 
 Function AA_PublicCheck(str As String) As String
-    
     ' 농업용은 전부 사설, 이중 허가공 - 공공
     If CheckSubstring(str, "전작") Then
             AA_PublicCheck = "ac,"
@@ -286,12 +274,10 @@ Function AA_PublicCheck(str As String) As String
     End If
     
     AA_PublicCheck = "ac,"
-    
 End Function
 
 
 Function II_PublicCheck(str As String) As String
-    
     ' 극가, 지방, 농공 - 공공
     If CheckSubstring(str, "국가") Then
             II_PublicCheck = "ab,"
@@ -320,7 +306,6 @@ Function II_PublicCheck(str As String) As String
     End If
 
     II_PublicCheck = "ac,"
-    
 End Function
 
 

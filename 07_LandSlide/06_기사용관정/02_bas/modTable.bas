@@ -16,7 +16,6 @@ End Sub
 
 
 Sub initialize_CNU(area As String)
-
     Dim tbl As ListObject
     Set tbl = Sheets("ref").ListObjects("tableCNU")
     
@@ -27,8 +26,7 @@ Sub initialize_CNU(area As String)
     End If
     
     values = tbl.ListColumns(area).DataBodyRange.Value
-        
-        
+         
     '전라남도, 목포시, 2020 환경부 지하수업무수행지침
     SS(svGAJUNG, 1) = values(1, 1)
     SS(svGAJUNG, 2) = values(2, 1)
@@ -70,7 +68,6 @@ End Sub
 
 
 Sub initialize_JIYEOL(area As String)
-
     Dim tbl As ListObject
     Set tbl = Sheets("ref1").ListObjects("tableJIYEOL")
     
@@ -82,8 +79,7 @@ Sub initialize_JIYEOL(area As String)
     End If
     
     values = tbl.ListColumns(area).DataBodyRange.Value
-        
-        
+           
     '전라남도, 목포시, 2020 환경부 지하수업무수행지침
     SS(svGAJUNG, 1) = values(1, 1)
     SS(svGAJUNG, 2) = values(2, 1)
@@ -120,7 +116,6 @@ Sub initialize_JIYEOL(area As String)
     
     AA(avCHICKEN, 1) = values(22, 1)
     AA(avCHICKEN, 2) = values(23, 1)
-    
 End Sub
 
 
