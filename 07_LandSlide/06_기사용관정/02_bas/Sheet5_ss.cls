@@ -51,6 +51,7 @@ Private Sub CommandButton5_Click()
     UserForm_survey.Show
 End Sub
 
+
 Private Sub Worksheet_Activate()
     ' Call combobox_initialize
     Call clearRowA
@@ -116,6 +117,11 @@ End Sub
 Private Sub CommandButtonDelete_Click()
     Call SubModuleCleanCopySection
 End Sub
+
+Private Sub CommandButtonInitialClear_Click()
+ Call SubModuleInitialClear
+End Sub
+
 
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
 

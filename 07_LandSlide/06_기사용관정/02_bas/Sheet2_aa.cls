@@ -32,6 +32,10 @@ Private Sub CommandButton5_Click()
     Sheets("aa").Activate
 End Sub
 
+Private Sub CommandButtonInitialClear_Click()
+
+End Sub
+
 Private Sub Worksheet_Activate()
     Call clearRowA
 End Sub

@@ -62,15 +62,6 @@ Attribute DoCopy.VB_ProcData.VB_Invoke_Func = " \n14"
     
 End Sub
 
-
-Private Sub CleanSection(lastRow As Long)
-
-    Range("n2:r" & lastRow).Select
-    Selection.ClearContents
-    Range("P14").Select
-    
-End Sub
-
 Sub MainMoudleGenerateCopy()
 
     Dim lastRow As Long
@@ -82,14 +73,32 @@ Sub MainMoudleGenerateCopy()
 End Sub
 
 
+Sub SubModuleInitialClear()
+
+    Dim lastRow As Long
+        
+    lastRow = lastRowByKey("I1")
+    Range("e2:j" & lastRow).Select
+    Selection.ClearContents
+    Range("P14").Select
+
+
+End Sub
+
 Sub SubModuleCleanCopySection()
 
     Dim lastRow As Long
         
     lastRow = lastRowByKey("I1")
-    Call CleanSection(lastRow)
+    Range("n2:r" & lastRow).Select
+    Selection.ClearContents
+    Range("P14").Select
+    
     
 End Sub
+
+
+' 2023/4/19 - copy modify
 
 Sub insertRow()
 
@@ -111,14 +120,14 @@ Sub insertRow()
     Range(selection_origin).Select
     Selection.AutoFill Destination:=Range(selection_target), Type:=xlFillDefault
  
-    selection_origin = "J" & i & ":L" & i
-    selection_target = "J" & i & ":L" & j
+    selection_origin = "K" & i & ":M" & i
+    selection_target = "K" & i & ":M" & j
 
     Range(selection_origin).Select
     Selection.AutoFill Destination:=Range(selection_target), Type:=xlFillDefault
     
-    Range("R" & i).Select
-    Selection.AutoFill Destination:=Range("R" & i & ":R" & j), Type:=xlFillDefault
+    Range("S" & i).Select
+    Selection.AutoFill Destination:=Range("S" & i & ":S" & j), Type:=xlFillDefault
     
     Application.CutCopyMode = False
     
