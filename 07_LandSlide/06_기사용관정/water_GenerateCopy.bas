@@ -3,14 +3,14 @@ Option Explicit
 
 Private Function lastRowByKey(cell As String) As Long
 
-    lastRowByKey = Range(cell).End(xlDown).Row
+    lastRowByKey = Range(cell).End(xlDown).row
 
 End Function
 
 
 Private Function lastRowByRowsCount(cell As String) As Long
 
-    lastRowByRowsCount = Cells(Rows.Count, cell).End(xlUp).Row
+    lastRowByRowsCount = Cells(Rows.Count, cell).End(xlUp).row
 
 End Function
 
@@ -28,13 +28,12 @@ End Sub
 Private Function lastRowByFind() As Long
     Dim lastRow As Long
     
-    lastRow = Cells.Find("*", SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
+    lastRow = Cells.Find("*", SearchOrder:=xlByRows, SearchDirection:=xlPrevious).row
     
     lastRowByFind = lastRow
 End Function
 
 Private Sub DoCopy(lastRow As Long)
-Attribute DoCopy.VB_ProcData.VB_Invoke_Func = " \n14"
 
     Range("F2:H" & lastRow).Select
     Selection.Copy
@@ -62,12 +61,43 @@ Attribute DoCopy.VB_ProcData.VB_Invoke_Func = " \n14"
     
 End Sub
 
+
+Function Alpha_Column(Cell_Add As Range) As String
+
+    Dim No_of_Rows As Integer
+    Dim No_of_Cols As Integer
+    Dim Num_Column As Integer
+    
+    No_of_Rows = Cell_Add.Rows.Count
+    No_of_Cols = Cell_Add.Columns.Count
+    
+    If ((No_of_Rows <> 1) Or (No_of_Cols <> 1)) Then
+        Alpha_Column = ""
+        Exit Function
+    End If
+    
+    Num_Column = Cell_Add.Column
+    If Num_Column < 26 Then
+        Alpha_Column = Chr(64 + Num_Column)
+    Else
+        Alpha_Column = Chr(Int(Num_Column / 26) + 64) & Chr((Num_Column Mod 26) + 64)
+    End If
+    
+End Function
+
 Sub ToggleOX()
-Attribute ToggleOX.VB_ProcData.VB_Invoke_Func = "d\n14"
 
     Dim activeCellColumn, activeCellRow As String
+    Dim row As Long
+    Dim col As Long
+
     activeCellColumn = Split(ActiveCell.address, "$")(1)
     activeCellRow = Split(ActiveCell.address, "$")(2)
+  
+    row = ActiveCell.row
+    col = ActiveCell.Column
+    
+    Debug.Print Alpha_Column(ActiveCell)
     
     If activeCellColumn = "S" Then
         If ActiveCell.Value = "O" Then
@@ -104,7 +134,7 @@ Sub MainMoudleGenerateCopy()
 
     Dim lastRow As Long
         
-    lastRow = lastRowByKey("I1")
+    lastRow = lastRowByKey("A1")
     Call DoCopy(lastRow)
 
 
@@ -115,8 +145,10 @@ Sub SubModuleInitialClear()
 
     Dim lastRow As Long
         
-    lastRow = lastRowByKey("I1")
+    lastRow = lastRowByKey("A1")
     Range("e2:j" & lastRow).Select
+    Selection.ClearContents
+    Range("n2:r" & lastRow).Select
     Selection.ClearContents
     Range("P14").Select
 
@@ -127,7 +159,7 @@ Sub SubModuleCleanCopySection()
 
     Dim lastRow As Long
         
-    lastRow = lastRowByKey("I1")
+    lastRow = lastRowByKey("A1")
     Range("n2:r" & lastRow).Select
     Selection.ClearContents
     Range("P14").Select
@@ -176,6 +208,8 @@ Sub insertRow()
 
 
 End Sub
+
+
 
 
 
