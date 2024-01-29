@@ -11,12 +11,32 @@ Private Function lastRowByRowsCount(cell As String) As Long
 End Function
 
 Public Sub clearRowA()
+    
+    
     Columns("A:A").Select
     Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
         SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
         ReplaceFormat:=False
-        
-    Range("m2").Select
+    Range("M2").Select
+    
+    Sheets("AA").Activate
+    Columns("A:A").Select
+    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    Range("M2").Select
+    
+    Sheets("II").Activate
+    Columns("A:A").Select
+    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    Range("M2").Select
+    
+    
+    Sheets("SS").Activate
+    
+    
 End Sub
 
 Private Function lastRowByFind() As Long
@@ -169,16 +189,21 @@ End Sub
 Sub insertRow()
     Dim lastRow As Long, i As Long, j As Long
     Dim selection_origin, selection_target As String
+    Dim AddingRowCount As Long
     
     'lastRow = lastRowByKey("A1")
 
+    AddingRowCount = 10
+
     lastRow = lastRowByRowsCount("A")
     
-    Rows(CStr(lastRow + 1) & ":" & CStr(lastRow + 2)).Select
+    Rows(CStr(lastRow + 1) & ":" & CStr(lastRow + AddingRowCount)).Select
     Selection.Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove
     
     
-    i = lastRowByKey("A1"): j = i + 2
+    i = lastRowByKey("A1")
+    j = i + AddingRowCount
+    
     selection_origin = "A" & i & ":D" & i
     selection_target = "A" & i & ":D" & j
     
