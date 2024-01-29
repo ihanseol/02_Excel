@@ -12,30 +12,29 @@ End Function
 
 Public Sub clearRowA()
     
-    
-    Columns("A:A").Select
-    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
-        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-        ReplaceFormat:=False
-    Range("M2").Select
-    
-    Sheets("AA").Activate
-    Columns("A:A").Select
-    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
-        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-        ReplaceFormat:=False
-    Range("M2").Select
-    
-    Sheets("II").Activate
-    Columns("A:A").Select
-    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
-        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-        ReplaceFormat:=False
-    Range("M2").Select
-    
-    
-    Sheets("SS").Activate
-    
+'
+'    Columns("A:A").Select
+'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+'        ReplaceFormat:=False
+'    Range("M2").Select
+'
+'    Sheets("AA").Activate
+'    Columns("A:A").Select
+'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+'        ReplaceFormat:=False
+'    Range("M2").Select
+'
+'    Sheets("II").Activate
+'    Columns("A:A").Select
+'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+'        ReplaceFormat:=False
+'    Range("M2").Select
+'
+'
+'    Sheets("SS").Activate
     
 End Sub
 
