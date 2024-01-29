@@ -137,6 +137,25 @@ Attribute ToggleOX.VB_ProcData.VB_Invoke_Func = "d\n14"
             Selection.Font.Bold = False
         End If
     End If
+    
+    
+    If ActiveSheet.Name = "ss" Then
+        UserForm_SS.Show
+    
+'        If activeCellColumn = "K" Then
+'            ActiveCell.Value = IIf(ActiveCell.Value = "가정용", "일반용", "가정용")
+'        End If
+    End If
+    
+    If ActiveSheet.Name = "aa" Then
+        UserForm_AA.Show
+        
+'        If activeCellColumn = "K" Then
+'            ActiveCell.Value = IIf(ActiveCell.Value = "답작용", "전작용", "답작용")
+'        End If
+    End If
+    
+    
 End Sub
 
 
@@ -171,6 +190,10 @@ Sub SubModuleInitialClear()
         Rows("23:" & lastRow).Select
         Selection.Delete Shift:=xlUp
     End If
+    
+    
+    Range("m2").Select
+
 End Sub
 
 Sub SubModuleCleanCopySection()

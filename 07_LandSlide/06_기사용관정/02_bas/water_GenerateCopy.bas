@@ -11,12 +11,31 @@ Private Function lastRowByRowsCount(cell As String) As Long
 End Function
 
 Public Sub clearRowA()
-    Columns("A:A").Select
-    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
-        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-        ReplaceFormat:=False
-        
-    Range("m2").Select
+    
+'
+'    Columns("A:A").Select
+'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+'        ReplaceFormat:=False
+'    Range("M2").Select
+'
+'    Sheets("AA").Activate
+'    Columns("A:A").Select
+'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+'        ReplaceFormat:=False
+'    Range("M2").Select
+'
+'    Sheets("II").Activate
+'    Columns("A:A").Select
+'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+'        ReplaceFormat:=False
+'    Range("M2").Select
+'
+'
+'    Sheets("SS").Activate
+    
 End Sub
 
 Private Function lastRowByFind() As Long
@@ -118,6 +137,25 @@ Attribute ToggleOX.VB_ProcData.VB_Invoke_Func = "d\n14"
             Selection.Font.Bold = False
         End If
     End If
+    
+    
+    If ActiveSheet.Name = "ss" Then
+        UserForm_SS.Show
+    
+'        If activeCellColumn = "K" Then
+'            ActiveCell.Value = IIf(ActiveCell.Value = "가정용", "일반용", "가정용")
+'        End If
+    End If
+    
+    If ActiveSheet.Name = "aa" Then
+        UserForm_AA.Show
+        
+'        If activeCellColumn = "K" Then
+'            ActiveCell.Value = IIf(ActiveCell.Value = "답작용", "전작용", "답작용")
+'        End If
+    End If
+    
+    
 End Sub
 
 
@@ -152,6 +190,10 @@ Sub SubModuleInitialClear()
         Rows("23:" & lastRow).Select
         Selection.Delete Shift:=xlUp
     End If
+    
+    
+    Range("m2").Select
+
 End Sub
 
 Sub SubModuleCleanCopySection()
@@ -169,16 +211,21 @@ End Sub
 Sub insertRow()
     Dim lastRow As Long, i As Long, j As Long
     Dim selection_origin, selection_target As String
+    Dim AddingRowCount As Long
     
     'lastRow = lastRowByKey("A1")
 
+    AddingRowCount = 10
+
     lastRow = lastRowByRowsCount("A")
     
-    Rows(CStr(lastRow + 1) & ":" & CStr(lastRow + 2)).Select
+    Rows(CStr(lastRow + 1) & ":" & CStr(lastRow + AddingRowCount)).Select
     Selection.Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove
     
     
-    i = lastRowByKey("A1"): j = i + 2
+    i = lastRowByKey("A1")
+    j = i + AddingRowCount
+    
     selection_origin = "A" & i & ":D" & i
     selection_target = "A" & i & ":D" & j
     
