@@ -656,10 +656,9 @@ Sub ToggleOX()
         
         Range(cp).Select
         Selection.AutoFill Destination:=Range(fillRange)
-        Range(fillRange).Select
+        
+        Range(cp).Select
     End If
-    
-    
     
     If ActiveSheet.Name = "ss" And activeCellColumn = "K" Then
         UserForm_SS.Show
@@ -668,7 +667,6 @@ Sub ToggleOX()
     If ActiveSheet.Name = "aa" And activeCellColumn = "K" Then
         UserForm_AA.Show
     End If
-    
     
 End Sub
 
