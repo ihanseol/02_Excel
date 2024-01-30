@@ -660,6 +660,19 @@ Sub ToggleOX()
         Range(cp).Select
     End If
     
+    If activeCellColumn = "C" Then
+        cp = Replace(ActiveCell.address, "$", "")
+        lastRow = lastRowByKey(ActiveCell.address)
+        
+        fillRange = "C" & Range(cp).row & ":C" & lastRow
+        
+        Range(cp).Select
+        Selection.AutoFill Destination:=Range(fillRange)
+        
+        Range(cp).Select
+    End If
+    
+    
     If ActiveSheet.Name = "ss" And activeCellColumn = "K" Then
         UserForm_SS.Show
     End If
@@ -1315,6 +1328,12 @@ Private Sub CommandButton_Cancel_Click()
 End Sub
 
 
+
+Private Sub UserForm_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+    If KeyCode = vbKeyEscape Then
+        Unload Me
+    End If
+End Sub
 
 
 ' ***************************************************************
@@ -2497,8 +2516,6 @@ End Sub
 '
 ' ***************************************************************
 
-
-
 ' Optionbutton1 - 가정용
 ' Optionbutton2 - 일반용
 ' Optionbutton3 - 청소용
@@ -2543,16 +2560,18 @@ Private Sub UserForm_Initialize()
     Dim i As Integer
     
     Me.StartUpPosition = 0
+    
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
     
    OptionButton1.Value = True
-    
 End Sub
 
-
-
-
+'Private Sub UserForm_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+'    If KeyCode = 27 Then
+'        Unload Me
+'    End If
+'End Sub
 ' ***************************************************************
 ' UserForm_AA
 '
@@ -2611,6 +2630,12 @@ End Sub
 
 
 
+
+Private Sub UserForm_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+    If KeyCode = vbKeyEscape Then
+        Unload Me
+    End If
+End Sub
 
 ' ***************************************************************
 ' vbGit

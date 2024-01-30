@@ -18,8 +18,6 @@ Attribute VB_Exposed = False
 '
 ' ***************************************************************
 
-
-
 ' Optionbutton1 - 가정용
 ' Optionbutton2 - 일반용
 ' Optionbutton3 - 청소용
@@ -64,13 +62,15 @@ Private Sub UserForm_Initialize()
     Dim i As Integer
     
     Me.StartUpPosition = 0
+    
     Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
     Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
     
    OptionButton1.Value = True
-    
 End Sub
 
-
-
-
+'Private Sub UserForm_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+'    If KeyCode = 27 Then
+'        Unload Me
+'    End If
+'End Sub

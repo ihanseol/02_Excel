@@ -264,4 +264,10 @@ End Sub
 
 
 
+Private Sub UserForm_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+    If KeyCode = vbKeyEscape Then
+        Unload Me
+    End If
+End Sub
+
 

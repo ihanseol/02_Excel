@@ -139,6 +139,19 @@ Attribute ToggleOX.VB_ProcData.VB_Invoke_Func = "d\n14"
         Range(cp).Select
     End If
     
+    If activeCellColumn = "C" Then
+        cp = Replace(ActiveCell.address, "$", "")
+        lastRow = lastRowByKey(ActiveCell.address)
+        
+        fillRange = "C" & Range(cp).row & ":C" & lastRow
+        
+        Range(cp).Select
+        Selection.AutoFill Destination:=Range(fillRange)
+        
+        Range(cp).Select
+    End If
+    
+    
     If ActiveSheet.Name = "ss" And activeCellColumn = "K" Then
         UserForm_SS.Show
     End If
