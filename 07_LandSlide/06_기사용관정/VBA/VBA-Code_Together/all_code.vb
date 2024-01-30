@@ -1,4 +1,10 @@
 
+' ***************************************************************
+' ThisWorkbook
+'
+' ***************************************************************
+
+
 Private Sub Workbook_Open()
     Sheets("ss").Activate
     ISIT_FIRST = True
@@ -6,6 +12,13 @@ Private Sub Workbook_Open()
      Call clearRowA
      
 End Sub
+
+' ***************************************************************
+' Sheet5_ss(ss)
+'
+' ***************************************************************
+
+
 
 
 Private Sub combobox_initialize()
@@ -125,6 +138,13 @@ End Sub
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
     
 End Sub
+' ***************************************************************
+' Sheet2_aa(aa)
+'
+' ***************************************************************
+
+
+
 Private Sub CommandButton1_Click()
     Call MainMoudleGenerateCopy
 End Sub
@@ -162,6 +182,13 @@ End Sub
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
     
 End Sub
+' ***************************************************************
+' Sheet3_ii(ii)
+'
+' ***************************************************************
+
+
+
 Private Sub CommandButton1_Click()
     Call MainMoudleGenerateCopy
 End Sub
@@ -186,6 +213,12 @@ End Sub
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
     
 End Sub
+' ***************************************************************
+' water_q
+'
+' ***************************************************************
+
+
 Public SS(1 To 5, 1 To 2) As Double
 Public AA(1 To 6, 1 To 2) As Double
 
@@ -488,6 +521,15 @@ End Function
 
 
 
+
+' ***************************************************************
+' water_GenerationCopy
+'
+' ***************************************************************
+
+
+
+
 Option Explicit
 
 Private Function lastRowByKey(cell As String) As Long
@@ -500,30 +542,6 @@ Private Function lastRowByRowsCount(cell As String) As Long
 End Function
 
 Public Sub clearRowA()
-    
-'
-'    Columns("A:A").Select
-'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
-'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-'        ReplaceFormat:=False
-'    Range("M2").Select
-'
-'    Sheets("AA").Activate
-'    Columns("A:A").Select
-'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
-'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-'        ReplaceFormat:=False
-'    Range("M2").Select
-'
-'    Sheets("II").Activate
-'    Columns("A:A").Select
-'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
-'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-'        ReplaceFormat:=False
-'    Range("M2").Select
-'
-'
-'    Sheets("SS").Activate
     
 End Sub
 
@@ -562,6 +580,7 @@ Private Sub DoCopy(lastRow As Long)
 End Sub
 
 
+
 ' return letter of range ...
 Function Alpha_Column(Cell_Add As Range) As String
     Dim No_of_Rows As Integer
@@ -590,6 +609,9 @@ Sub ToggleOX()
     Dim activeCellColumn, activeCellRow As String
     Dim row As Long
     Dim col As Long
+    Dim lastRow As Long
+    Dim cp, fillRange As String
+    
 
     activeCellColumn = Split(ActiveCell.address, "$")(1)
     activeCellRow = Split(ActiveCell.address, "$")(2)
@@ -626,21 +648,25 @@ Sub ToggleOX()
         End If
     End If
     
-    
-    If ActiveSheet.Name = "ss" Then
-        UserForm_SS.Show
-    
-'        If activeCellColumn = "K" Then
-'            ActiveCell.Value = IIf(ActiveCell.Value = "가정용", "일반용", "가정용")
-'        End If
+    If activeCellColumn = "D" Then
+        cp = Replace(ActiveCell.address, "$", "")
+        lastRow = lastRowByKey(ActiveCell.address)
+        
+        fillRange = "D" & Range(cp).row & ":D" & lastRow
+        
+        Range(cp).Select
+        Selection.AutoFill Destination:=Range(fillRange)
+        Range(fillRange).Select
     End If
     
-    If ActiveSheet.Name = "aa" Then
+    
+    
+    If ActiveSheet.Name = "ss" And activeCellColumn = "K" Then
+        UserForm_SS.Show
+    End If
+    
+    If ActiveSheet.Name = "aa" And activeCellColumn = "K" Then
         UserForm_AA.Show
-        
-'        If activeCellColumn = "K" Then
-'            ActiveCell.Value = IIf(ActiveCell.Value = "답작용", "전작용", "답작용")
-'        End If
     End If
     
     
@@ -739,6 +765,12 @@ End Sub
 
 
 
+
+
+' ***************************************************************
+' mod_initialize_setting
+'
+' ***************************************************************
 
 
 Option Explicit
@@ -1138,6 +1170,12 @@ Sub PutText(area As String)
     TextBox_AREA.Value = area
 End Sub
 
+' ***************************************************************
+' UserForm_Survey
+'
+' ***************************************************************
+
+
 
 Private Sub CommandButton_LOAD_Click()
     Call LoadSurveyData(ComboBox_AREA.Value)
@@ -1279,6 +1317,12 @@ Private Sub CommandButton_Cancel_Click()
 End Sub
 
 
+
+
+' ***************************************************************
+' mod_MakeFieldList
+'
+' ***************************************************************
 
 
 Option Explicit
@@ -1849,11 +1893,38 @@ End Sub
 
 
 
-Option Explicit
+' ***************************************************************
+' Sheet1_index(index)
+'
+' ***************************************************************
+
+
 
 Option Explicit
 
+' ***************************************************************
+' Sheet4_data_out(data_out)
+'
+' ***************************************************************
+
+
+
 Option Explicit
+
+' ***************************************************************
+' Sheet6_data_mid(data_mid)
+'
+' ***************************************************************
+
+
+
+Option Explicit
+
+' ***************************************************************
+' mod_UniCOde
+'
+' ***************************************************************
+
 
 Option Explicit
 
@@ -1894,6 +1965,12 @@ Sub TestUniCode()
     Debug.Print "strcheck", code
 End Sub
 
+
+
+' ***************************************************************
+' mod_FilterString
+'
+' ***************************************************************
 
 
 Option Explicit
@@ -1948,6 +2025,12 @@ Sub TestFilterString()
     
     Next i
 End Sub
+
+' ***************************************************************
+' mod_CheckString
+'
+' ***************************************************************
+
 
 Option Explicit
 
@@ -2259,16 +2342,36 @@ Function II_PublicCheck(str As String) As String
 End Function
 
 
+' ***************************************************************
+' Sheet1(ref)
+'
+' ***************************************************************
+
+
 Option Explicit
 
 Private Sub CommandButton1_Click()
     ActiveSheet.Visible = False
 End Sub
+' ***************************************************************
+' Sheet2(ref1)
+'
+' ***************************************************************
+
+
+
+
 Option Explicit
 
 Private Sub CommandButton1_Click()
     ActiveSheet.Visible = False
 End Sub
+' ***************************************************************
+' modTable
+'
+' ***************************************************************
+
+
 Option Explicit
 
 Sub test_tableindex()
@@ -2391,6 +2494,13 @@ End Sub
 
 
 
+' ***************************************************************
+' UserForm_SS
+'
+' ***************************************************************
+
+
+
 ' Optionbutton1 - 가정용
 ' Optionbutton2 - 일반용
 ' Optionbutton3 - 청소용
@@ -2401,55 +2511,6 @@ End Sub
 ' Optionbutton8 - 농생활겸용
 ' Optionbutton9 - 기타
 
-
-'Private Sub CommandButton1_Click()
-'    If OptionButton1.Value Then
-'        ActiveCell.Value = "가정용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton2.Value Then
-'        ActiveCell.Value = "일반용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton3.Value Then
-'        ActiveCell.Value = "청소용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton4.Value Then
-'        ActiveCell.Value = "민방위용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton5.Value Then
-'        ActiveCell.Value = "학교용"
-'        Unload Me
-'    End If
-'
-'
-'    If OptionButton6.Value Then
-'        ActiveCell.Value = "공동주택용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton7.Value Then
-'        ActiveCell.Value = "간이상수도"
-'        Unload Me
-'    End If
-'
-'    If OptionButton9.Value Then
-'        ActiveCell.Value = "농생활겸용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton8.Value Then
-'        ActiveCell.Value = "기타"
-'        Unload Me
-'    End If
-'
-'End Sub
 
 Private Sub CommandButton1_Click()
     Dim i As Integer
@@ -2494,6 +2555,12 @@ End Sub
 
 
 
+' ***************************************************************
+' UserForm_AA
+'
+' ***************************************************************
+
+
 ' Optionbutton1 - 답작용
 ' Optionbutton2 - 전작용
 ' Optionbutton3 - 원예용
@@ -2502,48 +2569,13 @@ End Sub
 ' Optionbutton6 - 기타
 
 
-'Private Sub CommandButton1_Click()
-'    If OptionButton1.Value Then
-'        ActiveCell.Value = "답작용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton2.Value Then
-'        ActiveCell.Value = "전작용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton3.Value Then
-'        ActiveCell.Value = "원예용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton4.Value Then
-'        ActiveCell.Value = "축산용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton5.Value Then
-'        ActiveCell.Value = "양어장용"
-'        Unload Me
-'    End If
-'
-'
-'    If OptionButton6.Value Then
-'        ActiveCell.Value = "기타"
-'        Unload Me
-'    End If
-'
-'
-'End Sub
-
 Private Sub CommandButton1_Click()
     Dim i As Integer
     Dim options() As Variant
     Dim selectedOption As String
     
     ' Assign captions to an array
-    options = Array("답작용", "전작용", "원예용", "축산용", "양어장용", "기타")
+    options = Array("답작용", "전작용", "원예용", "축산업", "양어장용", "기타")
     
     ' Loop through OptionButtons to find the selected one
     For i = 0 To 5
@@ -2580,6 +2612,12 @@ Private Sub UserForm_Initialize()
 End Sub
 
 
+
+
+' ***************************************************************
+' vbGit
+'
+' ***************************************************************
 
 
 Sub GitSave()

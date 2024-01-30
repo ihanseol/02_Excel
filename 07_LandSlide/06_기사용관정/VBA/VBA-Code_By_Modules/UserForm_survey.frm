@@ -116,6 +116,12 @@ Sub PutText(area As String)
     TextBox_AREA.Value = area
 End Sub
 
+' ***************************************************************
+' UserForm_Survey
+'
+' ***************************************************************
+
+
 
 Private Sub CommandButton_LOAD_Click()
     Call LoadSurveyData(ComboBox_AREA.Value)

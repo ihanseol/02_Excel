@@ -1,4 +1,10 @@
 Attribute VB_Name = "mod_UniCode"
+' ***************************************************************
+' mod_UniCOde
+'
+' ***************************************************************
+
+
 Option Explicit
 
 Sub GetCheckMarkCode()

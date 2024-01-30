@@ -13,6 +13,13 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+' ***************************************************************
+' UserForm_SS
+'
+' ***************************************************************
+
+
+
 ' Optionbutton1 - 가정용
 ' Optionbutton2 - 일반용
 ' Optionbutton3 - 청소용
@@ -23,55 +30,6 @@ Attribute VB_Exposed = False
 ' Optionbutton8 - 농생활겸용
 ' Optionbutton9 - 기타
 
-
-'Private Sub CommandButton1_Click()
-'    If OptionButton1.Value Then
-'        ActiveCell.Value = "가정용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton2.Value Then
-'        ActiveCell.Value = "일반용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton3.Value Then
-'        ActiveCell.Value = "청소용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton4.Value Then
-'        ActiveCell.Value = "민방위용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton5.Value Then
-'        ActiveCell.Value = "학교용"
-'        Unload Me
-'    End If
-'
-'
-'    If OptionButton6.Value Then
-'        ActiveCell.Value = "공동주택용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton7.Value Then
-'        ActiveCell.Value = "간이상수도"
-'        Unload Me
-'    End If
-'
-'    If OptionButton9.Value Then
-'        ActiveCell.Value = "농생활겸용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton8.Value Then
-'        ActiveCell.Value = "기타"
-'        Unload Me
-'    End If
-'
-'End Sub
 
 Private Sub CommandButton1_Click()
     Dim i As Integer

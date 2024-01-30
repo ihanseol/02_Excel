@@ -13,6 +13,12 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+' ***************************************************************
+' UserForm_AA
+'
+' ***************************************************************
+
+
 ' Optionbutton1 - 답작용
 ' Optionbutton2 - 전작용
 ' Optionbutton3 - 원예용
@@ -21,48 +27,13 @@ Attribute VB_Exposed = False
 ' Optionbutton6 - 기타
 
 
-'Private Sub CommandButton1_Click()
-'    If OptionButton1.Value Then
-'        ActiveCell.Value = "답작용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton2.Value Then
-'        ActiveCell.Value = "전작용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton3.Value Then
-'        ActiveCell.Value = "원예용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton4.Value Then
-'        ActiveCell.Value = "축산용"
-'        Unload Me
-'    End If
-'
-'    If OptionButton5.Value Then
-'        ActiveCell.Value = "양어장용"
-'        Unload Me
-'    End If
-'
-'
-'    If OptionButton6.Value Then
-'        ActiveCell.Value = "기타"
-'        Unload Me
-'    End If
-'
-'
-'End Sub
-
 Private Sub CommandButton1_Click()
     Dim i As Integer
     Dim options() As Variant
     Dim selectedOption As String
     
     ' Assign captions to an array
-    options = Array("답작용", "전작용", "원예용", "축산용", "양어장용", "기타")
+    options = Array("답작용", "전작용", "원예용", "축산업", "양어장용", "기타")
     
     ' Loop through OptionButtons to find the selected one
     For i = 0 To 5

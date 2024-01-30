@@ -1,4 +1,10 @@
 Attribute VB_Name = "mod_FilterString"
+' ***************************************************************
+' mod_FilterString
+'
+' ***************************************************************
+
+
 Option Explicit
 
 Function FilterString(str As String) As Variant

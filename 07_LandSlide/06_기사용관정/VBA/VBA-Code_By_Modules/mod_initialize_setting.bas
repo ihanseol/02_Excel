@@ -1,4 +1,10 @@
 Attribute VB_Name = "mod_initialize_setting"
+' ***************************************************************
+' mod_initialize_setting
+'
+' ***************************************************************
+
+
 Option Explicit
 
 

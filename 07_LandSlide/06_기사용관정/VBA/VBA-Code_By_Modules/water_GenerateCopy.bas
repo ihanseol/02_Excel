@@ -1,4 +1,13 @@
 Attribute VB_Name = "water_GenerateCopy"
+
+' ***************************************************************
+' water_GenerationCopy
+'
+' ***************************************************************
+
+
+
+
 Option Explicit
 
 Private Function lastRowByKey(cell As String) As Long
@@ -11,30 +20,6 @@ Private Function lastRowByRowsCount(cell As String) As Long
 End Function
 
 Public Sub clearRowA()
-    
-'
-'    Columns("A:A").Select
-'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
-'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-'        ReplaceFormat:=False
-'    Range("M2").Select
-'
-'    Sheets("AA").Activate
-'    Columns("A:A").Select
-'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
-'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-'        ReplaceFormat:=False
-'    Range("M2").Select
-'
-'    Sheets("II").Activate
-'    Columns("A:A").Select
-'    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
-'        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
-'        ReplaceFormat:=False
-'    Range("M2").Select
-'
-'
-'    Sheets("SS").Activate
     
 End Sub
 
@@ -73,6 +58,7 @@ Private Sub DoCopy(lastRow As Long)
 End Sub
 
 
+
 ' return letter of range ...
 Function Alpha_Column(Cell_Add As Range) As String
     Dim No_of_Rows As Integer
@@ -102,6 +88,9 @@ Attribute ToggleOX.VB_ProcData.VB_Invoke_Func = "d\n14"
     Dim activeCellColumn, activeCellRow As String
     Dim row As Long
     Dim col As Long
+    Dim lastRow As Long
+    Dim cp, fillRange As String
+    
 
     activeCellColumn = Split(ActiveCell.address, "$")(1)
     activeCellRow = Split(ActiveCell.address, "$")(2)
@@ -138,21 +127,25 @@ Attribute ToggleOX.VB_ProcData.VB_Invoke_Func = "d\n14"
         End If
     End If
     
-    
-    If ActiveSheet.Name = "ss" Then
-        UserForm_SS.Show
-    
-'        If activeCellColumn = "K" Then
-'            ActiveCell.Value = IIf(ActiveCell.Value = "가정용", "일반용", "가정용")
-'        End If
+    If activeCellColumn = "D" Then
+        cp = Replace(ActiveCell.address, "$", "")
+        lastRow = lastRowByKey(ActiveCell.address)
+        
+        fillRange = "D" & Range(cp).row & ":D" & lastRow
+        
+        Range(cp).Select
+        Selection.AutoFill Destination:=Range(fillRange)
+        Range(fillRange).Select
     End If
     
-    If ActiveSheet.Name = "aa" Then
+    
+    
+    If ActiveSheet.Name = "ss" And activeCellColumn = "K" Then
+        UserForm_SS.Show
+    End If
+    
+    If ActiveSheet.Name = "aa" And activeCellColumn = "K" Then
         UserForm_AA.Show
-        
-'        If activeCellColumn = "K" Then
-'            ActiveCell.Value = IIf(ActiveCell.Value = "답작용", "전작용", "답작용")
-'        End If
     End If
     
     
