@@ -1,4 +1,3 @@
-Attribute VB_Name = "water_GenerateCopy"
 
 ' ***************************************************************
 ' water_GenerationCopy
@@ -84,7 +83,6 @@ End Function
 
 ' Ctrl+D , Toggle OX, Toggle SINGO, HEOGA
 Sub ToggleOX()
-Attribute ToggleOX.VB_ProcData.VB_Invoke_Func = "d\n14"
     Dim activeCellColumn, activeCellRow As String
     Dim row As Long
     Dim col As Long
