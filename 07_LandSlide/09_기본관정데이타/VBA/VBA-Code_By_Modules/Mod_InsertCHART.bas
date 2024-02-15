@@ -28,7 +28,7 @@ Sub DeleteAllImages()
 End Sub
 
 Sub WriteAllCharts()
-    Dim fname, source_name As String
+    Dim fName, source_name As String
     Dim nofwell, i As Integer
     
     nofwell = GetNumberOfWell()
@@ -46,14 +46,14 @@ Sub WriteAllCharts()
 End Sub
 
 Sub Write_InsertChart(well As Integer, source_name As String)
-    Dim fname As String
+    Dim fName As String
     Dim imagePath As String
 
     imagePath = Environ("TEMP") & "\tempChartImage.png"
 
-    fname = "A" & CStr(well) & "_ge_OriginalSaveFile.xlsm"
-    If Not IsWorkBookOpen(fname) Then
-        MsgBox "Please open the yangsoo data ! " & fname
+    fName = "A" & CStr(well) & "_ge_OriginalSaveFile.xlsm"
+    If Not IsWorkBookOpen(fName) Then
+        MsgBox "Please open the yangsoo data ! " & fName
         Exit Sub
     End If
 
@@ -65,14 +65,14 @@ End Sub
 
 Sub SaveAndInsertChart(well As Integer, source_name As String, chartName As String, targetRange As String)
     Dim imagePath As String
-    Dim fname As String
+    Dim fName As String
     Dim targetCell As Range
     Dim picWidth As Double, picHeight As Double
     
     imagePath = Environ("TEMP") & "\tempChartImage.png"
-    fname = "A" & CStr(well) & "_ge_OriginalSaveFile.xlsm"
+    fName = "A" & CStr(well) & "_ge_OriginalSaveFile.xlsm"
 
-    Windows(fname).Activate
+    Windows(fName).Activate
     Worksheets("Input").ChartObjects(chartName).Activate
     ActiveChart.Export fileName:=imagePath, FilterName:="PNG"
     

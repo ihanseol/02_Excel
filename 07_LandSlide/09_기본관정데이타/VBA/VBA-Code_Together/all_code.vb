@@ -967,7 +967,7 @@ End Sub
 
 'Get Water Spec from YanSoo ilbo
 Private Sub CommandButton2_Click()
-  Dim thisname, fname As String
+  Dim thisname, fName As String
   Dim cell  As String
   Dim time As Date
   Dim bTemp, ec1, ph1 As Double
@@ -976,21 +976,21 @@ Private Sub CommandButton2_Click()
   cell = Range("d12").value
   
   thisname = ActiveWorkbook.Name
-  fname = "A" & GetNumeric2(cell) & "_ge_OriginalSaveFile.xlsm"
+  fName = "A" & GetNumeric2(cell) & "_ge_OriginalSaveFile.xlsm"
  
-  If Not IsWorkBookOpen(fname) Then
-    MsgBox "Please open the yangsoo data ! " & fname
+  If Not IsWorkBookOpen(fName) Then
+    MsgBox "Please open the yangsoo data ! " & fName
     Exit Sub
   End If
   
   ' Range("k2") = fname
    
   '------------------------------------------------------------------------
-  time = Workbooks(fname).Worksheets("w1").Range("c6").value
-  bTemp = Workbooks(fname).Worksheets("w1").Range("c7").value
+  time = Workbooks(fName).Worksheets("w1").Range("c6").value
+  bTemp = Workbooks(fName).Worksheets("w1").Range("c7").value
   
-  ec1 = Workbooks(fname).Worksheets("w1").Range("c8").value
-  ph1 = Workbooks(fname).Worksheets("w1").Range("c9").value
+  ec1 = Workbooks(fName).Worksheets("w1").Range("c8").value
+  ph1 = Workbooks(fName).Worksheets("w1").Range("c9").value
   
   '------------------------------------------------------------------------
   
@@ -999,12 +999,12 @@ Private Sub CommandButton2_Click()
   Range("c8").value = ec1
   Range("c9").value = ph1
     
-  Call getModDataFromYangSooSingle(thisname, fname)
+  Call getModDataFromYangSooSingle(thisname, fName)
 End Sub
 
 
-Sub getModDataFromYangSooSingle(ByVal thisname As String, ByVal fname As String)
-    Windows(fname).Activate
+Sub getModDataFromYangSooSingle(ByVal thisname As String, ByVal fName As String)
+    Windows(fName).Activate
     Sheets("w1").Activate
     Sheets("w1").Range("H14:J23").Select
     Selection.Copy
@@ -2539,13 +2539,13 @@ Private Sub CommandButton2_Click()
 End Sub
 
 
-Sub getModDataFromYangSooTripple(ByVal thisname As String, ByVal fname As String)
+Sub getModDataFromYangSooTripple(ByVal thisname As String, ByVal fName As String)
 
     Dim f As Integer
 
-    f = CInt(GetNumeric2(fname)) Mod 3
+    f = CInt(GetNumeric2(fName)) Mod 3
 
-    Windows(fname).Activate
+    Windows(fName).Activate
     Sheets("w1").Activate
     Sheets("w1").Range("H14:J23").Select
     Selection.Copy
@@ -3234,13 +3234,13 @@ Private Sub CommandButton2_Click()
 End Sub
 
 
-Sub getModDataFromYangSooDual(ByVal thisname As String, ByVal fname As String)
+Sub getModDataFromYangSooDual(ByVal thisname As String, ByVal fName As String)
 
     Dim f As Integer
 
-    f = CInt(GetNumeric2(fname)) Mod 2
+    f = CInt(GetNumeric2(fName)) Mod 2
 
-    Windows(fname).Activate
+    Windows(fName).Activate
     Sheets("w1").Activate
     Sheets("w1").Range("H14:J23").Select
     Selection.Copy
@@ -3968,7 +3968,7 @@ End Sub
 Private Sub CommandButton2_Click()
 ' Collect Data
 
-    Dim fname As String
+    Dim fName As String
     Dim nofwell, i As Integer
     Dim q1() As Double
     Dim qq1() As Double
@@ -4133,7 +4133,7 @@ End Sub
 Private Sub CommandButton2_Click()
 ' Collect Data
 
-    Dim fname As String
+    Dim fName As String
     Dim nofwell, i As Integer
     
     Dim Q() As Double          '양수량
@@ -4482,7 +4482,7 @@ End Function
 Private Sub CommandButton2_Click()
 ' Collect Data
 
-    Dim fname As String
+    Dim fName As String
     Dim nofwell, i As Integer
     
     Dim Q() As Double
@@ -5163,7 +5163,7 @@ Private Sub EraseCellData(str_range As String)
 End Sub
 
 Private Sub WriteStepTestData()
-    Dim fname As String
+    Dim fName As String
     Dim nofwell, i As Integer
     
     
@@ -5195,21 +5195,21 @@ Private Sub WriteStepTestData()
     
     For i = 1 To nofwell
     
-        fname = "A" & CStr(i) & "_ge_OriginalSaveFile.xlsm"
-        If Not IsWorkBookOpen(fname) Then
-            MsgBox "Please open the yangsoo data ! " & fname
+        fName = "A" & CStr(i) & "_ge_OriginalSaveFile.xlsm"
+        If Not IsWorkBookOpen(fName) Then
+            MsgBox "Please open the yangsoo data ! " & fName
             Exit Sub
         End If
         
-        Q(i) = Workbooks(fname).Worksheets("Input").Range("q64").value
-        h(i) = Workbooks(fname).Worksheets("Input").Range("r64").value
-        delta_h(i) = Workbooks(fname).Worksheets("Input").Range("s64").value
-        qsw(i) = Workbooks(fname).Worksheets("Input").Range("t64").value
-        swq(i) = Workbooks(fname).Worksheets("Input").Range("u64").value
+        Q(i) = Workbooks(fName).Worksheets("Input").Range("q64").value
+        h(i) = Workbooks(fName).Worksheets("Input").Range("r64").value
+        delta_h(i) = Workbooks(fName).Worksheets("Input").Range("s64").value
+        qsw(i) = Workbooks(fName).Worksheets("Input").Range("t64").value
+        swq(i) = Workbooks(fName).Worksheets("Input").Range("u64").value
 
-        a1(i) = Workbooks(fname).Worksheets("Input").Range("v64").value
-        a2(i) = Workbooks(fname).Worksheets("Input").Range("w64").value
-        a3(i) = Workbooks(fname).Worksheets("Input").Range("x64").value
+        a1(i) = Workbooks(fName).Worksheets("Input").Range("v64").value
+        a2(i) = Workbooks(fName).Worksheets("Input").Range("w64").value
+        a3(i) = Workbooks(fName).Worksheets("Input").Range("x64").value
         
     Next i
     
@@ -5293,7 +5293,7 @@ Sub DeleteAllImages()
 End Sub
 
 Sub WriteAllCharts()
-    Dim fname, source_name As String
+    Dim fName, source_name As String
     Dim nofwell, i As Integer
     
     nofwell = GetNumberOfWell()
@@ -5311,14 +5311,14 @@ Sub WriteAllCharts()
 End Sub
 
 Sub Write_InsertChart(well As Integer, source_name As String)
-    Dim fname As String
+    Dim fName As String
     Dim imagePath As String
 
     imagePath = Environ("TEMP") & "\tempChartImage.png"
 
-    fname = "A" & CStr(well) & "_ge_OriginalSaveFile.xlsm"
-    If Not IsWorkBookOpen(fname) Then
-        MsgBox "Please open the yangsoo data ! " & fname
+    fName = "A" & CStr(well) & "_ge_OriginalSaveFile.xlsm"
+    If Not IsWorkBookOpen(fName) Then
+        MsgBox "Please open the yangsoo data ! " & fName
         Exit Sub
     End If
 
@@ -5330,14 +5330,14 @@ End Sub
 
 Sub SaveAndInsertChart(well As Integer, source_name As String, chartName As String, targetRange As String)
     Dim imagePath As String
-    Dim fname As String
+    Dim fName As String
     Dim targetCell As Range
     Dim picWidth As Double, picHeight As Double
     
     imagePath = Environ("TEMP") & "\tempChartImage.png"
-    fname = "A" & CStr(well) & "_ge_OriginalSaveFile.xlsm"
+    fName = "A" & CStr(well) & "_ge_OriginalSaveFile.xlsm"
 
-    Windows(fname).Activate
+    Windows(fName).Activate
     Worksheets("Input").ChartObjects(chartName).Activate
     ActiveChart.Export fileName:=imagePath, FilterName:="PNG"
     
@@ -5393,7 +5393,7 @@ End Sub
 
 
 Sub GetBaseDataFromYangSoo()
-    Dim fname As String
+    Dim fName As String
     Dim nofwell, i As Integer
         
     Dim natural() As Double ' 자연수위, natural depth
@@ -5524,77 +5524,77 @@ Sub GetBaseDataFromYangSoo()
     
     For i = 1 To nofwell
     
-        fname = "A" & CStr(i) & "_ge_OriginalSaveFile.xlsm"
-        If Not IsWorkBookOpen(fname) Then
-            MsgBox "Please open the yangsoo data ! " & fname
+        fName = "A" & CStr(i) & "_ge_OriginalSaveFile.xlsm"
+        If Not IsWorkBookOpen(fName) Then
+            MsgBox "Please open the yangsoo data ! " & fName
             Exit Sub
         End If
         
         
-        Q(i) = Workbooks(fname).Worksheets("Input").Range("m51").value
-        hp(i) = Workbooks(fname).Worksheets("Input").Range("i48").value
+        Q(i) = Workbooks(fName).Worksheets("Input").Range("m51").value
+        hp(i) = Workbooks(fName).Worksheets("Input").Range("i48").value
         
-        natural(i) = Workbooks(fname).Worksheets("Input").Range("m48").value
-        stable(i) = Workbooks(fname).Worksheets("Input").Range("m49").value
-        radius(i) = Workbooks(fname).Worksheets("Input").Range("m44").value
+        natural(i) = Workbooks(fName).Worksheets("Input").Range("m48").value
+        stable(i) = Workbooks(fName).Worksheets("Input").Range("m49").value
+        radius(i) = Workbooks(fName).Worksheets("Input").Range("m44").value
         Rw(i) = radius(i) / 2000
         
-        well_depth(i) = Workbooks(fname).Worksheets("Input").Range("m45").value
-        casing(i) = Workbooks(fname).Worksheets("Input").Range("i52").value
+        well_depth(i) = Workbooks(fName).Worksheets("Input").Range("m45").value
+        casing(i) = Workbooks(fName).Worksheets("Input").Range("i52").value
         
         
-        C(i) = Workbooks(fname).Worksheets("Input").Range("A31").value
-        B(i) = Workbooks(fname).Worksheets("Input").Range("B31").value
+        C(i) = Workbooks(fName).Worksheets("Input").Range("A31").value
+        B(i) = Workbooks(fName).Worksheets("Input").Range("B31").value
         
         
         
-        recover(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c10").value
+        recover(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c10").value
         Sw(i) = stable(i) - recover(i)
         
-        delta_h(i) = Workbooks(fname).Worksheets("SkinFactor").Range("b16").value
-        delta_s(i) = Workbooks(fname).Worksheets("SkinFactor").Range("b4").value
+        delta_h(i) = Workbooks(fName).Worksheets("SkinFactor").Range("b16").value
+        delta_s(i) = Workbooks(fName).Worksheets("SkinFactor").Range("b4").value
         
-        daeSoo(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c16").value
+        daeSoo(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c16").value
         
         '----------------------------------------------------------------------------------
         
-        T0(i) = Workbooks(fname).Worksheets("SkinFactor").Range("d4").value
-        S0(i) = Workbooks(fname).Worksheets("SkinFactor").Range("f4").value
-        ER_MODE(i) = Workbooks(fname).Worksheets("SkinFactor").Range("h10").value
+        T0(i) = Workbooks(fName).Worksheets("SkinFactor").Range("d4").value
+        S0(i) = Workbooks(fName).Worksheets("SkinFactor").Range("f4").value
+        ER_MODE(i) = Workbooks(fName).Worksheets("SkinFactor").Range("h10").value
         
-        T1(i) = Workbooks(fname).Worksheets("SkinFactor").Range("d5").value
-        T2(i) = Workbooks(fname).Worksheets("SkinFactor").Range("h13").value
+        T1(i) = Workbooks(fName).Worksheets("SkinFactor").Range("d5").value
+        T2(i) = Workbooks(fName).Worksheets("SkinFactor").Range("h13").value
         TA(i) = (T1(i) + T2(i)) / 2
         
-        S1(i) = Workbooks(fname).Worksheets("SkinFactor").Range("e10").value
-        S2(i) = Workbooks(fname).Worksheets("SkinFactor").Range("i16").value
+        S1(i) = Workbooks(fName).Worksheets("SkinFactor").Range("e10").value
+        S2(i) = Workbooks(fName).Worksheets("SkinFactor").Range("i16").value
         
-        K(i) = Workbooks(fname).Worksheets("SkinFactor").Range("e16").value
-        time_(i) = Workbooks(fname).Worksheets("SkinFactor").Range("h16").value
+        K(i) = Workbooks(fName).Worksheets("SkinFactor").Range("e16").value
+        time_(i) = Workbooks(fName).Worksheets("SkinFactor").Range("h16").value
         
-        shultze(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c13").value
-        webber(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c18").value
-        jacob(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c23").value
+        shultze(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c13").value
+        webber(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c18").value
+        jacob(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c23").value
         
-        skin(i) = Workbooks(fname).Worksheets("SkinFactor").Range("g6").value
-        er(i) = Workbooks(fname).Worksheets("SkinFactor").Range("c8").value
+        skin(i) = Workbooks(fName).Worksheets("SkinFactor").Range("g6").value
+        er(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c8").value
         
         
         ' 경험식, 1번, 2번, 3번의 유효우물반경
-        ER1(i) = Workbooks(fname).Worksheets("SkinFactor").Range("K8").value
-        ER2(i) = Workbooks(fname).Worksheets("SkinFactor").Range("K9").value
-        ER3(i) = Workbooks(fname).Worksheets("SkinFactor").Range("K10").value
+        ER1(i) = Workbooks(fName).Worksheets("SkinFactor").Range("K8").value
+        ER2(i) = Workbooks(fName).Worksheets("SkinFactor").Range("K9").value
+        ER3(i) = Workbooks(fName).Worksheets("SkinFactor").Range("K10").value
         
         '----------------------------------------------------------------------------------
         
-        qh(i) = Workbooks(fname).Worksheets("SafeYield").Range("b13").value
-        qg(i) = Workbooks(fname).Worksheets("SafeYield").Range("b7").value
+        qh(i) = Workbooks(fName).Worksheets("SafeYield").Range("b13").value
+        qg(i) = Workbooks(fName).Worksheets("SafeYield").Range("b7").value
         
-        sd1(i) = Workbooks(fname).Worksheets("SafeYield").Range("b3").value
-        sd2(i) = Workbooks(fname).Worksheets("SafeYield").Range("b4").value
-        q1(i) = Workbooks(fname).Worksheets("SafeYield").Range("b2").value
+        sd1(i) = Workbooks(fName).Worksheets("SafeYield").Range("b3").value
+        sd2(i) = Workbooks(fName).Worksheets("SafeYield").Range("b4").value
+        q1(i) = Workbooks(fName).Worksheets("SafeYield").Range("b2").value
         
-        ratio(i) = Workbooks(fname).Worksheets("SafeYield").Range("b11").value
+        ratio(i) = Workbooks(fName).Worksheets("SafeYield").Range("b11").value
         
         '*****************************************************************************************
         
@@ -5933,11 +5933,11 @@ End Sub
 'End Function
 
 
-Function GetCopyPoint(ByVal fname As String) As String
+Function GetCopyPoint(ByVal fName As String) As String
 
   Dim ip1, ip2 As Integer
 
-  ip1 = Workbooks(fname).Worksheets("ss").Range("b1").End(xlDown).Row + 4
+  ip1 = Workbooks(fName).Worksheets("ss").Range("b1").End(xlDown).Row + 4
   ip2 = ip1 + 2
   
   GetCopyPoint = "B" & ip1 & ":J" & ip2
@@ -5946,10 +5946,10 @@ Function GetCopyPoint(ByVal fname As String) As String
 End Function
 
 
-Sub CopyFromGWAN_JUNG(ByVal fname As String, ByVal cpRange As String)
+Sub CopyFromGWAN_JUNG(ByVal fName As String, ByVal cpRange As String)
 
-    Workbooks(fname).Worksheets("ss").Activate
-    Workbooks(fname).Worksheets("ss").Range(cpRange).Select
+    Workbooks(fName).Worksheets("ss").Activate
+    Workbooks(fName).Worksheets("ss").Range(cpRange).Select
     Selection.Copy
     
     ThisWorkbook.Sheets("water").Activate
@@ -10056,6 +10056,8 @@ End Function
 
 
 
+
+
 Sub GitSave()
     
     DeleteAndMake
@@ -10089,15 +10091,23 @@ Sub PrintAllCode()
     Dim item  As Variant
     Dim textToPrint As String
     Dim lineToPrint As String
+    Dim fName As String
+    
+    Dim pathToExport As String
+    pathToExport = ThisWorkbook.Path & "\VBA\VBA-Code_Together\"
+    If Dir(pathToExport) <> "" Then Kill pathToExport & "*.*"
     
     For Each item In ThisWorkbook.VBProject.VBComponents
-        lineToPrint = item.codeModule.Lines(1, item.codeModule.CountOfLines)
+        lineToPrint = item.CodeModule.Lines(1, item.CodeModule.CountOfLines)
+        
+        fName = item.CodeModule.Name
         Debug.Print lineToPrint
+        SaveTextToFile lineToPrint, pathToExport & fName & ".bas"
+        
         textToPrint = textToPrint & vbCrLf & lineToPrint
     Next item
     
-    Dim pathToExport As String: pathToExport = ThisWorkbook.Path & "\VBA\VBA-Code_Together\"
-    If Dir(pathToExport) <> "" Then Kill pathToExport & "*.*"
+    
     SaveTextToFile textToPrint, pathToExport & "all_code.vb"
     
 End Sub
@@ -10183,3 +10193,4 @@ CreateLogFile_Error:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure CreateLogFile of Sub mod_TDD_Export"
 
 End Sub
+

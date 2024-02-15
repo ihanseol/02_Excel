@@ -1,7 +1,7 @@
 Attribute VB_Name = "modDumpArrayMyData"
 
 Sub DumpRangeToArrayAndSaveTest()
-Attribute DumpRangeToArrayAndSaveTest.VB_ProcData.VB_Invoke_Func = "d\n14"
+Attribute DumpRangeToArrayAndSaveTest.VB_ProcData.VB_Invoke_Func = " \n14"
     Dim myArray() As Variant
     Dim rng As Range
     Dim i As Integer, j As Integer

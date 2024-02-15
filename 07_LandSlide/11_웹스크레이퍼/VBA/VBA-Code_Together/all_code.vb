@@ -4149,7 +4149,13 @@ Private Sub CommandButton5_Click()
     Call ShiftNewYear
 End Sub
 
+'
+' Sheet1(AREAREF)
+'
+
 Option Explicit
+
+
 
 Sub GitSave()
     
@@ -4184,15 +4190,23 @@ Sub PrintAllCode()
     Dim item  As Variant
     Dim textToPrint As String
     Dim lineToPrint As String
+    Dim fName As String
+    
+    Dim pathToExport As String
+    pathToExport = ThisWorkbook.Path & "\VBA\VBA-Code_Together\"
+    If Dir(pathToExport) <> "" Then Kill pathToExport & "*.*"
     
     For Each item In ThisWorkbook.VBProject.VBComponents
-        lineToPrint = item.codeModule.Lines(1, item.codeModule.CountOfLines)
+        lineToPrint = item.CodeModule.Lines(1, item.CodeModule.CountOfLines)
+        
+        fName = item.CodeModule.name
         Debug.Print lineToPrint
+        SaveTextToFile lineToPrint, pathToExport & fName & ".bas"
+        
         textToPrint = textToPrint & vbCrLf & lineToPrint
     Next item
     
-    Dim pathToExport As String: pathToExport = ThisWorkbook.Path & "\VBA\VBA-Code_Together\"
-    If Dir(pathToExport) <> "" Then Kill pathToExport & "*.*"
+    
     SaveTextToFile textToPrint, pathToExport & "all_code.vb"
     
 End Sub
@@ -4278,3 +4292,4 @@ CreateLogFile_Error:
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure CreateLogFile of Sub mod_TDD_Export"
 
 End Sub
+
