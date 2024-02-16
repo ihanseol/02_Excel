@@ -5,9 +5,6 @@ Attribute VB_Name = "water_GenerateCopy"
 '
 ' ***************************************************************
 
-
-
-
 Option Explicit
 
 Private Function lastRowByKey(cell As String) As Long
@@ -202,6 +199,32 @@ Sub SubModuleInitialClear()
     End If
     
     Range("m2").Select
+End Sub
+
+
+Sub Finallize()
+    Dim lastRow As Long
+    Dim delStartRow As Long
+    Dim userChoice As VbMsgBoxResult
+    
+    lastRow = lastRowByKey("A1")
+    delStartRow = lastRowByKey("E1") + 1
+    
+    
+    userChoice = MsgBox("Do you want to continue?", vbOKCancel, "Confirmation")
+
+    If userChoice <> vbOK Then
+        Exit Sub
+    End If
+    
+    If delStartRow = 1048577 Or lastRow = 2 Then
+        Exit Sub
+    Else
+        Rows(delStartRow & ":" & lastRow).Select
+        Selection.Delete Shift:=xlUp
+        Range("A2").Select
+    End If
+      
 End Sub
 
 Sub SubModuleCleanCopySection()

@@ -50,6 +50,10 @@ Private Sub CommandButton5_Click()
 End Sub
 
 
+Private Sub CommandButton6_Click()
+    Call Finallize
+End Sub
+
 Private Sub Worksheet_Activate()
    
 End Sub

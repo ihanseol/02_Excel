@@ -30,6 +30,10 @@ Private Sub CommandButton5_Click()
     Sheets("aa").Activate
 End Sub
 
+Private Sub CommandButton6_Click()
+    Call Finallize
+End Sub
+
 Private Sub CommandButtonInitialClear_Click()
  Call SubModuleInitialClear
 End Sub

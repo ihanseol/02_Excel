@@ -22,6 +22,10 @@ Private Sub CommandButton4_Click()
  Call SubModuleInitialClear
 End Sub
 
+Private Sub CommandButton5_Click()
+    Call Finallize
+End Sub
+
 Private Sub Worksheet_Activate()
     
 End Sub
