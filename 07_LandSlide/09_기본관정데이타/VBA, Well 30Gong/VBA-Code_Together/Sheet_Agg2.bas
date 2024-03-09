@@ -10,24 +10,6 @@ Private Sub EraseCellData(str_range As String)
 End Sub
 
 
-Function GetRowColumn(name As String) As Variant
-    Dim acColumn, acRow As Variant
-    Dim result(1 To 2) As Variant
-
-    acColumn = Split(Range(name).Address, "$")(1)
-    acRow = Split(Range(name).Address, "$")(2)
-
-    '  Row = ActiveCell.Row
-    '  col = ActiveCell.Column
-    
-    
-    result(1) = acColumn
-    result(2) = acRow
-
-    Debug.Print acColumn, acRow
-    GetRowColumn = result
-End Function
-
 
 
 Private Sub CommandButton2_Click()
@@ -152,13 +134,13 @@ End Sub
 ' 3-3, 3-4, 3-5 결과출력
 Sub WriteWellData(Q As Variant, natural As Variant, stable As Variant, recover As Variant, radius As Variant, deltas As Variant, daeSoo As Variant, T1 As Variant, S1 As Variant, ByVal nofwell As Integer)
     
-    Dim i As Integer
+    Dim i, remainder As Integer
     
     For i = 1 To nofwell
     
         ' 3-3, 장기양수시험결과 (Collect from yangsoo data)
+
         Range("C" & (i + 2)).value = "W-" & i
-        
         Range("D" & (i + 2)).value = 2880
         
         Range("e" & (i + 2)).value = Q(i)
@@ -184,6 +166,19 @@ Sub WriteWellData(Q As Variant, natural As Variant, stable As Variant, recover A
         Range("s" & (i + 2)).value = stable(i)
         Range("t" & (i + 2)).value = recover(i)
         Range("u" & (i + 2)).value = stable(i) - recover(i)
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(i + 2, "c"), Cells(i + 2, "j")), True)
+                Call BackGroundFill(Range(Cells(i + 2, "l"), Cells(i + 2, "q")), True)
+                Call BackGroundFill(Range(Cells(i + 2, "s"), Cells(i + 2, "u")), True)
+                
+        Else
+                Call BackGroundFill(Range(Cells(i + 2, "c"), Cells(i + 2, "j")), False)
+                Call BackGroundFill(Range(Cells(i + 2, "l"), Cells(i + 2, "q")), False)
+                Call BackGroundFill(Range(Cells(i + 2, "s"), Cells(i + 2, "u")), False)
+        End If
+        
     Next i
    
 End Sub
@@ -196,7 +191,7 @@ Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, ti
 '    ip = 37 'W-1 point
 '****************************************
 
-    Dim i, ip As Variant
+    Dim i, ip, remainder As Variant
     Dim unit, rngString As String
     Dim Values As Variant
     
@@ -225,6 +220,14 @@ Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, ti
         Cells((ip + 5), (4 + i)).NumberFormat = "0.00"
         
         Cells((ip + 6), (4 + i)).value = daeSoo(i)
+        
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + 1, (i + 4)), Cells(ip + 6, (i + 4))), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + 1, (i + 4)), Cells(ip + 6, (i + 4))), False)
+        End If
     Next i
 
 End Sub
@@ -241,7 +244,7 @@ Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As V
 ' Call EraseCellData("C48:F137")
 ' 137 - 48 = 89
 
-    Dim i, ip As Variant
+    Dim i, ip, remainder As Variant
     Dim unit, rngString As String
     Dim Values As Variant
     
@@ -273,6 +276,14 @@ Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As V
         Cells((ip + 2) + (i - 1) * 3, "F").value = S2(i)
         Cells((ip + 2) + (i - 1) * 3, "F").NumberFormat = "0.0000000"
         Cells((ip + 2) + (i - 1) * 3, "F").Font.Bold = True
+        
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + (i - 1) * 3, "C"), Cells((ip + 2) + (i - 1) * 3, "F")), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + (i - 1) * 3, "C"), Cells((ip + 2) + (i - 1) * 3, "F")), False)
+        End If
     Next i
 End Sub
 
@@ -288,7 +299,7 @@ Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob 
 ' 77 - 48 = 29
 
 
-    Dim i, ip As Variant
+    Dim i, ip, remainder As Variant
     Dim unit, rngString As String
     Dim Values As Variant
     
@@ -318,6 +329,14 @@ Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob 
         
         Cells(ip + (i - 1), "n").value = Application.WorksheetFunction.min(shultz(i), webber(i), jcob(i))
         Cells(ip + (i - 1), "n").NumberFormat = "0.0"
+        
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "h"), Cells(ip + (i - 1), "n")), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "h"), Cells(ip + (i - 1), "n")), False)
+        End If
     Next i
 
 End Sub
@@ -350,6 +369,13 @@ Sub Wrote34_SkinFactor(skin As Variant, er As Variant, nofwell As Variant)
         
         Cells(ip + (i - 1), "r").value = er(i)
         Cells(ip + (i - 1), "r").NumberFormat = "0.000"
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "p"), Cells(ip + (i - 1), "r")), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "p"), Cells(ip + (i - 1), "r")), False)
+        End If
     Next i
 End Sub
 

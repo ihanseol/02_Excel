@@ -3687,6 +3687,52 @@ End Enum
 '    GetNumberOfWell = n
 'End Function
 
+Sub BackGroundFill(rngLine As Range, FLAG As Boolean)
+
+If FLAG Then
+    rngLine.Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorDark1
+        .TintAndShade = -4.99893185216834E-02
+        .PatternTintAndShade = 0
+    End With
+Else
+    rngLine.Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorDark1
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+End If
+
+End Sub
+
+Function GetRowColumn(name As String) As Variant
+    Dim acColumn, acRow As Variant
+    Dim result(1 To 2) As Variant
+
+    acColumn = Split(Range(name).Address, "$")(1)
+    acRow = Split(Range(name).Address, "$")(2)
+
+    '  Row = ActiveCell.Row
+    '  col = ActiveCell.Column
+    
+    
+    result(1) = acColumn
+    result(2) = acRow
+
+    Debug.Print acColumn, acRow
+    GetRowColumn = result
+End Function
+
+
+
+
+
 
 ' 이것은, Well 탭의 값을 가지고 검사하하는것이라서, 차이가 생긴다.
 Function GetNumberOfWell() As Integer
@@ -4011,6 +4057,11 @@ End Sub
 'qq1 - 1단계 양수량
 
 
+' Agg1_Tentative_Water_Intake : 적정취수량의 계산
+
+
+
+
 Private Sub EraseCellData(str_range As String)
     With Range(str_range)
         .value = ""
@@ -4086,13 +4137,21 @@ End Sub
 
 '적정취수량의 계산
 Sub Write_Tentative_water_intake(q1 As Variant, S2 As Variant, S1 As Variant, q2 As Variant, nofwell As Variant)
-    Dim i, ip As Integer
     
 '****************************************
-    ip = 43
+' ip = 43
 '****************************************
+' Call EraseCellData("F43:I102")
+
     
-    Call EraseCellData("F43:I102")
+    Dim i, ip, remainder As Variant
+    Dim Values As Variant
+    
+    Values = GetRowColumn("Agg1_Tentative_Water_Intake")
+    ip = Values(2)
+    
+    Call EraseCellData("F" & ip & ":I" & (ip + nofwell - 1))
+    
         
     For i = 1 To nofwell
         Cells((ip + 0) + (i - 1) * 2, "F").value = "W-" & CStr(i)
@@ -4103,6 +4162,14 @@ Sub Write_Tentative_water_intake(q1 As Variant, S2 As Variant, S1 As Variant, q2
         Cells((ip + 1) + (i - 1) * 2, "H").value = S1(i)
     
         Cells((ip + 0) + (i - 1) * 2, "I").value = q2(i)
+        
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells((ip + 0) + (i - 1) * 2, "F"), Cells((ip + 0) + (i - 1) * 2 + 1, "I")), True)
+        Else
+                Call BackGroundFill(Range(Cells((ip + 0) + (i - 1) * 2, "F"), Cells((ip + 0) + (i - 1) * 2 + 1, "I")), False)
+        End If
     Next i
 End Sub
 
@@ -4127,7 +4194,7 @@ End Sub
 '3-6, 조사공의 적정취수량및 취수계획량
 Sub WriteWellData36(q1 As Variant, q2 As Variant, q3 As Variant, ratio As Variant, C As Variant, B As Variant, ByVal nofwell As Integer)
     
-    Dim i As Integer
+    Dim i, remainder As Integer
     
     For i = 1 To nofwell
         Range("G" & (i + 2)).value = "W-" & i
@@ -4139,6 +4206,16 @@ Sub WriteWellData36(q1 As Variant, q2 As Variant, q3 As Variant, ratio As Varian
         Range("Q" & (i + 2)).value = "W-" & i
         Range("R" & (i + 2)).value = C(i)
         Range("S" & (i + 2)).value = B(i)
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(i + 2, "G"), Cells(i + 2, "K")), True)
+                Call BackGroundFill(Range(Cells(i + 2, "Q"), Cells(i + 2, "S")), True)
+        Else
+                Call BackGroundFill(Range(Cells(i + 2, "G"), Cells(i + 2, "K")), False)
+                Call BackGroundFill(Range(Cells(i + 2, "Q"), Cells(i + 2, "S")), False)
+        End If
+        
     Next i
    
     Range("N3").value = Application.min(ratio)
@@ -4178,24 +4255,6 @@ Private Sub EraseCellData(str_range As String)
     End With
 End Sub
 
-
-Function GetRowColumn(name As String) As Variant
-    Dim acColumn, acRow As Variant
-    Dim result(1 To 2) As Variant
-
-    acColumn = Split(Range(name).Address, "$")(1)
-    acRow = Split(Range(name).Address, "$")(2)
-
-    '  Row = ActiveCell.Row
-    '  col = ActiveCell.Column
-    
-    
-    result(1) = acColumn
-    result(2) = acRow
-
-    Debug.Print acColumn, acRow
-    GetRowColumn = result
-End Function
 
 
 
@@ -4321,13 +4380,13 @@ End Sub
 ' 3-3, 3-4, 3-5 결과출력
 Sub WriteWellData(Q As Variant, natural As Variant, stable As Variant, recover As Variant, radius As Variant, deltas As Variant, daeSoo As Variant, T1 As Variant, S1 As Variant, ByVal nofwell As Integer)
     
-    Dim i As Integer
+    Dim i, remainder As Integer
     
     For i = 1 To nofwell
     
         ' 3-3, 장기양수시험결과 (Collect from yangsoo data)
+
         Range("C" & (i + 2)).value = "W-" & i
-        
         Range("D" & (i + 2)).value = 2880
         
         Range("e" & (i + 2)).value = Q(i)
@@ -4353,6 +4412,19 @@ Sub WriteWellData(Q As Variant, natural As Variant, stable As Variant, recover A
         Range("s" & (i + 2)).value = stable(i)
         Range("t" & (i + 2)).value = recover(i)
         Range("u" & (i + 2)).value = stable(i) - recover(i)
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(i + 2, "c"), Cells(i + 2, "j")), True)
+                Call BackGroundFill(Range(Cells(i + 2, "l"), Cells(i + 2, "q")), True)
+                Call BackGroundFill(Range(Cells(i + 2, "s"), Cells(i + 2, "u")), True)
+                
+        Else
+                Call BackGroundFill(Range(Cells(i + 2, "c"), Cells(i + 2, "j")), False)
+                Call BackGroundFill(Range(Cells(i + 2, "l"), Cells(i + 2, "q")), False)
+                Call BackGroundFill(Range(Cells(i + 2, "s"), Cells(i + 2, "u")), False)
+        End If
+        
     Next i
    
 End Sub
@@ -4365,7 +4437,7 @@ Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, ti
 '    ip = 37 'W-1 point
 '****************************************
 
-    Dim i, ip As Variant
+    Dim i, ip, remainder As Variant
     Dim unit, rngString As String
     Dim Values As Variant
     
@@ -4394,6 +4466,14 @@ Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, ti
         Cells((ip + 5), (4 + i)).NumberFormat = "0.00"
         
         Cells((ip + 6), (4 + i)).value = daeSoo(i)
+        
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + 1, (i + 4)), Cells(ip + 6, (i + 4))), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + 1, (i + 4)), Cells(ip + 6, (i + 4))), False)
+        End If
     Next i
 
 End Sub
@@ -4410,7 +4490,7 @@ Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As V
 ' Call EraseCellData("C48:F137")
 ' 137 - 48 = 89
 
-    Dim i, ip As Variant
+    Dim i, ip, remainder As Variant
     Dim unit, rngString As String
     Dim Values As Variant
     
@@ -4442,6 +4522,14 @@ Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As V
         Cells((ip + 2) + (i - 1) * 3, "F").value = S2(i)
         Cells((ip + 2) + (i - 1) * 3, "F").NumberFormat = "0.0000000"
         Cells((ip + 2) + (i - 1) * 3, "F").Font.Bold = True
+        
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + (i - 1) * 3, "C"), Cells((ip + 2) + (i - 1) * 3, "F")), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + (i - 1) * 3, "C"), Cells((ip + 2) + (i - 1) * 3, "F")), False)
+        End If
     Next i
 End Sub
 
@@ -4457,7 +4545,7 @@ Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob 
 ' 77 - 48 = 29
 
 
-    Dim i, ip As Variant
+    Dim i, ip, remainder As Variant
     Dim unit, rngString As String
     Dim Values As Variant
     
@@ -4487,6 +4575,14 @@ Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob 
         
         Cells(ip + (i - 1), "n").value = Application.WorksheetFunction.min(shultz(i), webber(i), jcob(i))
         Cells(ip + (i - 1), "n").NumberFormat = "0.0"
+        
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "h"), Cells(ip + (i - 1), "n")), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "h"), Cells(ip + (i - 1), "n")), False)
+        End If
     Next i
 
 End Sub
@@ -4519,6 +4615,13 @@ Sub Wrote34_SkinFactor(skin As Variant, er As Variant, nofwell As Variant)
         
         Cells(ip + (i - 1), "r").value = er(i)
         Cells(ip + (i - 1), "r").NumberFormat = "0.000"
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "p"), Cells(ip + (i - 1), "r")), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "p"), Cells(ip + (i - 1), "r")), False)
+        End If
     Next i
 End Sub
 
@@ -4916,27 +5019,6 @@ Private Sub Test_NameManager()
     Debug.Print acColumn, acRow
 End Sub
 
-
-Function GetRowColumn(name As String) As Variant
-    Dim acColumn, acRow As Variant
-    Dim result(1 To 2) As Variant
-
-    acColumn = Split(Range(name).Address, "$")(1)
-    acRow = Split(Range(name).Address, "$")(2)
-
-    '  Row = ActiveCell.Row
-    '  col = ActiveCell.Column
-    
-    
-    result(1) = acColumn
-    result(2) = acRow
-
-    Debug.Print acColumn, acRow
-    GetRowColumn = result
-End Function
-
-
-
 ' Summary Button
 Private Sub CommandButton2_Click()
     Dim nofwell As Integer
@@ -4996,17 +5078,34 @@ Sub Write23_SummaryDevelopmentPotential()
 End Sub
 
 
+Sub TestColumnLetter()
+
+' ColumnNumberToLetter
+' ColumnLetterToNumber
+
+Debug.Print ColumnLetterToNumber("D")
+Debug.Print ColumnLetterToNumber("AG")
+' 4
+' 33
+' 33 = 4 + 30 - 1
+
+End Sub
+
 
 Sub Write_NaturalLevel(nofwell As Integer)
 ' 자연수위
     Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
+    Dim StartCol, EndCol As String
     
     Values = GetRowColumn("AggSum_NaturalLevel")
     ip = Values(2)
     
-    rngString = Values(1) & ip & ":AG" & (ip + 1)
+    StartCol = Values(1)
+    EndCol = ColumnNumberToLetter(ColumnLetterToNumber(StartCol) + nofwell - 1)
+    
+    rngString = StartCol & ip & ":" & EndCol & (ip + 1)
     Call EraseCellData(rngString)
     
     If Sheets("AggSum").CheckBox1.value = True Then
@@ -5026,11 +5125,15 @@ Sub Write_StableLevel(nofwell As Integer)
     Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
+    Dim StartCol, EndCol As String
     
     Values = GetRowColumn("AggSum_StableLevel")
     ip = Values(2)
     
-    rngString = Values(1) & ip & ":AG" & (ip + 1)
+    StartCol = Values(1)
+    EndCol = ColumnNumberToLetter(ColumnLetterToNumber(StartCol) + nofwell - 1)
+    
+    rngString = StartCol & ip & ":" & EndCol & (ip + 1)
     Call EraseCellData(rngString)
     
     If Sheets("AggSum").CheckBox1.value = True Then
@@ -5056,11 +5159,15 @@ Sub Write_MotorPower(nofwell As Integer)
     Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
+    Dim StartCol, EndCol As String
     
     Values = GetRowColumn("AggSum_MotorHP")
     ip = Values(2)
     
-    rngString = Values(1) & ip & ":AG" & (ip + 1)
+    StartCol = Values(1)
+    EndCol = ColumnNumberToLetter(ColumnLetterToNumber(StartCol) + nofwell - 1)
+    
+    rngString = StartCol & ip & ":" & EndCol & (ip + 1)
     Call EraseCellData(rngString)
     
     If Sheets("AggSum").CheckBox1.value = True Then
@@ -5081,11 +5188,16 @@ Sub Write_MotorSimdo(nofwell As Integer)
     Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
+    Dim StartCol, EndCol As String
     
     Values = GetRowColumn("AggSum_MotorSimdo")
     ip = Values(2)
     
-    rngString = Values(1) & ip & ":AG" & (ip + 1)
+    StartCol = Values(1)
+    EndCol = ColumnNumberToLetter(ColumnLetterToNumber(StartCol) + nofwell - 1)
+    
+    
+    rngString = StartCol & ip & ":" & EndCol & (ip + 1)
     Call EraseCellData(rngString)
     
     If Sheets("AggSum").CheckBox1.value = True Then
@@ -5106,11 +5218,15 @@ Sub Write_MotorTochool(nofwell As Integer)
     Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
+    Dim StartCol, EndCol As String
     
     Values = GetRowColumn("AggSum_ToChool")
     ip = Values(2)
     
-    rngString = Values(1) & ip & ":AG" & (ip + 1)
+    StartCol = Values(1)
+    EndCol = ColumnNumberToLetter(ColumnLetterToNumber(StartCol) + nofwell - 1)
+    
+    rngString = StartCol & ip & ":" & EndCol & (ip + 1)
     Call EraseCellData(rngString)
     
     If Sheets("AggSum").CheckBox1.value = True Then
@@ -5132,11 +5248,16 @@ Sub Write_DiggingDepth(nofwell As Integer)
    Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
+    Dim StartCol, EndCol As String
     
     Values = GetRowColumn("AggSum_Simdo")
     ip = Values(2)
     
-    rngString = Values(1) & ip & ":AG" & (ip + 1)
+    StartCol = Values(1)
+    EndCol = ColumnNumberToLetter(ColumnLetterToNumber(StartCol) + nofwell - 1)
+    
+    
+    rngString = StartCol & ip & ":" & EndCol & (ip + 1)
     Call EraseCellData(rngString)
     
     If Sheets("AggSum").CheckBox1.value = True Then
@@ -5158,11 +5279,16 @@ Sub Write_WaterIntake(nofwell As Integer)
     Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
+    Dim StartCol, EndCol As String
     
     Values = GetRowColumn("AggSum_Intake")
     ip = Values(2)
     
-    rngString = Values(1) & ip & ":AG" & (ip + 1)
+    StartCol = Values(1)
+    EndCol = ColumnNumberToLetter(ColumnLetterToNumber(StartCol) + nofwell - 1)
+    
+    
+    rngString = StartCol & ip & ":" & EndCol & (ip + 1)
     Call EraseCellData(rngString)
     
     If Sheets("AggSum").CheckBox1.value = True Then
@@ -5181,10 +5307,10 @@ End Sub
 
 Sub Write_RadiusOfInfluence(nofwell As Integer)
 ' 양수영향반경
-    Dim i, ip As Integer
+    Dim i, ip, remainder As Integer
     Dim unit, rngString01, rngString02 As String
     Dim Values As Variant
-    
+        
     Values = GetRowColumn("AggSum_ROI")
     ip = Values(2)
     
@@ -5218,6 +5344,15 @@ Sub Write_RadiusOfInfluence(nofwell As Integer)
         Cells(ip - 1 + i, "N").value = Worksheets(CStr(i)).Range("H10").value & unit
         Cells(ip - 1 + i, "O").value = Worksheets(CStr(i)).Range("H11").value & unit
         
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip - 1 + i, "d"), Cells(ip - 1 + i, "g")), True)
+                Call BackGroundFill(Range(Cells(ip - 1 + i, "m"), Cells(ip - 1 + i, "o")), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip - 1 + i, "d"), Cells(ip - 1 + i, "j")), False)
+                Call BackGroundFill(Range(Cells(ip - 1 + i, "m"), Cells(ip - 1 + i, "o")), False)
+        End If
+        
         
     Next i
 End Sub
@@ -5225,7 +5360,7 @@ End Sub
 
 Sub Write_DrasticIndex(nofwell As Integer)
 ' 드라스틱 인덱스
-    Dim i, ip As Integer
+    Dim i, ip, remainder As Integer
     Dim unit, rngString As String
     Dim Values As Variant
     
@@ -5240,6 +5375,14 @@ Sub Write_DrasticIndex(nofwell As Integer)
         Cells(ip - 1 + i, "I").value = "W-" & CStr(i)
         Cells(ip - 1 + i, "J").value = Worksheets(CStr(i)).Range("k30").value
         Cells(ip - 1 + i, "K").value = Worksheets(CStr(i)).Range("k31").value
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip - 1 + i, "i"), Cells(ip - 1 + i, "k")), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip - 1 + i, "i"), Cells(ip - 1 + i, "k")), False)
+        End If
+        
     Next i
 End Sub
 
@@ -5300,13 +5443,9 @@ Sub Write26_AquiferCharacterization(nofwell As Integer)
     
         remainder = i Mod 2
         If remainder = 0 Then
-                With Range(Cells(11 + i, "d"), Cells(11 + i, "j"))
-                    .Font.Bold = True
-                End With
+                Call BackGroundFill(Range(Cells(11 + i, "d"), Cells(11 + i, "j")), True)
         Else
-                With Range(Cells(11 + i, "d"), Cells(11 + i, "j"))
-                    .Font.Bold = False
-                End With
+                Call BackGroundFill(Range(Cells(11 + i, "d"), Cells(11 + i, "j")), False)
         End If
     
         ' WellNum --(J==10) / ='1'!$F$21
@@ -5352,13 +5491,9 @@ Sub Write26_Right_AquiferCharacterization(nofwell As Integer)
     
         remainder = i Mod 2
         If remainder = 0 Then
-                With Range(Cells(11 + i, "L"), Cells(11 + i, "S"))
-                    .Font.Bold = True
-                End With
+                Call BackGroundFill(Range(Cells(11 + i, "L"), Cells(11 + i, "S")), True)
         Else
-                With Range(Cells(11 + i, "L"), Cells(11 + i, "S"))
-                    .Font.Bold = False
-                End With
+                Call BackGroundFill(Range(Cells(11 + i, "L"), Cells(11 + i, "S")), False)
         End If
     
         ' WellNum --(J==10) / ='1'!$F$21
