@@ -10,6 +10,25 @@ Private Sub EraseCellData(str_range As String)
 End Sub
 
 
+Function GetRowColumn(name As String) As Variant
+    Dim acColumn, acRow As Variant
+    Dim result(1 To 2) As Variant
+
+    acColumn = Split(Range(name).Address, "$")(1)
+    acRow = Split(Range(name).Address, "$")(2)
+
+    '  Row = ActiveCell.Row
+    '  col = ActiveCell.Column
+    
+    
+    result(1) = acColumn
+    result(2) = acRow
+
+    Debug.Print acColumn, acRow
+    GetRowColumn = result
+End Function
+
+
 
 Private Sub CommandButton2_Click()
 ' Collect Data
@@ -170,39 +189,66 @@ Sub WriteWellData(Q As Variant, natural As Variant, stable As Variant, recover A
 End Sub
 
 
+' 3-7, 조사공별 수리상수
+Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, time_ As Variant, deltah As Variant, daeSoo As Variant, nofwell As Variant)
 
-' 3.4 스킨계수
-Sub Wrote34_SkinFactor(skin As Variant, er As Variant, nofwell As Variant)
-    Dim i, ip As Integer
+'****************************************
+'    ip = 37 'W-1 point
+'****************************************
+
+    Dim i, ip As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
     
-'****************************************
-    ip = 48
-'****************************************
-  
-    Call EraseCellData("P48:R77")
+    Values = GetRowColumn("agg2_37_roi")
+    ip = Values(2)
+    
+    Call EraseCellData("E" & ip & ":AH" & (ip + 6))
     
     For i = 1 To nofwell
-        Cells(ip + (i - 1), "p").value = "W-" & i
-           
-        Cells(ip + (i - 1), "q").value = skin(i)
-        Cells(ip + (i - 1), "q").NumberFormat = "0.0000"
+        Cells((ip + 0), (4 + i)).value = "W-" & i
         
-        Cells(ip + (i - 1), "r").value = er(i)
-        Cells(ip + (i - 1), "r").NumberFormat = "0.000"
+        Cells((ip + 1), (4 + i)).value = TA(i)
+        Cells((ip + 1), (4 + i)).NumberFormat = "0.0000"
+        
+        Cells((ip + 2), (4 + i)).value = K(i)
+        Cells((ip + 2), (4 + i)).NumberFormat = "0.0000"
+        
+        
+        Cells((ip + 3), (4 + i)).value = S2(i)
+        Cells((ip + 3), (4 + i)).NumberFormat = "0.0000000"
+        
+        Cells((ip + 4), (4 + i)).value = time_(i)
+        Cells((ip + 4), (4 + i)).NumberFormat = "0.0000"
+        
+        Cells((ip + 5), (4 + i)).value = deltah(i)
+        Cells((ip + 5), (4 + i)).NumberFormat = "0.00"
+        
+        Cells((ip + 6), (4 + i)).value = daeSoo(i)
     Next i
+
 End Sub
+
+
 
 
 ' 3-6, 수리상수산정결과
 Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As Variant, nofwell As Variant)
-    Dim i As Integer
-    Dim ip As Integer ' ip : insertion point
     
 '****************************************
-    ip = 48
+'    ip = 48
 '****************************************
-    Call EraseCellData("C48:F137")
+' Call EraseCellData("C48:F137")
+' 137 - 48 = 89
+
+    Dim i, ip As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
     
+    Values = GetRowColumn("agg2_36_surisangsoo")
+    ip = Values(2)
+    
+    Call EraseCellData("C" & ip & ":S" & (ip + nofwell * 3 - 1))
         
     For i = 1 To nofwell
         Cells(ip + (i - 1) * 3, "C").value = "W-" & i
@@ -231,53 +277,25 @@ Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As V
 End Sub
 
 
-' 3-7, 조사공별 수리상수
-Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, time_ As Variant, deltah As Variant, daeSoo As Variant, nofwell As Variant)
-
-    Dim i, ip As Variant
-       
-'****************************************
-    ip = 37 'W-1 point
-'****************************************
-
-    Call EraseCellData("E37:AH43")
-    
-    For i = 1 To nofwell
-        Cells((ip + 0), (4 + i)).value = "W-" & i
-        
-        Cells((ip + 1), (4 + i)).value = TA(i)
-        Cells((ip + 1), (4 + i)).NumberFormat = "0.0000"
-        
-        Cells((ip + 2), (4 + i)).value = K(i)
-        Cells((ip + 2), (4 + i)).NumberFormat = "0.0000"
-        
-        
-        Cells((ip + 3), (4 + i)).value = S2(i)
-        Cells((ip + 3), (4 + i)).NumberFormat = "0.0000000"
-        
-        Cells((ip + 4), (4 + i)).value = time_(i)
-        Cells((ip + 4), (4 + i)).NumberFormat = "0.0000"
-        
-        Cells((ip + 5), (4 + i)).value = deltah(i)
-        Cells((ip + 5), (4 + i)).NumberFormat = "0.00"
-        
-        Cells((ip + 6), (4 + i)).value = daeSoo(i)
-    Next i
-
-End Sub
 
 '3.8 영향반경
 Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob As Variant, nofwell As Variant)
+ 
+'****************************************
+'    ip = 48 'W-1 point
+'****************************************
+' Call EraseCellData("H48:N77")
+' 77 - 48 = 29
 
-    Dim i, ip As Integer
-    Dim sum, average As Double
+
+    Dim i, ip As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
     
+    Values = GetRowColumn("agg2_38_roi_result")
+    ip = Values(2)
     
-'****************************************
-    ip = 48 'W-1 point
-'****************************************
-    
-    Call EraseCellData("H48:N77")
+    Call EraseCellData("H" & ip & ":N" & (ip + nofwell - 1))
     
     For i = 1 To nofwell
         Cells(ip + (i - 1), "h").value = "W-" & i
@@ -303,6 +321,42 @@ Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob 
     Next i
 
 End Sub
+
+
+
+' 3.4 스킨계수
+Sub Wrote34_SkinFactor(skin As Variant, er As Variant, nofwell As Variant)
+    
+'****************************************
+'   ip = 48
+'****************************************
+' Call EraseCellData("P48:R77")
+'****************************************
+
+    Dim i, ip As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
+    
+    Values = GetRowColumn("agg2_34_skinfactor")
+    ip = Values(2)
+    
+    Call EraseCellData("P" & ip & ":R" & (ip + nofwell - 1))
+    
+    For i = 1 To nofwell
+        Cells(ip + (i - 1), "p").value = "W-" & i
+           
+        Cells(ip + (i - 1), "q").value = skin(i)
+        Cells(ip + (i - 1), "q").NumberFormat = "0.0000"
+        
+        Cells(ip + (i - 1), "r").value = er(i)
+        Cells(ip + (i - 1), "r").NumberFormat = "0.000"
+    Next i
+End Sub
+
+
+
+
+
 
 
 

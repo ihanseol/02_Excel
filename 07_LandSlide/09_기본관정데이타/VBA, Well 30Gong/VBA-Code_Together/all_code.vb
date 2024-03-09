@@ -1432,6 +1432,19 @@ Function ColumnNumberToLetter(ByVal columnNumber As Integer) As String
 End Function
 
 
+Function ColumnLetterToNumber(ByVal columnLetter As String) As Long
+    Dim i As Long
+    Dim result As Long
+
+    result = 0
+    For i = 1 To Len(columnLetter)
+        result = result * 26 + (Asc(UCase(Mid(columnLetter, i, 1))) - 64)
+    Next i
+
+    ColumnLetterToNumber = result
+End Function
+
+
 
 Public Sub draw_motor_frame(ByVal nof_sheets As Integer, ByVal po As Integer)
     Dim mychar
@@ -4166,6 +4179,25 @@ Private Sub EraseCellData(str_range As String)
 End Sub
 
 
+Function GetRowColumn(name As String) As Variant
+    Dim acColumn, acRow As Variant
+    Dim result(1 To 2) As Variant
+
+    acColumn = Split(Range(name).Address, "$")(1)
+    acRow = Split(Range(name).Address, "$")(2)
+
+    '  Row = ActiveCell.Row
+    '  col = ActiveCell.Column
+    
+    
+    result(1) = acColumn
+    result(2) = acRow
+
+    Debug.Print acColumn, acRow
+    GetRowColumn = result
+End Function
+
+
 
 Private Sub CommandButton2_Click()
 ' Collect Data
@@ -4326,39 +4358,66 @@ Sub WriteWellData(Q As Variant, natural As Variant, stable As Variant, recover A
 End Sub
 
 
+' 3-7, 조사공별 수리상수
+Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, time_ As Variant, deltah As Variant, daeSoo As Variant, nofwell As Variant)
 
-' 3.4 스킨계수
-Sub Wrote34_SkinFactor(skin As Variant, er As Variant, nofwell As Variant)
-    Dim i, ip As Integer
+'****************************************
+'    ip = 37 'W-1 point
+'****************************************
+
+    Dim i, ip As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
     
-'****************************************
-    ip = 48
-'****************************************
-  
-    Call EraseCellData("P48:R77")
+    Values = GetRowColumn("agg2_37_roi")
+    ip = Values(2)
+    
+    Call EraseCellData("E" & ip & ":AH" & (ip + 6))
     
     For i = 1 To nofwell
-        Cells(ip + (i - 1), "p").value = "W-" & i
-           
-        Cells(ip + (i - 1), "q").value = skin(i)
-        Cells(ip + (i - 1), "q").NumberFormat = "0.0000"
+        Cells((ip + 0), (4 + i)).value = "W-" & i
         
-        Cells(ip + (i - 1), "r").value = er(i)
-        Cells(ip + (i - 1), "r").NumberFormat = "0.000"
+        Cells((ip + 1), (4 + i)).value = TA(i)
+        Cells((ip + 1), (4 + i)).NumberFormat = "0.0000"
+        
+        Cells((ip + 2), (4 + i)).value = K(i)
+        Cells((ip + 2), (4 + i)).NumberFormat = "0.0000"
+        
+        
+        Cells((ip + 3), (4 + i)).value = S2(i)
+        Cells((ip + 3), (4 + i)).NumberFormat = "0.0000000"
+        
+        Cells((ip + 4), (4 + i)).value = time_(i)
+        Cells((ip + 4), (4 + i)).NumberFormat = "0.0000"
+        
+        Cells((ip + 5), (4 + i)).value = deltah(i)
+        Cells((ip + 5), (4 + i)).NumberFormat = "0.00"
+        
+        Cells((ip + 6), (4 + i)).value = daeSoo(i)
     Next i
+
 End Sub
+
+
 
 
 ' 3-6, 수리상수산정결과
 Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As Variant, nofwell As Variant)
-    Dim i As Integer
-    Dim ip As Integer ' ip : insertion point
     
 '****************************************
-    ip = 48
+'    ip = 48
 '****************************************
-    Call EraseCellData("C48:F137")
+' Call EraseCellData("C48:F137")
+' 137 - 48 = 89
+
+    Dim i, ip As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
     
+    Values = GetRowColumn("agg2_36_surisangsoo")
+    ip = Values(2)
+    
+    Call EraseCellData("C" & ip & ":S" & (ip + nofwell * 3 - 1))
         
     For i = 1 To nofwell
         Cells(ip + (i - 1) * 3, "C").value = "W-" & i
@@ -4387,53 +4446,25 @@ Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As V
 End Sub
 
 
-' 3-7, 조사공별 수리상수
-Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, time_ As Variant, deltah As Variant, daeSoo As Variant, nofwell As Variant)
-
-    Dim i, ip As Variant
-       
-'****************************************
-    ip = 37 'W-1 point
-'****************************************
-
-    Call EraseCellData("E37:AH43")
-    
-    For i = 1 To nofwell
-        Cells((ip + 0), (4 + i)).value = "W-" & i
-        
-        Cells((ip + 1), (4 + i)).value = TA(i)
-        Cells((ip + 1), (4 + i)).NumberFormat = "0.0000"
-        
-        Cells((ip + 2), (4 + i)).value = K(i)
-        Cells((ip + 2), (4 + i)).NumberFormat = "0.0000"
-        
-        
-        Cells((ip + 3), (4 + i)).value = S2(i)
-        Cells((ip + 3), (4 + i)).NumberFormat = "0.0000000"
-        
-        Cells((ip + 4), (4 + i)).value = time_(i)
-        Cells((ip + 4), (4 + i)).NumberFormat = "0.0000"
-        
-        Cells((ip + 5), (4 + i)).value = deltah(i)
-        Cells((ip + 5), (4 + i)).NumberFormat = "0.00"
-        
-        Cells((ip + 6), (4 + i)).value = daeSoo(i)
-    Next i
-
-End Sub
 
 '3.8 영향반경
 Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob As Variant, nofwell As Variant)
+ 
+'****************************************
+'    ip = 48 'W-1 point
+'****************************************
+' Call EraseCellData("H48:N77")
+' 77 - 48 = 29
 
-    Dim i, ip As Integer
-    Dim sum, average As Double
+
+    Dim i, ip As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
     
+    Values = GetRowColumn("agg2_38_roi_result")
+    ip = Values(2)
     
-'****************************************
-    ip = 48 'W-1 point
-'****************************************
-    
-    Call EraseCellData("H48:N77")
+    Call EraseCellData("H" & ip & ":N" & (ip + nofwell - 1))
     
     For i = 1 To nofwell
         Cells(ip + (i - 1), "h").value = "W-" & i
@@ -4459,6 +4490,42 @@ Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob 
     Next i
 
 End Sub
+
+
+
+' 3.4 스킨계수
+Sub Wrote34_SkinFactor(skin As Variant, er As Variant, nofwell As Variant)
+    
+'****************************************
+'   ip = 48
+'****************************************
+' Call EraseCellData("P48:R77")
+'****************************************
+
+    Dim i, ip As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
+    
+    Values = GetRowColumn("agg2_34_skinfactor")
+    ip = Values(2)
+    
+    Call EraseCellData("P" & ip & ":R" & (ip + nofwell - 1))
+    
+    For i = 1 To nofwell
+        Cells(ip + (i - 1), "p").value = "W-" & i
+           
+        Cells(ip + (i - 1), "q").value = skin(i)
+        Cells(ip + (i - 1), "q").NumberFormat = "0.0000"
+        
+        Cells(ip + (i - 1), "r").value = er(i)
+        Cells(ip + (i - 1), "r").NumberFormat = "0.000"
+    Next i
+End Sub
+
+
+
+
+
 
 
 
@@ -4808,21 +4875,22 @@ End Sub
 
 Option Explicit
 
-' ip_intake : 취수계획량
-' ip_simdo : 굴착심도
-' ip_pump : 펌프마력
-' ip_natural_level  : 자연수위
-' ip_stable_level  : 안정수위
-' ip_tochul  : 토출구경
-' ip_motor_simdo : 모터심도
-'
-' ip_roi : radius of influence
-' ip_di : drastic index
-'
-' ip_ac : AquiferCharacterization
-' ip_right_ac : Right AquiferCharacterization
 
-Const G_WELL As Integer = 30
+' AggSum_Intake : 취수계획량
+' AggSum_Simdo : 굴착심도
+' AggSum_MotorHP : 펌프마력
+' AggSum_NaturalLevel : 자연수위
+' AggSum_StableLevel : 안정수위
+' AggSum_ToChool : 토출구경
+' AggSum_MotorSimdo : 모터심도
+'
+
+' AggSum_ROI : radius of influence
+' AggSum_DI : drastic index
+' AggSum_ROI_Stat :
+' AggSum_26_AC : 26, AquiferCharacterization
+' AggSum_26_RightAC : 26, Right AquiferCharacterizationn
+
 
 Private Sub EraseCellData(ByVal str_range As String)
     With Range(str_range)
@@ -4838,18 +4906,18 @@ End Sub
 
 Private Sub Test_NameManager()
     Dim acColumn, acRow As Variant
-
-  acColumn = Split(Range("ip_motor_simdo").Address, "$")(1)
-  acRow = Split(Range("ip_motor_simdo").Address, "$")(2)
-
-'  Row = ActiveCell.Row
-'  col = ActiveCell.Column
-
+    
+    acColumn = Split(Range("ip_motor_simdo").Address, "$")(1)
+    acRow = Split(Range("ip_motor_simdo").Address, "$")(2)
+    
+    '  Row = ActiveCell.Row
+    '  col = ActiveCell.Column
+    
     Debug.Print acColumn, acRow
 End Sub
 
 
-Function GetRC(name As String) As Variant
+Function GetRowColumn(name As String) As Variant
     Dim acColumn, acRow As Variant
     Dim result(1 To 2) As Variant
 
@@ -4864,7 +4932,7 @@ Function GetRC(name As String) As Variant
     result(2) = acRow
 
     Debug.Print acColumn, acRow
-    GetRC = result
+    GetRowColumn = result
 End Function
 
 
@@ -4931,14 +4999,14 @@ End Sub
 
 Sub Write_NaturalLevel(nofwell As Integer)
 ' 자연수위
-    Dim i As Integer
+    Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
     
-    Values = GetRC("ip_natural_level")
-    rngString = Values(1) & Values(2) & ":AG" & (Values(2) + 1)
+    Values = GetRowColumn("AggSum_NaturalLevel")
+    ip = Values(2)
     
-    
+    rngString = Values(1) & ip & ":AG" & (ip + 1)
     Call EraseCellData(rngString)
     
     If Sheets("AggSum").CheckBox1.value = True Then
@@ -4948,22 +5016,23 @@ Sub Write_NaturalLevel(nofwell As Integer)
     End If
 
     For i = 1 To nofwell
-        Cells(Values(2), (i + 3)).value = "W-" & CStr(i)
-        Cells(Values(2) + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c20").value & unit
+        Cells(ip, (i + 3)).value = "W-" & CStr(i)
+        Cells(ip + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c20").value & unit
     Next i
 End Sub
 
 Sub Write_StableLevel(nofwell As Integer)
 ' 안정수위
-    Dim i As Integer
+    Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
     
-    Values = GetRC("ip_stable_level")
-    rngString = Values(1) & Values(2) & ":AG" & (Values(2) + 1)
+    Values = GetRowColumn("AggSum_StableLevel")
+    ip = Values(2)
     
-    
+    rngString = Values(1) & ip & ":AG" & (ip + 1)
     Call EraseCellData(rngString)
+    
     If Sheets("AggSum").CheckBox1.value = True Then
             unit = " m"
         Else
@@ -4972,8 +5041,8 @@ Sub Write_StableLevel(nofwell As Integer)
 
 
     For i = 1 To nofwell
-        Cells(Values(2), (i + 3)).value = "W-" & CStr(i)
-        Cells(Values(2) + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c21").value & unit
+        Cells(ip, (i + 3)).value = "W-" & CStr(i)
+        Cells(ip + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c21").value & unit
     Next i
 End Sub
 
@@ -4984,15 +5053,16 @@ End Sub
 
 Sub Write_MotorPower(nofwell As Integer)
 ' 모터마력
-    Dim i As Integer
+    Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
     
-    Values = GetRC("ip_pump")
-    rngString = Values(1) & Values(2) & ":AG" & (Values(2) + 1)
+    Values = GetRowColumn("AggSum_MotorHP")
+    ip = Values(2)
     
-    
+    rngString = Values(1) & ip & ":AG" & (ip + 1)
     Call EraseCellData(rngString)
+    
     If Sheets("AggSum").CheckBox1.value = True Then
             unit = " Hp"
         Else
@@ -5000,22 +5070,22 @@ Sub Write_MotorPower(nofwell As Integer)
     End If
 
     For i = 1 To nofwell
-        Cells(Values(2), (i + 3)).value = "W-" & CStr(i)
-        Cells(Values(2) + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c17").value & unit
+        Cells(ip, (i + 3)).value = "W-" & CStr(i)
+        Cells(ip + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c17").value & unit
     Next i
 End Sub
 
 
 Sub Write_MotorSimdo(nofwell As Integer)
 ' 모터심도
-    Dim i As Integer
+    Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
     
-    Values = GetRC("ip_motor_simdo")
-    rngString = Values(1) & Values(2) & ":AG" & (Values(2) + 1)
+    Values = GetRowColumn("AggSum_MotorSimdo")
+    ip = Values(2)
     
-    
+    rngString = Values(1) & ip & ":AG" & (ip + 1)
     Call EraseCellData(rngString)
     
     If Sheets("AggSum").CheckBox1.value = True Then
@@ -5024,37 +5094,34 @@ Sub Write_MotorSimdo(nofwell As Integer)
             unit = ""
     End If
 
-
     For i = 1 To nofwell
-        Cells(Values(2), (i + 3)).value = "W-" & CStr(i)
-        Cells(Values(2) + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c18").value & unit
+        Cells(ip, (i + 3)).value = "W-" & CStr(i)
+        Cells(ip + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c18").value & unit
     Next i
 End Sub
 
 
 Sub Write_MotorTochool(nofwell As Integer)
 ' 토출구경
-    Dim i As Integer
+    Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
     
-    Values = GetRC("ip_tochul")
-    rngString = Values(1) & Values(2) & ":AG" & (Values(2) + 1)
+    Values = GetRowColumn("AggSum_ToChool")
+    ip = Values(2)
     
-    
+    rngString = Values(1) & ip & ":AG" & (ip + 1)
     Call EraseCellData(rngString)
     
-
     If Sheets("AggSum").CheckBox1.value = True Then
             unit = " mm"
         Else
             unit = ""
     End If
 
-
     For i = 1 To nofwell
-        Cells(Values(2), (i + 3)).value = "W-" & CStr(i)
-        Cells(Values(2) + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c19").value & unit
+        Cells(ip, (i + 3)).value = "W-" & CStr(i)
+        Cells(ip + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c19").value & unit
     Next i
 End Sub
 
@@ -5062,14 +5129,14 @@ End Sub
 
 Sub Write_DiggingDepth(nofwell As Integer)
 ' 굴착심도
-   Dim i As Integer
+   Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
     
-    Values = GetRC("ip_simdo")
-    rngString = Values(1) & Values(2) & ":AG" & (Values(2) + 1)
+    Values = GetRowColumn("AggSum_Simdo")
+    ip = Values(2)
     
-    
+    rngString = Values(1) & ip & ":AG" & (ip + 1)
     Call EraseCellData(rngString)
     
     If Sheets("AggSum").CheckBox1.value = True Then
@@ -5079,8 +5146,8 @@ Sub Write_DiggingDepth(nofwell As Integer)
     End If
 
     For i = 1 To nofwell
-        Cells(Values(2), (i + 3)).value = "W-" & CStr(i)
-        Cells(Values(2) + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c7").value & unit
+        Cells(ip, (i + 3)).value = "W-" & CStr(i)
+        Cells(ip + 1, (i + 3)).value = Worksheets(CStr(i)).Range("c7").value & unit
     Next i
 End Sub
 
@@ -5088,14 +5155,14 @@ End Sub
 
 Sub Write_WaterIntake(nofwell As Integer)
 ' 취수계획량
-    Dim i As Integer
+    Dim i, ip As Integer
     Dim unit, rngString As String
     Dim Values As Variant
     
-    Values = GetRC("ip_intake")
-    rngString = Values(1) & Values(2) & ":AG" & (Values(2) + 1)
+    Values = GetRowColumn("AggSum_Intake")
+    ip = Values(2)
     
-    
+    rngString = Values(1) & ip & ":AG" & (ip + 1)
     Call EraseCellData(rngString)
     
     If Sheets("AggSum").CheckBox1.value = True Then
@@ -5106,24 +5173,24 @@ Sub Write_WaterIntake(nofwell As Integer)
 
     For i = 1 To nofwell
         ' WellNum
-        Cells(Values(2), (i + 3)).value = "W-" & CStr(i)
-        Cells(Values(2) + 1, (i + 3)).value = Worksheets(CStr(i)).Range("C15").value & unit
+        Cells(ip, (i + 3)).value = "W-" & CStr(i)
+        Cells(ip + 1, (i + 3)).value = Worksheets(CStr(i)).Range("C15").value & unit
     Next i
 End Sub
 
 
 Sub Write_RadiusOfInfluence(nofwell As Integer)
 ' 양수영향반경
-    Dim i As Integer
+    Dim i, ip As Integer
     Dim unit, rngString01, rngString02 As String
     Dim Values As Variant
     
-    Values = GetRC("ip_roi")
-    rngString01 = "D" & Values(2) & ":G" & (Values(2) + G_WELL - 1)
-    rngString02 = "M" & Values(2) & ":O" & (Values(2) + G_WELL - 1)
+    Values = GetRowColumn("AggSum_ROI")
+    ip = Values(2)
     
+    rngString01 = "D" & ip & ":G" & (ip + nofwell - 1)
+    rngString02 = "M" & ip & ":O" & (ip + nofwell - 1)
     
-    ' Call EraseCellData(rngString)
     
     Call EraseCellData(rngString01)
     Call EraseCellData(rngString02)
@@ -5137,19 +5204,19 @@ Sub Write_RadiusOfInfluence(nofwell As Integer)
 
     For i = 1 To nofwell
         ' WellNum
-        Cells(Values(2) - 1 + i, "D").value = "W-" & CStr(i)
+        Cells(ip - 1 + i, "D").value = "W-" & CStr(i)
         ' 양수영향반경, 이것은 보고서에 따라서 다른데,
         ' 일단은 최대값, shultz, webber, jcob 의 최대값을 선택하는것으로 한다.
         ' 그리고 필요한 부분은, 후에 추가시켜준다.
-        Cells(Values(2) - 1 + i, "E").value = Worksheets(CStr(i)).Range("H9").value & unit
-        Cells(Values(2) - 1 + i, "F").value = Worksheets(CStr(i)).Range("K6").value & unit
-        Cells(Values(2) - 1 + i, "G").value = Worksheets(CStr(i)).Range("K7").value & unit
+        Cells(ip - 1 + i, "E").value = Worksheets(CStr(i)).Range("H9").value & unit
+        Cells(ip - 1 + i, "F").value = Worksheets(CStr(i)).Range("K6").value & unit
+        Cells(ip - 1 + i, "G").value = Worksheets(CStr(i)).Range("K7").value & unit
         
         
         '영향반경의 최대, 최소, 평균값을 추가해준다.
-        Cells(Values(2) - 1 + i, "M").value = Worksheets(CStr(i)).Range("H9").value & unit
-        Cells(Values(2) - 1 + i, "N").value = Worksheets(CStr(i)).Range("H10").value & unit
-        Cells(Values(2) - 1 + i, "O").value = Worksheets(CStr(i)).Range("H11").value & unit
+        Cells(ip - 1 + i, "M").value = Worksheets(CStr(i)).Range("H9").value & unit
+        Cells(ip - 1 + i, "N").value = Worksheets(CStr(i)).Range("H10").value & unit
+        Cells(ip - 1 + i, "O").value = Worksheets(CStr(i)).Range("H11").value & unit
         
         
     Next i
@@ -5158,21 +5225,21 @@ End Sub
 
 Sub Write_DrasticIndex(nofwell As Integer)
 ' 드라스틱 인덱스
-    Dim i As Integer
-    Dim unit, rngString01, rngString02 As String
+    Dim i, ip As Integer
+    Dim unit, rngString As String
     Dim Values As Variant
     
-    Values = GetRC("ip_di")
-    rngString01 = "I" & Values(2) & ":K" & (Values(2) + G_WELL - 1)
+    Values = GetRowColumn("AggSum_DI")
+    ip = Values(2)
     
-    
-    Call EraseCellData(rngString01)
+    rngString = "I" & Values(2) & ":K" & (Values(2) + nofwell - 1)
+    Call EraseCellData(rngString)
     
     For i = 1 To nofwell
         ' WellNum
-        Cells(Values(2) - 1 + i, "I").value = "W-" & CStr(i)
-        Cells(Values(2) - 1 + i, "J").value = Worksheets(CStr(i)).Range("k30").value
-        Cells(Values(2) - 1 + i, "K").value = Worksheets(CStr(i)).Range("k31").value
+        Cells(ip - 1 + i, "I").value = "W-" & CStr(i)
+        Cells(ip - 1 + i, "J").value = Worksheets(CStr(i)).Range("k30").value
+        Cells(ip - 1 + i, "K").value = Worksheets(CStr(i)).Range("k31").value
     Next i
 End Sub
 
@@ -5201,24 +5268,33 @@ End Function
 
 
 Sub Check_DI()
+' Drastic Index 의 범위를 추려줌 ...
+
+    Dim i, ip_Row, ip_Column As Integer
+    Dim unit, rngString01 As String
+    Dim Values As Variant
     
-    Range("R59").value = CheckDrasticIndex(Range("Q59"))
-    Range("R60").value = CheckDrasticIndex(Range("Q60"))
+    Values = GetRowColumn("AggSum_Statistic_DrasticIndex")
+    
+    ip_Column = ColumnLetterToNumber(Values(1))
+    ip_Row = Values(2)
+    
+    Range(ColumnNumberToLetter(ip_Column + 1) & ip_Row).value = CheckDrasticIndex(Range(ColumnNumberToLetter(ip_Column) & ip_Row))
+    Range(ColumnNumberToLetter(ip_Column + 1) & (ip_Row + 1)).value = CheckDrasticIndex(Range(ColumnNumberToLetter(ip_Column) & (ip_Row + 1)))
 
 End Sub
 
 Sub Write26_AquiferCharacterization(nofwell As Integer)
 ' 대수층 분석및 적정채수량 분석
-    Dim i, remainder As Integer
-    Dim unit, rngString01, rngString02 As String
+    Dim i, ip, remainder As Integer
+    Dim unit, rngString As String
     Dim Values As Variant
     
-    Values = GetRC("ip_ac")
-    rngString01 = "D" & Values(2) & ":J" & (Values(2) + G_WELL - 1)
-    MsgBox rngString01
+    Values = GetRowColumn("AggSum_26_AC")
+    ip = Values(2)
     
-    Call EraseCellData(rngString01)
-    ' Call EraseCellData("D12:J26")
+    rngString = "D" & ip & ":J" & (ip + nofwell - 1)
+    Call EraseCellData(rngString)
         
     For i = 1 To nofwell
     
@@ -5261,17 +5337,17 @@ End Sub
 
 Sub Write26_Right_AquiferCharacterization(nofwell As Integer)
 ' 대수층 분석및 적정채수량 분석
-    Dim i, remainder As Integer
-    Dim unit, rngString01, rngString02 As String
+    Dim i, ip, remainder As Integer
+    Dim unit, rngString As String
     Dim Values As Variant
     
-    Values = GetRC("ip_right_ac")
-    rngString01 = "L" & Values(2) & ":S" & (Values(2) + G_WELL - 1)
+    Values = GetRowColumn("AggSum_26_RightAC")
+    ip = Values(2)
     
+    rngString = "L" & ip & ":S" & (ip + nofwell - 1)
     
-    Call EraseCellData(rngString01)
-    ' Call EraseCellData("L12:S26")
-        
+    Call EraseCellData(rngString)
+            
     For i = 1 To nofwell
     
         remainder = i Mod 2
@@ -5553,7 +5629,7 @@ End Sub
 
 
 
-Const G_WELL As Integer = 30
+Const nofwell As Integer = 30
 
 Private Sub CommandButton1_Click()
     Sheets("YangSoo").Visible = False
@@ -5701,7 +5777,7 @@ Sub GetBaseDataFromYangSoo()
     ReDim ER_MODE(1 To nofwell)
     
     
-    rngString = "A5:AN" & (G_WELL + 5 - 1)
+    rngString = "A5:AN" & (nofwell + 5 - 1)
     
     Call EraseCellData(rngString)
     

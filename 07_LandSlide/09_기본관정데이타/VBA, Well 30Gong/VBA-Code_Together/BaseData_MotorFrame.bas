@@ -17,6 +17,19 @@ Function ColumnNumberToLetter(ByVal columnNumber As Integer) As String
 End Function
 
 
+Function ColumnLetterToNumber(ByVal columnLetter As String) As Long
+    Dim i As Long
+    Dim result As Long
+
+    result = 0
+    For i = 1 To Len(columnLetter)
+        result = result * 26 + (Asc(UCase(Mid(columnLetter, i, 1))) - 64)
+    Next i
+
+    ColumnLetterToNumber = result
+End Function
+
+
 
 Public Sub draw_motor_frame(ByVal nof_sheets As Integer, ByVal po As Integer)
     Dim mychar
