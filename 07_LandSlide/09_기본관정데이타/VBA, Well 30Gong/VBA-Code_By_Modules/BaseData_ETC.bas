@@ -158,7 +158,12 @@ Function GetOtherFileName() As String
 NEXT_ITERATION:
     Next
     
-    GetOtherFileName = Workbook.name
+    If Workbook Is Nothing Then
+        GetOtherFileName = "Empty"
+    Else
+        GetOtherFileName = Workbook.name
+    End If
+    
 End Function
 
 

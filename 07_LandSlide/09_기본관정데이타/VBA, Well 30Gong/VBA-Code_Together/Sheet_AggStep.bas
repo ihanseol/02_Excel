@@ -31,8 +31,19 @@ Dim WB_NAME As String
 WB_NAME = GetOtherFileName
 'MsgBox WB_NAME
 
-singleWell = CInt(ExtractNumberFromString(WB_NAME))
-'MsgBox (SingleWell)
+'If Workbook Is Nothing Then
+'    GetOtherFileName = "Empty"
+'Else
+'    GetOtherFileName = Workbook.name
+'End If
+    
+If WB_NAME = "Empty" Then
+    MsgBox "WorkBook is Empty"
+    Exit Sub
+Else
+    singleWell = CInt(ExtractNumberFromString(WB_NAME))
+'   MsgBox (SingleWell)
+End If
 
 Call WriteStepTestData(singleWell, True)
 

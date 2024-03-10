@@ -31,12 +31,21 @@ Private Sub CommandButton3_Click()
 Dim singleWell  As Integer
 Dim WB_NAME As String
 
-
+'If Workbook Is Nothing Then
+'    GetOtherFileName = "Empty"
+'Else
+'    GetOtherFileName = Workbook.name
+'End If
+    
 WB_NAME = GetOtherFileName
-'MsgBox WB_NAME
 
-singleWell = CInt(ExtractNumberFromString(WB_NAME))
-'MsgBox (SingleWell)
+If WB_NAME = "Empty" Then
+    MsgBox "WorkBook is Empty"
+    Exit Sub
+Else
+    singleWell = CInt(ExtractNumberFromString(WB_NAME))
+'   MsgBox (SingleWell)
+End If
 
 Call WriteAllCharts(singleWell, True)
 

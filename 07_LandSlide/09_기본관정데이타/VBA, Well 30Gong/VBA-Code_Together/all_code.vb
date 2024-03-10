@@ -3792,7 +3792,12 @@ Function GetOtherFileName() As String
 NEXT_ITERATION:
     Next
     
-    GetOtherFileName = Workbook.name
+    If Workbook Is Nothing Then
+        GetOtherFileName = "Empty"
+    Else
+        GetOtherFileName = Workbook.name
+    End If
+    
 End Function
 
 
@@ -4148,8 +4153,19 @@ Dim WB_NAME As String
 WB_NAME = GetOtherFileName
 'MsgBox WB_NAME
 
-singleWell = CInt(ExtractNumberFromString(WB_NAME))
-'MsgBox (SingleWell)
+'If Workbook Is Nothing Then
+'    GetOtherFileName = "Empty"
+'Else
+'    GetOtherFileName = Workbook.name
+'End If
+    
+If WB_NAME = "Empty" Then
+    MsgBox "WorkBook is Empty"
+    Exit Sub
+Else
+    singleWell = CInt(ExtractNumberFromString(WB_NAME))
+'   MsgBox (SingleWell)
+End If
 
 Call AggregateOne_Import(singleWell, True)
 
@@ -4331,8 +4347,20 @@ Dim WB_NAME As String
 WB_NAME = GetOtherFileName
 'MsgBox WB_NAME
 
-singleWell = CInt(ExtractNumberFromString(WB_NAME))
-'MsgBox (SingleWell)
+'
+'If Workbook Is Nothing Then
+'    GetOtherFileName = "Empty"
+'Else
+'    GetOtherFileName = Workbook.name
+'End If
+    
+If WB_NAME = "Empty" Then
+    MsgBox "WorkBook is Empty"
+    Exit Sub
+Else
+    singleWell = CInt(ExtractNumberFromString(WB_NAME))
+'   MsgBox (SingleWell)
+End If
 
 Call ImportWellSpec(singleWell, True)
 
@@ -5654,8 +5682,19 @@ Dim WB_NAME As String
 WB_NAME = GetOtherFileName
 'MsgBox WB_NAME
 
-singleWell = CInt(ExtractNumberFromString(WB_NAME))
-'MsgBox (SingleWell)
+'If Workbook Is Nothing Then
+'    GetOtherFileName = "Empty"
+'Else
+'    GetOtherFileName = Workbook.name
+'End If
+    
+If WB_NAME = "Empty" Then
+    MsgBox "WorkBook is Empty"
+    Exit Sub
+Else
+    singleWell = CInt(ExtractNumberFromString(WB_NAME))
+'   MsgBox (SingleWell)
+End If
 
 Call WriteStepTestData(singleWell, True)
 
@@ -5801,12 +5840,21 @@ Private Sub CommandButton3_Click()
 Dim singleWell  As Integer
 Dim WB_NAME As String
 
-
+'If Workbook Is Nothing Then
+'    GetOtherFileName = "Empty"
+'Else
+'    GetOtherFileName = Workbook.name
+'End If
+    
 WB_NAME = GetOtherFileName
-'MsgBox WB_NAME
 
-singleWell = CInt(ExtractNumberFromString(WB_NAME))
-'MsgBox (SingleWell)
+If WB_NAME = "Empty" Then
+    MsgBox "WorkBook is Empty"
+    Exit Sub
+Else
+    singleWell = CInt(ExtractNumberFromString(WB_NAME))
+'   MsgBox (SingleWell)
+End If
 
 Call WriteAllCharts(singleWell, True)
 
@@ -5972,19 +6020,30 @@ End Sub
 
 
 Private Sub CommandButton4_Click()
-    'single well import
+'single well import
+
+Dim singleWell  As Integer
+Dim WB_NAME As String
+
+
+WB_NAME = GetOtherFileName
+'MsgBox WB_NAME
     
-    Dim singleWell  As Integer
-    Dim WB_NAME As String
+'If Workbook Is Nothing Then
+'    GetOtherFileName = "Empty"
+'Else
+'    GetOtherFileName = Workbook.name
+'End If
     
-    
-    WB_NAME = GetOtherFileName
-    'MsgBox WB_NAME
-    
+If WB_NAME = "Empty" Then
+    MsgBox "WorkBook is Empty"
+    Exit Sub
+Else
     singleWell = CInt(ExtractNumberFromString(WB_NAME))
-    'MsgBox (SingleWell)
-    
-    Call GetBaseDataFromYangSoo(singleWell, True)
+'   MsgBox (SingleWell)
+End If
+
+Call GetBaseDataFromYangSoo(singleWell, True)
 
 End Sub
 
@@ -10763,7 +10822,14 @@ Sub PrintAllCode()
     If Dir(pathToExport) <> "" Then Kill pathToExport & "*.*"
     
     For Each item In ThisWorkbook.VBProject.VBComponents
-        lineToPrint = item.CodeModule.Lines(1, item.CodeModule.CountOfLines)
+        
+        
+        If item.CodeModule.CountOfLines <> 0 Then
+            lineToPrint = item.CodeModule.Lines(1, item.CodeModule.CountOfLines)
+        Else
+            lineToPrint = "'This Module is Empty "
+        End If
+        
         
         fName = item.CodeModule.name
         Debug.Print lineToPrint
@@ -22102,11 +22168,4 @@ Function getTEMP(ByVal LOWHI As Integer, ByVal well As Integer)
 End Function
 
 
-' Module Refactor
-' This is a empty Module ....
-
-
-
-
-
-
+'This Module is Empty 
