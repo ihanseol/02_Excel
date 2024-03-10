@@ -1,13 +1,15 @@
 
-Const nofwell As Integer = 30
-
 Private Sub CommandButton1_Click()
+'Hide Aggregate
+
     Sheets("YangSoo").Visible = False
     Sheets("Well").Select
 End Sub
 
 Private Sub CommandButton2_Click()
-    Call GetBaseDataFromYangSoo
+'Collect Data
+    
+    Call GetBaseDataFromYangSoo(999, False)
 End Sub
 
 Private Sub EraseCellData(str_range As String)
@@ -17,7 +19,32 @@ Private Sub EraseCellData(str_range As String)
 End Sub
 
 
-Sub GetBaseDataFromYangSoo()
+
+Private Sub CommandButton4_Click()
+    'single well import
+    
+    Dim singleWell  As Integer
+    Dim WB_NAME As String
+    
+    
+    WB_NAME = GetOtherFileName
+    'MsgBox WB_NAME
+    
+    singleWell = CInt(ExtractNumberFromString(WB_NAME))
+    'MsgBox (SingleWell)
+    
+    Call GetBaseDataFromYangSoo(singleWell, True)
+
+End Sub
+
+
+Sub GetBaseDataFromYangSoo(ByVal singleWell As Integer, ByVal isSingleWellImport As Boolean)
+' isSingleWellImport = True ---> SingleWell Import
+' isSingleWellImport = False ---> AllWell Import
+'
+' SingleWell --> ImportWell Number
+' 999 & False --> 모든관정을 임포트
+'
     Dim fName As String
     Dim nofwell, i As Integer
     Dim rngString As String
@@ -147,12 +174,27 @@ Sub GetBaseDataFromYangSoo()
     ReDim ER_MODE(1 To nofwell)
     
     
-    rngString = "A5:AN" & (nofwell + 5 - 1)
     
-    Call EraseCellData(rngString)
+    If Not (isSingleWellImport) And singleWell = 999 Then
+        rngString = "A5:AN" & (nofwell + 5 - 1)
+        Call EraseCellData(rngString)
+    End If
     
     For i = 1 To nofwell
     
+        ' isSingleWellImport = True ---> SingleWell Import
+        ' isSingleWellImport = False ---> AllWell Import
+        
+        If isSingleWellImport Then
+            If i = singleWell Then
+                GoTo SINGLE_ITERATION
+            Else
+                GoTo NEXT_ITERATION
+            End If
+        End If
+        
+SINGLE_ITERATION:
+        
         fName = "A" & CStr(i) & "_ge_OriginalSaveFile.xlsm"
         If Not IsWorkBookOpen(fName) Then
             MsgBox "Please open the yangsoo data ! " & fName
@@ -310,6 +352,8 @@ Sub GetBaseDataFromYangSoo()
         Cells(4 + i, "AM").value = Format(ER2(i), "0.0000")
         Cells(4 + i, "AN").value = Format(ER3(i), "0.0000")
         
+NEXT_ITERATION:
+
     Next i
 End Sub
 
@@ -553,7 +597,6 @@ Sub FormulaRadiusOfInfluence(FileNum As Integer)
     Print #FileNum, "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
     
 End Sub
-
 
 
 

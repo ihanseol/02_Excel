@@ -1,34 +1,3 @@
-Function ColumnNumberToLetter(ByVal columnNumber As Integer) As String
-    Dim dividend As Integer
-    Dim modulo As Integer
-    Dim columnName As String
-    Dim result As String
-    
-    dividend = columnNumber
-    result = ""
-    
-    Do While dividend > 0
-        modulo = (dividend - 1) Mod 26
-        columnName = Chr(65 + modulo) & columnName
-        dividend = (dividend - modulo) \ 26
-    Loop
-    
-    ColumnNumberToLetter = columnName
-End Function
-
-
-Function ColumnLetterToNumber(ByVal columnLetter As String) As Long
-    Dim i As Long
-    Dim result As Long
-
-    result = 0
-    For i = 1 To Len(columnLetter)
-        result = result * 26 + (Asc(UCase(Mid(columnLetter, i, 1))) - 64)
-    Next i
-
-    ColumnLetterToNumber = result
-End Function
-
 
 
 Public Sub draw_motor_frame(ByVal nof_sheets As Integer, ByVal po As Integer)

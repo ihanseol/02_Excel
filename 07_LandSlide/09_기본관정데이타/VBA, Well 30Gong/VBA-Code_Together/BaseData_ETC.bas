@@ -21,6 +21,41 @@ End Enum
 '    GetNumberOfWell = n
 'End Function
 
+
+Function ColumnNumberToLetter(ByVal columnNumber As Integer) As String
+    Dim dividend As Integer
+    Dim modulo As Integer
+    Dim columnName As String
+    Dim result As String
+    
+    dividend = columnNumber
+    result = ""
+    
+    Do While dividend > 0
+        modulo = (dividend - 1) Mod 26
+        columnName = Chr(65 + modulo) & columnName
+        dividend = (dividend - modulo) \ 26
+    Loop
+    
+    ColumnNumberToLetter = columnName
+End Function
+
+
+Function ColumnLetterToNumber(ByVal columnLetter As String) As Long
+    Dim i As Long
+    Dim result As Long
+
+    result = 0
+    For i = 1 To Len(columnLetter)
+        result = result * 26 + (Asc(UCase(Mid(columnLetter, i, 1))) - 64)
+    Next i
+
+    ColumnLetterToNumber = result
+End Function
+
+
+
+
 Sub BackGroundFill(rngLine As Range, FLAG As Boolean)
 
 If FLAG Then
@@ -102,6 +137,42 @@ End Function
 '    sheets_count = nWell
 'End Function
 
+
+Function GetOtherFileName() As String
+    Dim Workbook As Workbook
+    Dim workbookNames As String
+    Dim i As Long
+
+    workbookNames = ""
+    
+    For Each Workbook In Application.Workbooks
+        If StrComp(ThisWorkbook.name, Workbook.name, vbTextCompare) = 0 Then
+            GoTo NEXT_ITERATION
+        End If
+        
+        If CheckSubstring(Workbook.name, "OriginalSaveFile") Then
+            Exit For
+        End If
+        
+NEXT_ITERATION:
+    Next
+    
+    GetOtherFileName = Workbook.name
+End Function
+
+
+Function CheckSubstring(str As String, chk As String) As Boolean
+    
+    If InStr(str, chk) > 0 Then
+        ' The string contains "chk"
+        CheckSubstring = True
+    Else
+        ' The string does not contain "chk"
+        CheckSubstring = False
+    End If
+End Function
+
+
 Public Function sheets_count() As Long
     Dim i As Integer
     Dim nSheetsCount As Long
@@ -122,6 +193,29 @@ Public Function sheets_count() As Long
 
     sheets_count = nWell
 End Function
+
+Function ExtractNumberFromString(inputString As String) As String
+    Dim regex As Object
+    Dim matches As Object
+    Dim match As Object
+    
+    Set regex = CreateObject("VBScript.RegExp")
+    
+    With regex
+        .Global = True
+        .MultiLine = True
+        .IgnoreCase = False
+        .Pattern = "\d+"
+    End With
+    
+    If regex.Test(inputString) Then
+        Set matches = regex.Execute(inputString)
+        ExtractNumberFromString = matches(0)
+    Else
+        ExtractNumberFromString = "No numbers found"
+    End If
+End Function
+
 
 
 Function GetNumeric2(ByVal CellRef As String)

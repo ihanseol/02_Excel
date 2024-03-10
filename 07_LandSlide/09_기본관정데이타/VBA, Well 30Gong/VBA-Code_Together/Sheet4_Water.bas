@@ -33,6 +33,42 @@ Private Sub FormulaInjection()
 
 End Sub
 
+
+Function GetOtherFileName() As String
+    Dim Workbook As Workbook
+    Dim workbookNames As String
+    Dim i As Long
+
+    workbookNames = ""
+    
+    For Each Workbook In Application.Workbooks
+        If StrComp(ThisWorkbook.name, Workbook.name, vbTextCompare) = 0 Then
+            GoTo NEXT_ITERATION
+        End If
+        
+        If CheckSubstring(Workbook.name, "관정") Then
+            Exit For
+        End If
+        
+NEXT_ITERATION:
+    Next
+    
+    GetOtherFileName = Workbook.name
+End Function
+
+
+Function CheckSubstring(str As String, chk As String) As Boolean
+    
+    If InStr(str, chk) > 0 Then
+        ' The string contains "chk"
+        CheckSubstring = True
+    Else
+        ' The string does not contain "chk"
+        CheckSubstring = False
+    End If
+End Function
+
+
 '
 'Function lastRowByKey(cell As String) As Long
 '    lastRowByKey = Range(cell).End(xlDown).Row
@@ -80,36 +116,3 @@ Sub ListOpenWorkbookNames()
     Cells(1, 1).value = workbookNames
 End Sub
 
-Function GetOtherFileName() As String
-    Dim Workbook As Workbook
-    Dim workbookNames As String
-    Dim i As Long
-
-    workbookNames = ""
-    
-    For Each Workbook In Application.Workbooks
-        If StrComp(ThisWorkbook.name, Workbook.name, vbTextCompare) = 0 Then
-            GoTo NEXT_ITERATION
-        End If
-        
-        If CheckSubstring(Workbook.name, "관정") Then
-            Exit For
-        End If
-        
-NEXT_ITERATION:
-    Next
-    
-    GetOtherFileName = Workbook.name
-End Function
-
-
-Function CheckSubstring(str As String, chk As String) As Boolean
-    
-    If InStr(str, chk) > 0 Then
-        ' The string contains "chk"
-        CheckSubstring = True
-    Else
-        ' The string does not contain "chk"
-        CheckSubstring = False
-    End If
-End Function

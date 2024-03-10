@@ -3,14 +3,39 @@ Option Explicit
 
 
 Private Sub CommandButton1_Click()
+'Hide Aggregate
+
     Sheets("AggStep").Visible = False
     Sheets("Well").Select
 End Sub
 
 
 Private Sub CommandButton2_Click()
+'Collect Data
+
     If ActiveSheet.name <> "AggStep" Then Sheets("AggStep").Select
-    Call WriteStepTestData
+    Call WriteStepTestData(999, False)
+End Sub
+
+
+
+Private Sub CommandButton3_Click()
+'Single Well Import
+
+'single well import
+
+Dim singleWell  As Integer
+Dim WB_NAME As String
+
+
+WB_NAME = GetOtherFileName
+'MsgBox WB_NAME
+
+singleWell = CInt(ExtractNumberFromString(WB_NAME))
+'MsgBox (SingleWell)
+
+Call WriteStepTestData(singleWell, True)
+
 End Sub
 
 
@@ -20,7 +45,15 @@ Private Sub EraseCellData(str_range As String)
     End With
 End Sub
 
-Private Sub WriteStepTestData()
+Private Sub WriteStepTestData(ByVal singleWell As Integer, ByVal isSingleWellImport As Boolean)
+' isSingleWellImport = True ---> SingleWell Import
+' isSingleWellImport = False ---> AllWell Import
+'
+' SingleWell --> ImportWell Number
+' 999 & False --> 모든관정을 임포트
+'
+
+
     Dim fName As String
     Dim nofwell, i As Integer
     
@@ -53,6 +86,20 @@ Private Sub WriteStepTestData()
     
     For i = 1 To nofwell
     
+        ' isSingleWellImport = True ---> SingleWell Import
+        ' isSingleWellImport = False ---> AllWell Import
+        
+        If isSingleWellImport Then
+            If i = singleWell Then
+                GoTo SINGLE_ITERATION
+            Else
+                GoTo NEXT_ITERATION
+            End If
+        End If
+        
+    
+SINGLE_ITERATION:
+
         fName = "A" & CStr(i) & "_ge_OriginalSaveFile.xlsm"
         If Not IsWorkBookOpen(fName) Then
             MsgBox "Please open the yangsoo data ! " & fName
@@ -69,31 +116,32 @@ Private Sub WriteStepTestData()
         a2(i) = Workbooks(fName).Worksheets("Input").Range("w64").value
         a3(i) = Workbooks(fName).Worksheets("Input").Range("x64").value
         
+        Call Write31_StepTestData_Single(a1(i), a2(i), a3(i), Q(i), h(i), delta_h(i), qsw(i), swq(i), i)
+
+NEXT_ITERATION:
+
     Next i
     
-    Call Write31_StepTestData(a1, a2, a3, Q, h, delta_h, qsw, swq, nofwell)
+    'Call Write31_StepTestData(a1, a2, a3, Q, h, delta_h, qsw, swq, nofwell)
 End Sub
 
 
-Sub Write31_StepTestData(a1 As Variant, a2 As Variant, a3 As Variant, Q As Variant, h As Variant, delta_h As Variant, qsw As Variant, swq As Variant, nofwell As Variant)
-
-    Dim i As Integer
-        
+Sub Write31_StepTestData_Single(a1 As Variant, a2 As Variant, a3 As Variant, Q As Variant, h As Variant, delta_h As Variant, qsw As Variant, swq As Variant, i As Integer)
+' i : well_index
+    
     Call EraseCellData("C5:K36")
     
-    For i = 1 To nofwell
-        Cells(4 + i, "c").value = "W-" & CStr(i)
-        
-        Cells(4 + i, "d").value = a1(i)
-        Cells(4 + i, "e").value = a2(i)
-        Cells(4 + i, "f").value = a3(i)
+    Cells(4 + i, "c").value = "W-" & CStr(i)
     
-        Cells(4 + i, "g").value = Q(i)
-        Cells(4 + i, "h").value = h(i)
-        Cells(4 + i, "i").value = delta_h(i)
-        Cells(4 + i, "j").value = qsw(i)
-        Cells(4 + i, "k").value = swq(i)
-    Next i
-End Sub
+    Cells(4 + i, "d").value = a1
+    Cells(4 + i, "e").value = a2
+    Cells(4 + i, "f").value = a3
 
+    Cells(4 + i, "g").value = Q
+    Cells(4 + i, "h").value = h
+    Cells(4 + i, "i").value = delta_h
+    Cells(4 + i, "j").value = qsw
+    Cells(4 + i, "k").value = swq
+
+End Sub
 
