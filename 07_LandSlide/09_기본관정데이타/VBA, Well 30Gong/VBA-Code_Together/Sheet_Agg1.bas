@@ -12,6 +12,11 @@ End Sub
 'qq1 - 1단계 양수량
 
 
+' Agg1_Tentative_Water_Intake : 적정취수량의 계산
+
+
+
+
 Private Sub EraseCellData(str_range As String)
     With Range(str_range)
         .value = ""
@@ -87,13 +92,21 @@ End Sub
 
 '적정취수량의 계산
 Sub Write_Tentative_water_intake(q1 As Variant, S2 As Variant, S1 As Variant, q2 As Variant, nofwell As Variant)
-    Dim i, ip As Integer
     
 '****************************************
-    ip = 43
+' ip = 43
 '****************************************
+' Call EraseCellData("F43:I102")
+
     
-    Call EraseCellData("F43:I102")
+    Dim i, ip, remainder As Variant
+    Dim Values As Variant
+    
+    Values = GetRowColumn("Agg1_Tentative_Water_Intake")
+    ip = Values(2)
+    
+    Call EraseCellData("F" & ip & ":I" & (ip + nofwell - 1))
+    
         
     For i = 1 To nofwell
         Cells((ip + 0) + (i - 1) * 2, "F").value = "W-" & CStr(i)
@@ -104,6 +117,14 @@ Sub Write_Tentative_water_intake(q1 As Variant, S2 As Variant, S1 As Variant, q2
         Cells((ip + 1) + (i - 1) * 2, "H").value = S1(i)
     
         Cells((ip + 0) + (i - 1) * 2, "I").value = q2(i)
+        
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells((ip + 0) + (i - 1) * 2, "F"), Cells((ip + 0) + (i - 1) * 2 + 1, "I")), True)
+        Else
+                Call BackGroundFill(Range(Cells((ip + 0) + (i - 1) * 2, "F"), Cells((ip + 0) + (i - 1) * 2 + 1, "I")), False)
+        End If
     Next i
 End Sub
 
@@ -128,7 +149,7 @@ End Sub
 '3-6, 조사공의 적정취수량및 취수계획량
 Sub WriteWellData36(q1 As Variant, q2 As Variant, q3 As Variant, ratio As Variant, C As Variant, B As Variant, ByVal nofwell As Integer)
     
-    Dim i As Integer
+    Dim i, remainder As Integer
     
     For i = 1 To nofwell
         Range("G" & (i + 2)).value = "W-" & i
@@ -140,6 +161,16 @@ Sub WriteWellData36(q1 As Variant, q2 As Variant, q3 As Variant, ratio As Varian
         Range("Q" & (i + 2)).value = "W-" & i
         Range("R" & (i + 2)).value = C(i)
         Range("S" & (i + 2)).value = B(i)
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(i + 2, "G"), Cells(i + 2, "K")), True)
+                Call BackGroundFill(Range(Cells(i + 2, "Q"), Cells(i + 2, "S")), True)
+        Else
+                Call BackGroundFill(Range(Cells(i + 2, "G"), Cells(i + 2, "K")), False)
+                Call BackGroundFill(Range(Cells(i + 2, "Q"), Cells(i + 2, "S")), False)
+        End If
+        
     Next i
    
     Range("N3").value = Application.min(ratio)

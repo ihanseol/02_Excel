@@ -11,6 +11,7 @@ End Sub
 
 
 
+
 Private Sub CommandButton2_Click()
 ' Collect Data
 
@@ -133,13 +134,13 @@ End Sub
 ' 3-3, 3-4, 3-5 결과출력
 Sub WriteWellData(Q As Variant, natural As Variant, stable As Variant, recover As Variant, radius As Variant, deltas As Variant, daeSoo As Variant, T1 As Variant, S1 As Variant, ByVal nofwell As Integer)
     
-    Dim i As Integer
+    Dim i, remainder As Integer
     
     For i = 1 To nofwell
     
         ' 3-3, 장기양수시험결과 (Collect from yangsoo data)
+
         Range("C" & (i + 2)).value = "W-" & i
-        
         Range("D" & (i + 2)).value = 2880
         
         Range("e" & (i + 2)).value = Q(i)
@@ -165,44 +166,92 @@ Sub WriteWellData(Q As Variant, natural As Variant, stable As Variant, recover A
         Range("s" & (i + 2)).value = stable(i)
         Range("t" & (i + 2)).value = recover(i)
         Range("u" & (i + 2)).value = stable(i) - recover(i)
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(i + 2, "c"), Cells(i + 2, "j")), True)
+                Call BackGroundFill(Range(Cells(i + 2, "l"), Cells(i + 2, "q")), True)
+                Call BackGroundFill(Range(Cells(i + 2, "s"), Cells(i + 2, "u")), True)
+                
+        Else
+                Call BackGroundFill(Range(Cells(i + 2, "c"), Cells(i + 2, "j")), False)
+                Call BackGroundFill(Range(Cells(i + 2, "l"), Cells(i + 2, "q")), False)
+                Call BackGroundFill(Range(Cells(i + 2, "s"), Cells(i + 2, "u")), False)
+        End If
+        
     Next i
    
 End Sub
 
 
+' 3-7, 조사공별 수리상수
+Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, time_ As Variant, deltah As Variant, daeSoo As Variant, nofwell As Variant)
 
-' 3.4 스킨계수
-Sub Wrote34_SkinFactor(skin As Variant, er As Variant, nofwell As Variant)
-    Dim i, ip As Integer
+'****************************************
+'    ip = 37 'W-1 point
+'****************************************
+
+    Dim i, ip, remainder As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
     
-'****************************************
-    ip = 48
-'****************************************
-  
-    Call EraseCellData("P48:R77")
+    Values = GetRowColumn("agg2_37_roi")
+    ip = Values(2)
+    
+    Call EraseCellData("E" & ip & ":AH" & (ip + 6))
     
     For i = 1 To nofwell
-        Cells(ip + (i - 1), "p").value = "W-" & i
-           
-        Cells(ip + (i - 1), "q").value = skin(i)
-        Cells(ip + (i - 1), "q").NumberFormat = "0.0000"
+        Cells((ip + 0), (4 + i)).value = "W-" & i
         
-        Cells(ip + (i - 1), "r").value = er(i)
-        Cells(ip + (i - 1), "r").NumberFormat = "0.000"
+        Cells((ip + 1), (4 + i)).value = TA(i)
+        Cells((ip + 1), (4 + i)).NumberFormat = "0.0000"
+        
+        Cells((ip + 2), (4 + i)).value = K(i)
+        Cells((ip + 2), (4 + i)).NumberFormat = "0.0000"
+        
+        
+        Cells((ip + 3), (4 + i)).value = S2(i)
+        Cells((ip + 3), (4 + i)).NumberFormat = "0.0000000"
+        
+        Cells((ip + 4), (4 + i)).value = time_(i)
+        Cells((ip + 4), (4 + i)).NumberFormat = "0.0000"
+        
+        Cells((ip + 5), (4 + i)).value = deltah(i)
+        Cells((ip + 5), (4 + i)).NumberFormat = "0.00"
+        
+        Cells((ip + 6), (4 + i)).value = daeSoo(i)
+        
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + 1, (i + 4)), Cells(ip + 6, (i + 4))), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + 1, (i + 4)), Cells(ip + 6, (i + 4))), False)
+        End If
     Next i
+
 End Sub
+
+
 
 
 ' 3-6, 수리상수산정결과
 Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As Variant, nofwell As Variant)
-    Dim i As Integer
-    Dim ip As Integer ' ip : insertion point
     
 '****************************************
-    ip = 48
+'    ip = 48
 '****************************************
-    Call EraseCellData("C48:F137")
+' Call EraseCellData("C48:F137")
+' 137 - 48 = 89
+
+    Dim i, ip, remainder As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
     
+    Values = GetRowColumn("agg2_36_surisangsoo")
+    ip = Values(2)
+    
+    Call EraseCellData("C" & ip & ":S" & (ip + nofwell * 3 - 1))
         
     For i = 1 To nofwell
         Cells(ip + (i - 1) * 3, "C").value = "W-" & i
@@ -227,57 +276,37 @@ Sub WriteData36_TS_Analysis(T1 As Variant, T2 As Variant, TA As Variant, S2 As V
         Cells((ip + 2) + (i - 1) * 3, "F").value = S2(i)
         Cells((ip + 2) + (i - 1) * 3, "F").NumberFormat = "0.0000000"
         Cells((ip + 2) + (i - 1) * 3, "F").Font.Bold = True
+        
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + (i - 1) * 3, "C"), Cells((ip + 2) + (i - 1) * 3, "F")), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + (i - 1) * 3, "C"), Cells((ip + 2) + (i - 1) * 3, "F")), False)
+        End If
     Next i
 End Sub
 
 
-' 3-7, 조사공별 수리상수
-Sub WriteData37_RadiusOfInfluence(TA As Variant, K As Variant, S2 As Variant, time_ As Variant, deltah As Variant, daeSoo As Variant, nofwell As Variant)
-
-    Dim i, ip As Variant
-       
-'****************************************
-    ip = 37 'W-1 point
-'****************************************
-
-    Call EraseCellData("E37:AH43")
-    
-    For i = 1 To nofwell
-        Cells((ip + 0), (4 + i)).value = "W-" & i
-        
-        Cells((ip + 1), (4 + i)).value = TA(i)
-        Cells((ip + 1), (4 + i)).NumberFormat = "0.0000"
-        
-        Cells((ip + 2), (4 + i)).value = K(i)
-        Cells((ip + 2), (4 + i)).NumberFormat = "0.0000"
-        
-        
-        Cells((ip + 3), (4 + i)).value = S2(i)
-        Cells((ip + 3), (4 + i)).NumberFormat = "0.0000000"
-        
-        Cells((ip + 4), (4 + i)).value = time_(i)
-        Cells((ip + 4), (4 + i)).NumberFormat = "0.0000"
-        
-        Cells((ip + 5), (4 + i)).value = deltah(i)
-        Cells((ip + 5), (4 + i)).NumberFormat = "0.00"
-        
-        Cells((ip + 6), (4 + i)).value = daeSoo(i)
-    Next i
-
-End Sub
 
 '3.8 영향반경
 Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob As Variant, nofwell As Variant)
+ 
+'****************************************
+'    ip = 48 'W-1 point
+'****************************************
+' Call EraseCellData("H48:N77")
+' 77 - 48 = 29
 
-    Dim i, ip As Integer
-    Dim sum, average As Double
+
+    Dim i, ip, remainder As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
     
+    Values = GetRowColumn("agg2_38_roi_result")
+    ip = Values(2)
     
-'****************************************
-    ip = 48 'W-1 point
-'****************************************
-    
-    Call EraseCellData("H48:N77")
+    Call EraseCellData("H" & ip & ":N" & (ip + nofwell - 1))
     
     For i = 1 To nofwell
         Cells(ip + (i - 1), "h").value = "W-" & i
@@ -300,9 +329,60 @@ Sub Write38_RadiusOfInfluence_Result(shultz As Variant, webber As Variant, jcob 
         
         Cells(ip + (i - 1), "n").value = Application.WorksheetFunction.min(shultz(i), webber(i), jcob(i))
         Cells(ip + (i - 1), "n").NumberFormat = "0.0"
+        
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "h"), Cells(ip + (i - 1), "n")), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "h"), Cells(ip + (i - 1), "n")), False)
+        End If
     Next i
 
 End Sub
+
+
+
+' 3.4 스킨계수
+Sub Wrote34_SkinFactor(skin As Variant, er As Variant, nofwell As Variant)
+    
+'****************************************
+'   ip = 48
+'****************************************
+' Call EraseCellData("P48:R77")
+'****************************************
+
+    Dim i, ip As Variant
+    Dim unit, rngString As String
+    Dim Values As Variant
+    
+    Values = GetRowColumn("agg2_34_skinfactor")
+    ip = Values(2)
+    
+    Call EraseCellData("P" & ip & ":R" & (ip + nofwell - 1))
+    
+    For i = 1 To nofwell
+        Cells(ip + (i - 1), "p").value = "W-" & i
+           
+        Cells(ip + (i - 1), "q").value = skin(i)
+        Cells(ip + (i - 1), "q").NumberFormat = "0.0000"
+        
+        Cells(ip + (i - 1), "r").value = er(i)
+        Cells(ip + (i - 1), "r").NumberFormat = "0.000"
+        
+        remainder = i Mod 2
+        If remainder = 0 Then
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "p"), Cells(ip + (i - 1), "r")), True)
+        Else
+                Call BackGroundFill(Range(Cells(ip + (i - 1), "p"), Cells(ip + (i - 1), "r")), False)
+        End If
+    Next i
+End Sub
+
+
+
+
+
 
 
 

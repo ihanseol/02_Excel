@@ -1,5 +1,5 @@
 
-Const G_WELL As Integer = 30
+Const nofwell As Integer = 30
 
 Private Sub CommandButton1_Click()
     Sheets("YangSoo").Visible = False
@@ -147,7 +147,7 @@ Sub GetBaseDataFromYangSoo()
     ReDim ER_MODE(1 To nofwell)
     
     
-    rngString = "A5:AN" & (G_WELL + 5 - 1)
+    rngString = "A5:AN" & (nofwell + 5 - 1)
     
     Call EraseCellData(rngString)
     

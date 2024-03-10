@@ -21,6 +21,52 @@ End Enum
 '    GetNumberOfWell = n
 'End Function
 
+Sub BackGroundFill(rngLine As Range, FLAG As Boolean)
+
+If FLAG Then
+    rngLine.Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorDark1
+        .TintAndShade = -4.99893185216834E-02
+        .PatternTintAndShade = 0
+    End With
+Else
+    rngLine.Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorDark1
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+End If
+
+End Sub
+
+Function GetRowColumn(name As String) As Variant
+    Dim acColumn, acRow As Variant
+    Dim result(1 To 2) As Variant
+
+    acColumn = Split(Range(name).Address, "$")(1)
+    acRow = Split(Range(name).Address, "$")(2)
+
+    '  Row = ActiveCell.Row
+    '  col = ActiveCell.Column
+    
+    
+    result(1) = acColumn
+    result(2) = acRow
+
+    Debug.Print acColumn, acRow
+    GetRowColumn = result
+End Function
+
+
+
+
+
 
 ' 이것은, Well 탭의 값을 가지고 검사하하는것이라서, 차이가 생긴다.
 Function GetNumberOfWell() As Integer
