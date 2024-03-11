@@ -6030,121 +6030,188 @@ Sub ImportDataForWell(ByVal wellIndex As Integer, ByVal dataArrays As Variant)
     ' wb.Close SaveChanges:=False
 End Sub
 
+
 Sub SetDataArrayValues(ByVal wb As Workbook, ByVal wellIndex As Integer, ByVal dataArrayName As String)
     Dim wsInput As Worksheet
     Dim wsSkinFactor As Worksheet
     Dim wsSafeYield As Worksheet
     Dim dataCell As Range
-    Dim value As Variant
 
+    
+    Dim dataRanges() As Variant
+    Dim addresses() As Variant
+    Dim i As Integer
+
+    ' Set references to worksheets
     Set wsInput = wb.Worksheets("Input")
     Set wsSkinFactor = wb.Worksheets("SkinFactor")
     Set wsSafeYield = wb.Worksheets("SafeYield")
 
-    Select Case dataArrayName
-        Case "Q"
-            Set dataCell = wsInput.Range("m51")
-        Case "hp"
-            Set dataCell = wsInput.Range("i48")
-        
-        
-        Case "natural"
-            Set dataCell = wsInput.Range("m48")
-        Case "stable"
-            Set dataCell = wsInput.Range("m49")
-        Case "radius"
-            Set dataCell = wsInput.Range("m44")
-        Case "Rw"
-            Set dataCell = wsSkinFactor.Range("e4")
-        
-        Case "well_depth"
-            Set dataCell = wsInput.Range("m45")
-        Case "casing"
-            Set dataCell = wsInput.Range("i52")
-        
-        Case "C"
-            Set dataCell = wsInput.Range("A31")
-         Case "B"
-            Set dataCell = wsInput.Range("B31")
-        
-        
-        Case "recover"
-            Set dataCell = wsSkinFactor.Range("c10")
-        Case "Sw"
-            Set dataCell = wsSkinFactor.Range("c11")
-        
-        Case "delta_h"
-            Set dataCell = wsSkinFactor.Range("b16")
-        Case "delta_s"
-            Set dataCell = wsSkinFactor.Range("b4")
-    
-        Case "daeSoo"
-            Set dataCell = wsSkinFactor.Range("c16")
-            
-  '--------------------------------------------------------------
-  
-       Case "T0"
-            Set dataCell = wsSkinFactor.Range("d4")
-        Case "S0"
-            Set dataCell = wsSkinFactor.Range("f4")
-       Case "ER_MODE"
-            Set dataCell = wsSkinFactor.Range("h10")
-                  
-        Case "T1"
-            Set dataCell = wsSkinFactor.Range("d5")
-        Case "T2"
-            Set dataCell = wsSkinFactor.Range("h13")
-        Case "TA"
-            Set dataCell = wsSkinFactor.Range("d16")
-            
-       Case "S1"
-            Set dataCell = wsSkinFactor.Range("e10")
-        Case "S2"
-            Set dataCell = wsSkinFactor.Range("i16")
-        
-        Case "K"
-            Set dataCell = wsSkinFactor.Range("e16")
-        Case "time_"
-            Set dataCell = wsSkinFactor.Range("h16")
-            
-        Case "shultze"
-            Set dataCell = wsSkinFactor.Range("c13")
-        Case "webber"
-            Set dataCell = wsSkinFactor.Range("c18")
-        Case "jacob"
-            Set dataCell = wsSkinFactor.Range("c23")
-                    
-                        
-       Case "skin"
-            Set dataCell = wsSkinFactor.Range("g6")
-        Case "er"
-            Set dataCell = wsSkinFactor.Range("c8")
-            
-        Case "ER1"
-            Set dataCell = wsSkinFactor.Range("k8")
-        Case "ER2"
-            Set dataCell = wsSkinFactor.Range("k9")
-        Case "ER3"
-            Set dataCell = wsSkinFactor.Range("k10")
+    ' Define data ranges for each dataArrayName
+    dataRanges = Array(wsInput.Range("m51"), wsInput.Range("i48"), _
+                        wsInput.Range("m48"), wsInput.Range("m49"), _
+                        wsInput.Range("m44"), wsSkinFactor.Range("e4"), _
+                        wsInput.Range("m45"), wsInput.Range("i52"), _
+                        wsInput.Range("A31"), wsInput.Range("B31"), _
+                        wsSkinFactor.Range("c10"), wsSkinFactor.Range("c11"), _
+                        wsSkinFactor.Range("b16"), wsSkinFactor.Range("b4"), _
+                        wsSkinFactor.Range("c16"), wsSkinFactor.Range("d4"), _
+                        wsSkinFactor.Range("f4"), wsSkinFactor.Range("h10"), _
+                        wsSkinFactor.Range("d5"), wsSkinFactor.Range("h13"), _
+                        wsSkinFactor.Range("d16"), wsSkinFactor.Range("e10"), _
+                        wsSkinFactor.Range("i16"), wsSkinFactor.Range("e16"), _
+                        wsSkinFactor.Range("h16"), wsSkinFactor.Range("c13"), _
+                        wsSkinFactor.Range("c18"), wsSkinFactor.Range("c23"), _
+                        wsSkinFactor.Range("g6"), wsSkinFactor.Range("c8"), _
+                        wsSkinFactor.Range("k8"), wsSkinFactor.Range("k9"), _
+                        wsSkinFactor.Range("k10"), wsSafeYield.Range("b13"), _
+                        wsSafeYield.Range("b7"), wsSafeYield.Range("b3"), _
+                        wsSafeYield.Range("b4"), wsSafeYield.Range("b2"), _
+                        wsSafeYield.Range("b11"))
 
+    ' Array of data addresses
+    addresses = Array("Q", "hp", "natural", "stable", "radius", "Rw", _
+                        "well_depth", "casing", "C", "B", "recover", "Sw", _
+                        "delta_h", "delta_s", "daeSoo", "T0", "S0", "ER_MODE", _
+                        "T1", "T2", "TA", "S1", "S2", "K", "time_", "shultze", _
+                        "webber", "jacob", "skin", "er", "ER1", "ER2", "ER3", _
+                        "qh", "qg", "sd1", "sd2", "q1", "ratio")
 
-        Case "qh"
-            Set dataCell = wsSafeYield.Range("b13")
-        Case "qg"
-            Set dataCell = wsSafeYield.Range("b7")
-            
-        Case "sd1"
-            Set dataCell = wsSafeYield.Range("b3")
-        Case "sd2"
-            Set dataCell = wsSafeYield.Range("b4")
-        Case "q1"
-            Set dataCell = wsSafeYield.Range("b2")
-        Case "ratio"
-            Set dataCell = wsSafeYield.Range("b11")
-    End Select
+    ' Find index of dataArrayName in addresses array
+    For i = LBound(addresses) To UBound(addresses)
+        If addresses(i) = dataArrayName Then
+            Set dataCell = dataRanges(i)
+            Exit For
+        End If
+    Next i
 
-    SetCellValueForWell wellIndex, dataCell, dataArrayName
+    ' Check if dataArrayName is found
+    If Not dataCell Is Nothing Then
+        SetCellValueForWell wellIndex, dataCell, dataArrayName
+    Else
+        MsgBox "Data array name not found: " & dataArrayName
+    End If
 End Sub
+
+
+
+
+'
+'Sub SetDataArrayValues(ByVal wb As Workbook, ByVal wellIndex As Integer, ByVal dataArrayName As String)
+'    Dim wsInput As Worksheet
+'    Dim wsSkinFactor As Worksheet
+'    Dim wsSafeYield As Worksheet
+'    Dim dataCell As Range
+'    Dim value As Variant
+'
+'    Set wsInput = wb.Worksheets("Input")
+'    Set wsSkinFactor = wb.Worksheets("SkinFactor")
+'    Set wsSafeYield = wb.Worksheets("SafeYield")
+'
+'    Select Case dataArrayName
+'        Case "Q"
+'            Set dataCell = wsInput.Range("m51")
+'        Case "hp"
+'            Set dataCell = wsInput.Range("i48")
+'
+'
+'        Case "natural"
+'            Set dataCell = wsInput.Range("m48")
+'        Case "stable"
+'            Set dataCell = wsInput.Range("m49")
+'        Case "radius"
+'            Set dataCell = wsInput.Range("m44")
+'        Case "Rw"
+'            Set dataCell = wsSkinFactor.Range("e4")
+'
+'        Case "well_depth"
+'            Set dataCell = wsInput.Range("m45")
+'        Case "casing"
+'            Set dataCell = wsInput.Range("i52")
+'
+'        Case "C"
+'            Set dataCell = wsInput.Range("A31")
+'         Case "B"
+'            Set dataCell = wsInput.Range("B31")
+'
+'
+'        Case "recover"
+'            Set dataCell = wsSkinFactor.Range("c10")
+'        Case "Sw"
+'            Set dataCell = wsSkinFactor.Range("c11")
+'
+'        Case "delta_h"
+'            Set dataCell = wsSkinFactor.Range("b16")
+'        Case "delta_s"
+'            Set dataCell = wsSkinFactor.Range("b4")
+'
+'        Case "daeSoo"
+'            Set dataCell = wsSkinFactor.Range("c16")
+'
+'  '--------------------------------------------------------------
+'
+'       Case "T0"
+'            Set dataCell = wsSkinFactor.Range("d4")
+'        Case "S0"
+'            Set dataCell = wsSkinFactor.Range("f4")
+'       Case "ER_MODE"
+'            Set dataCell = wsSkinFactor.Range("h10")
+'
+'        Case "T1"
+'            Set dataCell = wsSkinFactor.Range("d5")
+'        Case "T2"
+'            Set dataCell = wsSkinFactor.Range("h13")
+'        Case "TA"
+'            Set dataCell = wsSkinFactor.Range("d16")
+'
+'       Case "S1"
+'            Set dataCell = wsSkinFactor.Range("e10")
+'        Case "S2"
+'            Set dataCell = wsSkinFactor.Range("i16")
+'
+'        Case "K"
+'            Set dataCell = wsSkinFactor.Range("e16")
+'        Case "time_"
+'            Set dataCell = wsSkinFactor.Range("h16")
+'
+'        Case "shultze"
+'            Set dataCell = wsSkinFactor.Range("c13")
+'        Case "webber"
+'            Set dataCell = wsSkinFactor.Range("c18")
+'        Case "jacob"
+'            Set dataCell = wsSkinFactor.Range("c23")
+'
+'
+'       Case "skin"
+'            Set dataCell = wsSkinFactor.Range("g6")
+'        Case "er"
+'            Set dataCell = wsSkinFactor.Range("c8")
+'
+'        Case "ER1"
+'            Set dataCell = wsSkinFactor.Range("k8")
+'        Case "ER2"
+'            Set dataCell = wsSkinFactor.Range("k9")
+'        Case "ER3"
+'            Set dataCell = wsSkinFactor.Range("k10")
+'
+'
+'        Case "qh"
+'            Set dataCell = wsSafeYield.Range("b13")
+'        Case "qg"
+'            Set dataCell = wsSafeYield.Range("b7")
+'
+'        Case "sd1"
+'            Set dataCell = wsSafeYield.Range("b3")
+'        Case "sd2"
+'            Set dataCell = wsSafeYield.Range("b4")
+'        Case "q1"
+'            Set dataCell = wsSafeYield.Range("b2")
+'        Case "ratio"
+'            Set dataCell = wsSafeYield.Range("b11")
+'    End Select
+'
+'    SetCellValueForWell wellIndex, dataCell, dataArrayName
+'End Sub
 
 Sub SetCellValueForWell(ByVal wellIndex As Integer, ByVal dataCell As Range, ByVal dataArrayName As String)
     Dim wellData As Variant
