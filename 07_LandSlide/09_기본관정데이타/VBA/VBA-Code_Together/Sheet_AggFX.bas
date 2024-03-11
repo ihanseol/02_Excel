@@ -258,112 +258,43 @@ Sub SetCellValueForWell(ByVal wellIndex As Integer, ByVal dataCell As Range, ByV
     End If
 End Sub
 
+
 Function GetColumnIndex(ByVal columnName As String) As Integer
-    Dim colIndex As Integer
+    ' Define array to store column indices
+    Dim columnIndices As Variant
+    columnIndices = Array( _
+        11, 13, 2, 3, 7, 8, 9, 10, _
+        32, 33, 4, 5, 6, 12, 14, _
+        35, 36, 37, 15, 16, 17, 18, _
+        19, 20, 21, 22, 23, 24, 25, _
+        26, 38, 39, 40, 27, 28, 30, _
+        31, 29, 34 _
+    )
 
-    Select Case columnName
-        Case "Q"
-            colIndex = 11
-        Case "hp"
-            colIndex = 13
-        
-        
-        Case "natural"
-            colIndex = 2
-        Case "stable"
-            colIndex = 3
-        Case "radius"
-            colIndex = 7
-        Case "Rw"
-            colIndex = 8
-        
-        Case "well_depth"
-            colIndex = 9
-        Case "casing"
-           colIndex = 10
-        
-        Case "C"
-           colIndex = 32
-         Case "B"
-            colIndex = 33
-        
-        
-        Case "recover"
-            colIndex = 4
-        Case "Sw"
-            colIndex = 5
-        
-        Case "delta_h"
-            colIndex = 6
-        Case "delta_s"
-            colIndex = 12
-    
-        Case "daeSoo"
-           colIndex = 14
-            
-  '--------------------------------------------------------------
-  
-       Case "T0"
-           colIndex = 35
-        Case "S0"
-           colIndex = 36
-       Case "ER_MODE"
-           colIndex = 37
-                  
-        Case "T1"
-           colIndex = 15
-        Case "T2"
-            colIndex = 16
-        Case "TA"
-           colIndex = 17
-            
-       Case "S1"
-           colIndex = 18
-        Case "S2"
-            colIndex = 19
-        
-        Case "K"
-           colIndex = 20
-        Case "time_"
-            colIndex = 21
-            
-        Case "shultze"
-           colIndex = 22
-        Case "webber"
-            colIndex = 23
-        Case "jacob"
-            colIndex = 24
-                    
-                        
-       Case "skin"
-            colIndex = 25
-        Case "er"
-            colIndex = 26
-            
-        Case "ER1"
-            colIndex = 38
-        Case "ER2"
-            colIndex = 39
-        Case "ER3"
-            colIndex = 40
+    ' Define array to store column names
+    Dim columnNames As Variant
+    columnNames = Array( _
+        "Q", "hp", "natural", "stable", "radius", "Rw", "well_depth", "casing", _
+        "C", "B", "recover", "Sw", "delta_h", "delta_s", "daeSoo", _
+        "T0", "S0", "ER_MODE", "T1", "T2", "TA", "S1", _
+        "S2", "K", "time_", "shultze", "webber", "jacob", "skin", _
+        "er", "ER1", "ER2", "ER3", "qh", "qg", "sd1", _
+        "sd2", "q1", "ratio" _
+    )
 
-        Case "qh"
-            colIndex = 27
-        Case "qg"
-            colIndex = 28
-            
-        Case "sd1"
-            colIndex = 30
-        Case "sd2"
-            colIndex = 31
-        Case "q1"
-            colIndex = 29
-        Case "ratio"
-            colIndex = 34
-    End Select
+    ' Find index of columnName in columnNames array
+    Dim index As Integer
+    index = Application.match(columnName, columnNames, 0)
 
-    GetColumnIndex = colIndex
+    ' Check if columnName exists in columnNames array
+    If IsNumeric(index) Then
+        GetColumnIndex = columnIndices(index - 1)
+    Else
+        ' Return -1 if columnName is not found
+        GetColumnIndex = -1
+    End If
 End Function
+
 
 
 ' in here by refctor by  openai
