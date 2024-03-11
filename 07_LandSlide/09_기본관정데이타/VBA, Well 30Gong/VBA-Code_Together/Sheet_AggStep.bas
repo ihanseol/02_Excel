@@ -91,6 +91,12 @@ Private Sub WriteStepTestData(ByVal singleWell As Integer, ByVal isSingleWellImp
     ReDim qsw(1 To nofwell)
     ReDim swq(1 To nofwell)
     
+    
+    Dim wb As Workbook
+    Dim wsYangSoo As Worksheet
+    
+    
+    
     ' --------------------------------------------------------------------------------------
     
     If ActiveSheet.name <> "AggStep" Then Sheets("AggStep").Select
@@ -100,14 +106,20 @@ Private Sub WriteStepTestData(ByVal singleWell As Integer, ByVal isSingleWellImp
         ' isSingleWellImport = True ---> SingleWell Import
         ' isSingleWellImport = False ---> AllWell Import
         
-        If isSingleWellImport Then
-            If i = singleWell Then
-                GoTo SINGLE_ITERATION
-            Else
-                GoTo NEXT_ITERATION
-            End If
-        End If
+'        If isSingleWellImport Then
+'            If i = singleWell Then
+'                GoTo SINGLE_ITERATION
+'            Else
+'                GoTo NEXT_ITERATION
+'            End If
+'        End If
         
+        
+        If Not isSingleWellImport Or (isSingleWellImport And i = singleWell) Then
+            GoTo SINGLE_ITERATION
+        Else
+            GoTo NEXT_ITERATION
+        End If
     
 SINGLE_ITERATION:
 
@@ -117,15 +129,18 @@ SINGLE_ITERATION:
             Exit Sub
         End If
         
-        Q(i) = Workbooks(fName).Worksheets("Input").Range("q64").value
-        h(i) = Workbooks(fName).Worksheets("Input").Range("r64").value
-        delta_h(i) = Workbooks(fName).Worksheets("Input").Range("s64").value
-        qsw(i) = Workbooks(fName).Worksheets("Input").Range("t64").value
-        swq(i) = Workbooks(fName).Worksheets("Input").Range("u64").value
+        Set wb = Workbooks(fName)
+        Set wsInput = wb.Worksheets("Input")
+        
+        Q(i) = wsInput.Range("q64").value
+        h(i) = wsInput.Range("r64").value
+        delta_h(i) = wsInput.Range("s64").value
+        qsw(i) = wsInput.Range("t64").value
+        swq(i) = wsInput.Range("u64").value
 
-        a1(i) = Workbooks(fName).Worksheets("Input").Range("v64").value
-        a2(i) = Workbooks(fName).Worksheets("Input").Range("w64").value
-        a3(i) = Workbooks(fName).Worksheets("Input").Range("x64").value
+        a1(i) = wsInput.Range("v64").value
+        a2(i) = wsInput.Range("w64").value
+        a3(i) = wsInput.Range("x64").value
         
         Call Write31_StepTestData_Single(a1(i), a2(i), a3(i), Q(i), h(i), delta_h(i), qsw(i), swq(i), i)
 

@@ -184,7 +184,10 @@ Sub GetBaseDataFromYangSoo(ByVal singleWell As Integer, ByVal isSingleWellImport
     ReDim S0(1 To nofwell)         ' S값, 0.005: 피압대수층, 0.001: 누수대수층, 0.1: 자유면대수층
     ReDim ER_MODE(1 To nofwell)
     
-    
+    Dim wb As Workbook
+    Dim wsInput As Worksheet
+    Dim wsSkinFactor As Worksheet
+    Dim wsSafeYield As Worksheet
     
     If Not (isSingleWellImport) And singleWell = 999 Then
         rngString = "A5:AN" & (nofwell + 5 - 1)
@@ -196,12 +199,19 @@ Sub GetBaseDataFromYangSoo(ByVal singleWell As Integer, ByVal isSingleWellImport
         ' isSingleWellImport = True ---> SingleWell Import
         ' isSingleWellImport = False ---> AllWell Import
         
-        If isSingleWellImport Then
-            If i = singleWell Then
-                GoTo SINGLE_ITERATION
-            Else
-                GoTo NEXT_ITERATION
-            End If
+'        If isSingleWellImport Then
+'            If i = singleWell Then
+'                GoTo SINGLE_ITERATION
+'            Else
+'                GoTo NEXT_ITERATION
+'            End If
+'        End If
+        
+        
+        If Not isSingleWellImport Or (isSingleWellImport And i = singleWell) Then
+            GoTo SINGLE_ITERATION
+        Else
+            GoTo NEXT_ITERATION
         End If
         
 SINGLE_ITERATION:
@@ -212,71 +222,76 @@ SINGLE_ITERATION:
             Exit Sub
         End If
         
+        Set wb = Workbooks(fName)
+        Set wsInput = wb.Worksheets("Input")
+        Set wsSkinFactor = wb.Worksheets("SkinFactor")
+        Set wsSafeYield = wb.Worksheets("SafeYield")
         
-        Q(i) = Workbooks(fName).Worksheets("Input").Range("m51").value
-        hp(i) = Workbooks(fName).Worksheets("Input").Range("i48").value
         
-        natural(i) = Workbooks(fName).Worksheets("Input").Range("m48").value
-        stable(i) = Workbooks(fName).Worksheets("Input").Range("m49").value
-        radius(i) = Workbooks(fName).Worksheets("Input").Range("m44").value
+        Q(i) = wsInput.Range("m51").value
+        hp(i) = wsInput.Range("i48").value
+        
+        natural(i) = wsInput.Range("m48").value
+        stable(i) = wsInput.Range("m49").value
+        radius(i) = wsInput.Range("m44").value
         Rw(i) = radius(i) / 2000
         
-        well_depth(i) = Workbooks(fName).Worksheets("Input").Range("m45").value
-        casing(i) = Workbooks(fName).Worksheets("Input").Range("i52").value
+        well_depth(i) = wsInput.Range("m45").value
+        casing(i) = wsInput.Range("i52").value
         
         
-        C(i) = Workbooks(fName).Worksheets("Input").Range("A31").value
-        B(i) = Workbooks(fName).Worksheets("Input").Range("B31").value
+        C(i) = wsInput.Range("A31").value
+        B(i) = wsInput.Range("B31").value
         
         
         
-        recover(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c10").value
+        recover(i) = wsSkinFactor.Range("c10").value
         Sw(i) = stable(i) - recover(i)
         
-        delta_h(i) = Workbooks(fName).Worksheets("SkinFactor").Range("b16").value
-        delta_s(i) = Workbooks(fName).Worksheets("SkinFactor").Range("b4").value
+        delta_h(i) = wsSkinFactor.Range("b16").value
+        delta_s(i) = wsSkinFactor.Range("b4").value
         
-        daeSoo(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c16").value
+        daeSoo(i) = wsSkinFactor.Range("c16").value
         
         '----------------------------------------------------------------------------------
         
-        T0(i) = Workbooks(fName).Worksheets("SkinFactor").Range("d4").value
-        S0(i) = Workbooks(fName).Worksheets("SkinFactor").Range("f4").value
-        ER_MODE(i) = Workbooks(fName).Worksheets("SkinFactor").Range("h10").value
+        T0(i) = wsSkinFactor.Range("d4").value
+        S0(i) = wsSkinFactor.Range("f4").value
+        ER_MODE(i) = wsSkinFactor.Range("h10").value
         
-        T1(i) = Workbooks(fName).Worksheets("SkinFactor").Range("d5").value
-        T2(i) = Workbooks(fName).Worksheets("SkinFactor").Range("h13").value
+        T1(i) = wsSkinFactor.Range("d5").value
+        T2(i) = wsSkinFactor.Range("h13").value
         TA(i) = (T1(i) + T2(i)) / 2
         
-        S1(i) = Workbooks(fName).Worksheets("SkinFactor").Range("e10").value
-        S2(i) = Workbooks(fName).Worksheets("SkinFactor").Range("i16").value
+        S1(i) = wsSkinFactor.Range("e10").value
+        S2(i) = wsSkinFactor.Range("i16").value
         
-        K(i) = Workbooks(fName).Worksheets("SkinFactor").Range("e16").value
-        time_(i) = Workbooks(fName).Worksheets("SkinFactor").Range("h16").value
+        K(i) = wsSkinFactor.Range("e16").value
+        time_(i) = wsSkinFactor.Range("h16").value
         
-        shultze(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c13").value
-        webber(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c18").value
-        jacob(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c23").value
+        shultze(i) = wsSkinFactor.Range("c13").value
+        webber(i) = wsSkinFactor.Range("c18").value
+        jacob(i) = wsSkinFactor.Range("c23").value
         
-        skin(i) = Workbooks(fName).Worksheets("SkinFactor").Range("g6").value
-        er(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c8").value
+        skin(i) = wsSkinFactor.Range("g6").value
+        er(i) = wsSkinFactor.Range("c8").value
         
         
         ' 경험식, 1번, 2번, 3번의 유효우물반경
-        ER1(i) = Workbooks(fName).Worksheets("SkinFactor").Range("K8").value
-        ER2(i) = Workbooks(fName).Worksheets("SkinFactor").Range("K9").value
-        ER3(i) = Workbooks(fName).Worksheets("SkinFactor").Range("K10").value
+        ER1(i) = wsSkinFactor.Range("K8").value
+        ER2(i) = wsSkinFactor.Range("K9").value
+        ER3(i) = wsSkinFactor.Range("K10").value
         
         '----------------------------------------------------------------------------------
         
-        qh(i) = Workbooks(fName).Worksheets("SafeYield").Range("b13").value
-        qg(i) = Workbooks(fName).Worksheets("SafeYield").Range("b7").value
+        qh(i) = wsSafeYield.Range("b13").value
+        qg(i) = wsSafeYield.Range("b7").value
         
-        sd1(i) = Workbooks(fName).Worksheets("SafeYield").Range("b3").value
-        sd2(i) = Workbooks(fName).Worksheets("SafeYield").Range("b4").value
-        q1(i) = Workbooks(fName).Worksheets("SafeYield").Range("b2").value
+        sd1(i) = wsSafeYield.Range("b3").value
+        sd2(i) = wsSafeYield.Range("b4").value
+        q1(i) = wsSafeYield.Range("b2").value
         
-        ratio(i) = Workbooks(fName).Worksheets("SafeYield").Range("b11").value
+        ratio(i) = wsSafeYield.Range("b11").value
         
         '*****************************************************************************************
         

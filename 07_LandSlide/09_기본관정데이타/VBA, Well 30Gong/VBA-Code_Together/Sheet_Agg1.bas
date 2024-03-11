@@ -94,6 +94,10 @@ Private Sub AggregateOne_Import(ByVal singleWell As Integer, ByVal isSingleWellI
     
     ReDim S1(1 To nofwell)
     ReDim S2(1 To nofwell)
+ 
+    Dim wsYangSoo As Worksheet
+    Set wsYangSoo = Worksheets("YangSoo")
+    
     
     If Not isSingleWellImport Then
         Call EraseCellData("G3:K35")
@@ -106,29 +110,36 @@ Private Sub AggregateOne_Import(ByVal singleWell As Integer, ByVal isSingleWellI
         ' isSingleWellImport = True ---> SingleWell Import
         ' isSingleWellImport = False ---> AllWell Import
         
-        If isSingleWellImport Then
-            If i = singleWell Then
-                GoTo SINGLE_ITERATION
-            Else
-                GoTo NEXT_ITERATION
-            End If
+'        If isSingleWellImport Then
+'            If i = singleWell Then
+'                GoTo SINGLE_ITERATION
+'            Else
+'                GoTo NEXT_ITERATION
+'            End If
+'        End If
+        
+        
+        If Not isSingleWellImport Or (isSingleWellImport And i = singleWell) Then
+            GoTo SINGLE_ITERATION
+        Else
+            GoTo NEXT_ITERATION
         End If
         
 SINGLE_ITERATION:
 
-        q1(i) = Worksheets("YangSoo").Cells(4 + i, "aa").value
-        qq1(i) = Worksheets("YangSoo").Cells(4 + i, "ac").value
+        q1(i) = wsYangSoo.Cells(4 + i, "aa").value
+        qq1(i) = wsYangSoo.Cells(4 + i, "ac").value
         
-        q2(i) = Worksheets("YangSoo").Cells(4 + i, "ab").value
-        q3(i) = Worksheets("YangSoo").Cells(4 + i, "k").value
+        q2(i) = wsYangSoo.Cells(4 + i, "ab").value
+        q3(i) = wsYangSoo.Cells(4 + i, "k").value
         
-        ratio(i) = Worksheets("YangSoo").Cells(4 + i, "ah").value
+        ratio(i) = wsYangSoo.Cells(4 + i, "ah").value
         
-        S1(i) = Worksheets("YangSoo").Cells(4 + i, "ad").value
-        S2(i) = Worksheets("YangSoo").Cells(4 + i, "ae").value
+        S1(i) = wsYangSoo.Cells(4 + i, "ad").value
+        S2(i) = wsYangSoo.Cells(4 + i, "ae").value
         
-        C(i) = Worksheets("YangSoo").Cells(4 + i, "af").value
-        B(i) = Worksheets("YangSoo").Cells(4 + i, "ag").value
+        C(i) = wsYangSoo.Cells(4 + i, "af").value
+        B(i) = wsYangSoo.Cells(4 + i, "ag").value
         
         Call WriteWellData36_Single(q1(i), q2(i), q3(i), ratio(i), C(i), B(i), i)
         Call Write_Tentative_water_intake_Single(qq1(i), S2(i), S1(i), q2(i), i)

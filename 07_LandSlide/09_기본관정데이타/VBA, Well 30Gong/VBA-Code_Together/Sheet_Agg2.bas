@@ -112,6 +112,10 @@ Private Sub ImportWellSpec(ByVal singleWell As Integer, ByVal isSingleWellImport
     ReDim skin(1 To nofwell) ' skin factor
     ReDim er(1 To nofwell)   ' effective radius
     
+    Dim wsYangSoo As Worksheet
+    Set wsYangSoo = Worksheets("YangSoo")
+    
+    
     ' --------------------------------------------------------------------------------------
     
     If Not isSingleWellImport Then
@@ -125,46 +129,53 @@ Private Sub ImportWellSpec(ByVal singleWell As Integer, ByVal isSingleWellImport
         ' isSingleWellImport = True ---> SingleWell Import
         ' isSingleWellImport = False ---> AllWell Import
         
-        If isSingleWellImport Then
-            If i = singleWell Then
-                GoTo SINGLE_ITERATION
-            Else
-                GoTo NEXT_ITERATION
-            End If
+'        If isSingleWellImport Then
+'            If i = singleWell Then
+'                GoTo SINGLE_ITERATION
+'            Else
+'                GoTo NEXT_ITERATION
+'            End If
+'        End If
+        
+        
+        If Not isSingleWellImport Or (isSingleWellImport And i = singleWell) Then
+            GoTo SINGLE_ITERATION
+        Else
+            GoTo NEXT_ITERATION
         End If
         
 SINGLE_ITERATION:
    
-        Q(i) = Worksheets("YangSoo").Cells(4 + i, "k").value
+        Q(i) = wsYangSoo.Cells(4 + i, "k").value
         
-        natural(i) = Worksheets("YangSoo").Cells(4 + i, "b").value
-        stable(i) = Worksheets("YangSoo").Cells(4 + i, "c").value
-        recover(i) = Worksheets("YangSoo").Cells(4 + i, "d").value
+        natural(i) = wsYangSoo.Cells(4 + i, "b").value
+        stable(i) = wsYangSoo.Cells(4 + i, "c").value
+        recover(i) = wsYangSoo.Cells(4 + i, "d").value
         
-        radius(i) = Worksheets("YangSoo").Cells(4 + i, "h").value
+        radius(i) = wsYangSoo.Cells(4 + i, "h").value
         
-        deltas(i) = Worksheets("YangSoo").Cells(4 + i, "l").value
-        deltah(i) = Worksheets("YangSoo").Cells(4 + i, "f").value
-        daeSoo(i) = Worksheets("YangSoo").Cells(4 + i, "n").value
+        deltas(i) = wsYangSoo.Cells(4 + i, "l").value
+        deltah(i) = wsYangSoo.Cells(4 + i, "f").value
+        daeSoo(i) = wsYangSoo.Cells(4 + i, "n").value
         
         
-        T1(i) = Worksheets("YangSoo").Cells(4 + i, "o").value
-        T2(i) = Worksheets("YangSoo").Cells(4 + i, "p").value
-        TA(i) = Worksheets("YangSoo").Cells(4 + i, "q").value
+        T1(i) = wsYangSoo.Cells(4 + i, "o").value
+        T2(i) = wsYangSoo.Cells(4 + i, "p").value
+        TA(i) = wsYangSoo.Cells(4 + i, "q").value
         
-        time_(i) = Worksheets("YangSoo").Cells(4 + i, "u").value
+        time_(i) = wsYangSoo.Cells(4 + i, "u").value
                 
-        S1(i) = Worksheets("YangSoo").Cells(4 + i, "r").value
-        S2(i) = Worksheets("YangSoo").Cells(4 + i, "s").value
-        K(i) = Worksheets("YangSoo").Cells(4 + i, "t").value
+        S1(i) = wsYangSoo.Cells(4 + i, "r").value
+        S2(i) = wsYangSoo.Cells(4 + i, "s").value
+        K(i) = wsYangSoo.Cells(4 + i, "t").value
         
-        shultz(i) = Worksheets("YangSoo").Cells(4 + i, "v").value
-        webber(i) = Worksheets("YangSoo").Cells(4 + i, "w").value
-        jcob(i) = Worksheets("YangSoo").Cells(4 + i, "x").value
+        shultz(i) = wsYangSoo.Cells(4 + i, "v").value
+        webber(i) = wsYangSoo.Cells(4 + i, "w").value
+        jcob(i) = wsYangSoo.Cells(4 + i, "x").value
         
         
-        skin(i) = Worksheets("YangSoo").Cells(4 + i, "y").value
-        er(i) = Worksheets("YangSoo").Cells(4 + i, "z").value
+        skin(i) = wsYangSoo.Cells(4 + i, "y").value
+        er(i) = wsYangSoo.Cells(4 + i, "z").value
         
         Call WriteWellData_Single(Q(i), natural(i), stable(i), recover(i), radius(i), deltas(i), daeSoo(i), T1(i), S1(i), i)
         Call WriteData37_RadiusOfInfluence_Single(TA(i), K(i), S2(i), time_(i), deltah(i), daeSoo(i), i)

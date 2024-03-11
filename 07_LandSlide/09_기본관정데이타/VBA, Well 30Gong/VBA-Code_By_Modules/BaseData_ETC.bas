@@ -100,10 +100,6 @@ Function GetRowColumn(name As String) As Variant
 End Function
 
 
-
-
-
-
 ' 이것은, Well 탭의 값을 가지고 검사하하는것이라서, 차이가 생긴다.
 Function GetNumberOfWell() As Integer
     Dim save_name As String
@@ -224,7 +220,7 @@ End Function
 
 
 
-Function GetNumeric2(ByVal CellRef As String)
+Function GetNumeric2(ByVal CellRef As String) As String
     Dim StringLength, i  As Integer
     Dim result      As String
     
@@ -243,7 +239,7 @@ End Function
 '********************************************************************************************************************************************************************************
 Function IsWorkBookOpen(ByVal OWB As String) As Boolean
     IsWorkBookOpen = False
-    Dim WB          As Excel.Workbook
+    Dim wb          As Excel.Workbook
     Dim WBName      As String
     Dim WBPath      As String
     Dim OWBArray    As Variant
@@ -252,11 +248,11 @@ Function IsWorkBookOpen(ByVal OWB As String) As Boolean
     
     On Error Resume Next
     OWBArray = Split(OWB, Application.PathSeparator)
-    Set WB = Application.Workbooks(OWBArray(UBound(OWBArray)))
+    Set wb = Application.Workbooks(OWBArray(UBound(OWBArray)))
     WBName = OWBArray(UBound(OWBArray))
-    WBPath = WB.Path & Application.PathSeparator & WBName
+    WBPath = wb.Path & Application.PathSeparator & WBName
     
-    If Not WB Is Nothing Then
+    If Not wb Is Nothing Then
         If UBound(OWBArray) > 0 Then
             If LCase(WBPath) = LCase(OWB) Then IsWorkBookOpen = True
         Else

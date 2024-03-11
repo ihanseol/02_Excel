@@ -3734,10 +3734,6 @@ Function GetRowColumn(name As String) As Variant
 End Function
 
 
-
-
-
-
 ' 이것은, Well 탭의 값을 가지고 검사하하는것이라서, 차이가 생긴다.
 Function GetNumberOfWell() As Integer
     Dim save_name As String
@@ -3858,7 +3854,7 @@ End Function
 
 
 
-Function GetNumeric2(ByVal CellRef As String)
+Function GetNumeric2(ByVal CellRef As String) As String
     Dim StringLength, i  As Integer
     Dim result      As String
     
@@ -3877,7 +3873,7 @@ End Function
 '********************************************************************************************************************************************************************************
 Function IsWorkBookOpen(ByVal OWB As String) As Boolean
     IsWorkBookOpen = False
-    Dim WB          As Excel.Workbook
+    Dim wb          As Excel.Workbook
     Dim WBName      As String
     Dim WBPath      As String
     Dim OWBArray    As Variant
@@ -3886,11 +3882,11 @@ Function IsWorkBookOpen(ByVal OWB As String) As Boolean
     
     On Error Resume Next
     OWBArray = Split(OWB, Application.PathSeparator)
-    Set WB = Application.Workbooks(OWBArray(UBound(OWBArray)))
+    Set wb = Application.Workbooks(OWBArray(UBound(OWBArray)))
     WBName = OWBArray(UBound(OWBArray))
-    WBPath = WB.Path & Application.PathSeparator & WBName
+    WBPath = wb.Path & Application.PathSeparator & WBName
     
-    If Not WB Is Nothing Then
+    If Not wb Is Nothing Then
         If UBound(OWBArray) > 0 Then
             If LCase(WBPath) = LCase(OWB) Then IsWorkBookOpen = True
         Else
@@ -4207,6 +4203,10 @@ Private Sub AggregateOne_Import(ByVal singleWell As Integer, ByVal isSingleWellI
     
     ReDim S1(1 To nofwell)
     ReDim S2(1 To nofwell)
+ 
+    Dim wsYangSoo As Worksheet
+    Set wsYangSoo = Worksheets("YangSoo")
+    
     
     If Not isSingleWellImport Then
         Call EraseCellData("G3:K35")
@@ -4219,29 +4219,36 @@ Private Sub AggregateOne_Import(ByVal singleWell As Integer, ByVal isSingleWellI
         ' isSingleWellImport = True ---> SingleWell Import
         ' isSingleWellImport = False ---> AllWell Import
         
-        If isSingleWellImport Then
-            If i = singleWell Then
-                GoTo SINGLE_ITERATION
-            Else
-                GoTo NEXT_ITERATION
-            End If
+'        If isSingleWellImport Then
+'            If i = singleWell Then
+'                GoTo SINGLE_ITERATION
+'            Else
+'                GoTo NEXT_ITERATION
+'            End If
+'        End If
+        
+        
+        If Not isSingleWellImport Or (isSingleWellImport And i = singleWell) Then
+            GoTo SINGLE_ITERATION
+        Else
+            GoTo NEXT_ITERATION
         End If
         
 SINGLE_ITERATION:
 
-        q1(i) = Worksheets("YangSoo").Cells(4 + i, "aa").value
-        qq1(i) = Worksheets("YangSoo").Cells(4 + i, "ac").value
+        q1(i) = wsYangSoo.Cells(4 + i, "aa").value
+        qq1(i) = wsYangSoo.Cells(4 + i, "ac").value
         
-        q2(i) = Worksheets("YangSoo").Cells(4 + i, "ab").value
-        q3(i) = Worksheets("YangSoo").Cells(4 + i, "k").value
+        q2(i) = wsYangSoo.Cells(4 + i, "ab").value
+        q3(i) = wsYangSoo.Cells(4 + i, "k").value
         
-        ratio(i) = Worksheets("YangSoo").Cells(4 + i, "ah").value
+        ratio(i) = wsYangSoo.Cells(4 + i, "ah").value
         
-        S1(i) = Worksheets("YangSoo").Cells(4 + i, "ad").value
-        S2(i) = Worksheets("YangSoo").Cells(4 + i, "ae").value
+        S1(i) = wsYangSoo.Cells(4 + i, "ad").value
+        S2(i) = wsYangSoo.Cells(4 + i, "ae").value
         
-        C(i) = Worksheets("YangSoo").Cells(4 + i, "af").value
-        B(i) = Worksheets("YangSoo").Cells(4 + i, "ag").value
+        C(i) = wsYangSoo.Cells(4 + i, "af").value
+        B(i) = wsYangSoo.Cells(4 + i, "ag").value
         
         Call WriteWellData36_Single(q1(i), q2(i), q3(i), ratio(i), C(i), B(i), i)
         Call Write_Tentative_water_intake_Single(qq1(i), S2(i), S1(i), q2(i), i)
@@ -4431,6 +4438,10 @@ Private Sub ImportWellSpec(ByVal singleWell As Integer, ByVal isSingleWellImport
     ReDim skin(1 To nofwell) ' skin factor
     ReDim er(1 To nofwell)   ' effective radius
     
+    Dim wsYangSoo As Worksheet
+    Set wsYangSoo = Worksheets("YangSoo")
+    
+    
     ' --------------------------------------------------------------------------------------
     
     If Not isSingleWellImport Then
@@ -4444,46 +4455,53 @@ Private Sub ImportWellSpec(ByVal singleWell As Integer, ByVal isSingleWellImport
         ' isSingleWellImport = True ---> SingleWell Import
         ' isSingleWellImport = False ---> AllWell Import
         
-        If isSingleWellImport Then
-            If i = singleWell Then
-                GoTo SINGLE_ITERATION
-            Else
-                GoTo NEXT_ITERATION
-            End If
+'        If isSingleWellImport Then
+'            If i = singleWell Then
+'                GoTo SINGLE_ITERATION
+'            Else
+'                GoTo NEXT_ITERATION
+'            End If
+'        End If
+        
+        
+        If Not isSingleWellImport Or (isSingleWellImport And i = singleWell) Then
+            GoTo SINGLE_ITERATION
+        Else
+            GoTo NEXT_ITERATION
         End If
         
 SINGLE_ITERATION:
    
-        Q(i) = Worksheets("YangSoo").Cells(4 + i, "k").value
+        Q(i) = wsYangSoo.Cells(4 + i, "k").value
         
-        natural(i) = Worksheets("YangSoo").Cells(4 + i, "b").value
-        stable(i) = Worksheets("YangSoo").Cells(4 + i, "c").value
-        recover(i) = Worksheets("YangSoo").Cells(4 + i, "d").value
+        natural(i) = wsYangSoo.Cells(4 + i, "b").value
+        stable(i) = wsYangSoo.Cells(4 + i, "c").value
+        recover(i) = wsYangSoo.Cells(4 + i, "d").value
         
-        radius(i) = Worksheets("YangSoo").Cells(4 + i, "h").value
+        radius(i) = wsYangSoo.Cells(4 + i, "h").value
         
-        deltas(i) = Worksheets("YangSoo").Cells(4 + i, "l").value
-        deltah(i) = Worksheets("YangSoo").Cells(4 + i, "f").value
-        daeSoo(i) = Worksheets("YangSoo").Cells(4 + i, "n").value
+        deltas(i) = wsYangSoo.Cells(4 + i, "l").value
+        deltah(i) = wsYangSoo.Cells(4 + i, "f").value
+        daeSoo(i) = wsYangSoo.Cells(4 + i, "n").value
         
         
-        T1(i) = Worksheets("YangSoo").Cells(4 + i, "o").value
-        T2(i) = Worksheets("YangSoo").Cells(4 + i, "p").value
-        TA(i) = Worksheets("YangSoo").Cells(4 + i, "q").value
+        T1(i) = wsYangSoo.Cells(4 + i, "o").value
+        T2(i) = wsYangSoo.Cells(4 + i, "p").value
+        TA(i) = wsYangSoo.Cells(4 + i, "q").value
         
-        time_(i) = Worksheets("YangSoo").Cells(4 + i, "u").value
+        time_(i) = wsYangSoo.Cells(4 + i, "u").value
                 
-        S1(i) = Worksheets("YangSoo").Cells(4 + i, "r").value
-        S2(i) = Worksheets("YangSoo").Cells(4 + i, "s").value
-        K(i) = Worksheets("YangSoo").Cells(4 + i, "t").value
+        S1(i) = wsYangSoo.Cells(4 + i, "r").value
+        S2(i) = wsYangSoo.Cells(4 + i, "s").value
+        K(i) = wsYangSoo.Cells(4 + i, "t").value
         
-        shultz(i) = Worksheets("YangSoo").Cells(4 + i, "v").value
-        webber(i) = Worksheets("YangSoo").Cells(4 + i, "w").value
-        jcob(i) = Worksheets("YangSoo").Cells(4 + i, "x").value
+        shultz(i) = wsYangSoo.Cells(4 + i, "v").value
+        webber(i) = wsYangSoo.Cells(4 + i, "w").value
+        jcob(i) = wsYangSoo.Cells(4 + i, "x").value
         
         
-        skin(i) = Worksheets("YangSoo").Cells(4 + i, "y").value
-        er(i) = Worksheets("YangSoo").Cells(4 + i, "z").value
+        skin(i) = wsYangSoo.Cells(4 + i, "y").value
+        er(i) = wsYangSoo.Cells(4 + i, "z").value
         
         Call WriteWellData_Single(Q(i), natural(i), stable(i), recover(i), radius(i), deltas(i), daeSoo(i), T1(i), S1(i), i)
         Call WriteData37_RadiusOfInfluence_Single(TA(i), K(i), S2(i), time_(i), deltah(i), daeSoo(i), i)
@@ -5742,6 +5760,12 @@ Private Sub WriteStepTestData(ByVal singleWell As Integer, ByVal isSingleWellImp
     ReDim qsw(1 To nofwell)
     ReDim swq(1 To nofwell)
     
+    
+    Dim wb As Workbook
+    Dim wsYangSoo As Worksheet
+    
+    
+    
     ' --------------------------------------------------------------------------------------
     
     If ActiveSheet.name <> "AggStep" Then Sheets("AggStep").Select
@@ -5751,14 +5775,20 @@ Private Sub WriteStepTestData(ByVal singleWell As Integer, ByVal isSingleWellImp
         ' isSingleWellImport = True ---> SingleWell Import
         ' isSingleWellImport = False ---> AllWell Import
         
-        If isSingleWellImport Then
-            If i = singleWell Then
-                GoTo SINGLE_ITERATION
-            Else
-                GoTo NEXT_ITERATION
-            End If
-        End If
+'        If isSingleWellImport Then
+'            If i = singleWell Then
+'                GoTo SINGLE_ITERATION
+'            Else
+'                GoTo NEXT_ITERATION
+'            End If
+'        End If
         
+        
+        If Not isSingleWellImport Or (isSingleWellImport And i = singleWell) Then
+            GoTo SINGLE_ITERATION
+        Else
+            GoTo NEXT_ITERATION
+        End If
     
 SINGLE_ITERATION:
 
@@ -5768,15 +5798,18 @@ SINGLE_ITERATION:
             Exit Sub
         End If
         
-        Q(i) = Workbooks(fName).Worksheets("Input").Range("q64").value
-        h(i) = Workbooks(fName).Worksheets("Input").Range("r64").value
-        delta_h(i) = Workbooks(fName).Worksheets("Input").Range("s64").value
-        qsw(i) = Workbooks(fName).Worksheets("Input").Range("t64").value
-        swq(i) = Workbooks(fName).Worksheets("Input").Range("u64").value
+        Set wb = Workbooks(fName)
+        Set wsInput = wb.Worksheets("Input")
+        
+        Q(i) = wsInput.Range("q64").value
+        h(i) = wsInput.Range("r64").value
+        delta_h(i) = wsInput.Range("s64").value
+        qsw(i) = wsInput.Range("t64").value
+        swq(i) = wsInput.Range("u64").value
 
-        a1(i) = Workbooks(fName).Worksheets("Input").Range("v64").value
-        a2(i) = Workbooks(fName).Worksheets("Input").Range("w64").value
-        a3(i) = Workbooks(fName).Worksheets("Input").Range("x64").value
+        a1(i) = wsInput.Range("v64").value
+        a2(i) = wsInput.Range("w64").value
+        a3(i) = wsInput.Range("x64").value
         
         Call Write31_StepTestData_Single(a1(i), a2(i), a3(i), Q(i), h(i), delta_h(i), qsw(i), swq(i), i)
 
@@ -5917,12 +5950,19 @@ Sub WriteAllCharts(ByVal singleWell As Integer, ByVal isSingleWellImport As Bool
         ' isSingleWellImport = True ---> SingleWell Import
         ' isSingleWellImport = False ---> AllWell Import
         
-        If isSingleWellImport Then
-            If i = singleWell Then
-                GoTo SINGLE_ITERATION
-            Else
-                GoTo NEXT_ITERATION
-            End If
+'        If isSingleWellImport Then
+'            If i = singleWell Then
+'                GoTo SINGLE_ITERATION
+'            Else
+'                GoTo NEXT_ITERATION
+'            End If
+'        End If
+        
+        
+        If Not isSingleWellImport Or (isSingleWellImport And i = singleWell) Then
+            GoTo SINGLE_ITERATION
+        Else
+            GoTo NEXT_ITERATION
         End If
         
 SINGLE_ITERATION:
@@ -6183,7 +6223,10 @@ Sub GetBaseDataFromYangSoo(ByVal singleWell As Integer, ByVal isSingleWellImport
     ReDim S0(1 To nofwell)         ' S값, 0.005: 피압대수층, 0.001: 누수대수층, 0.1: 자유면대수층
     ReDim ER_MODE(1 To nofwell)
     
-    
+    Dim wb As Workbook
+    Dim wsInput As Worksheet
+    Dim wsSkinFactor As Worksheet
+    Dim wsSafeYield As Worksheet
     
     If Not (isSingleWellImport) And singleWell = 999 Then
         rngString = "A5:AN" & (nofwell + 5 - 1)
@@ -6195,12 +6238,19 @@ Sub GetBaseDataFromYangSoo(ByVal singleWell As Integer, ByVal isSingleWellImport
         ' isSingleWellImport = True ---> SingleWell Import
         ' isSingleWellImport = False ---> AllWell Import
         
-        If isSingleWellImport Then
-            If i = singleWell Then
-                GoTo SINGLE_ITERATION
-            Else
-                GoTo NEXT_ITERATION
-            End If
+'        If isSingleWellImport Then
+'            If i = singleWell Then
+'                GoTo SINGLE_ITERATION
+'            Else
+'                GoTo NEXT_ITERATION
+'            End If
+'        End If
+        
+        
+        If Not isSingleWellImport Or (isSingleWellImport And i = singleWell) Then
+            GoTo SINGLE_ITERATION
+        Else
+            GoTo NEXT_ITERATION
         End If
         
 SINGLE_ITERATION:
@@ -6211,71 +6261,76 @@ SINGLE_ITERATION:
             Exit Sub
         End If
         
+        Set wb = Workbooks(fName)
+        Set wsInput = wb.Worksheets("Input")
+        Set wsSkinFactor = wb.Worksheets("SkinFactor")
+        Set wsSafeYield = wb.Worksheets("SafeYield")
         
-        Q(i) = Workbooks(fName).Worksheets("Input").Range("m51").value
-        hp(i) = Workbooks(fName).Worksheets("Input").Range("i48").value
         
-        natural(i) = Workbooks(fName).Worksheets("Input").Range("m48").value
-        stable(i) = Workbooks(fName).Worksheets("Input").Range("m49").value
-        radius(i) = Workbooks(fName).Worksheets("Input").Range("m44").value
+        Q(i) = wsInput.Range("m51").value
+        hp(i) = wsInput.Range("i48").value
+        
+        natural(i) = wsInput.Range("m48").value
+        stable(i) = wsInput.Range("m49").value
+        radius(i) = wsInput.Range("m44").value
         Rw(i) = radius(i) / 2000
         
-        well_depth(i) = Workbooks(fName).Worksheets("Input").Range("m45").value
-        casing(i) = Workbooks(fName).Worksheets("Input").Range("i52").value
+        well_depth(i) = wsInput.Range("m45").value
+        casing(i) = wsInput.Range("i52").value
         
         
-        C(i) = Workbooks(fName).Worksheets("Input").Range("A31").value
-        B(i) = Workbooks(fName).Worksheets("Input").Range("B31").value
+        C(i) = wsInput.Range("A31").value
+        B(i) = wsInput.Range("B31").value
         
         
         
-        recover(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c10").value
+        recover(i) = wsSkinFactor.Range("c10").value
         Sw(i) = stable(i) - recover(i)
         
-        delta_h(i) = Workbooks(fName).Worksheets("SkinFactor").Range("b16").value
-        delta_s(i) = Workbooks(fName).Worksheets("SkinFactor").Range("b4").value
+        delta_h(i) = wsSkinFactor.Range("b16").value
+        delta_s(i) = wsSkinFactor.Range("b4").value
         
-        daeSoo(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c16").value
+        daeSoo(i) = wsSkinFactor.Range("c16").value
         
         '----------------------------------------------------------------------------------
         
-        T0(i) = Workbooks(fName).Worksheets("SkinFactor").Range("d4").value
-        S0(i) = Workbooks(fName).Worksheets("SkinFactor").Range("f4").value
-        ER_MODE(i) = Workbooks(fName).Worksheets("SkinFactor").Range("h10").value
+        T0(i) = wsSkinFactor.Range("d4").value
+        S0(i) = wsSkinFactor.Range("f4").value
+        ER_MODE(i) = wsSkinFactor.Range("h10").value
         
-        T1(i) = Workbooks(fName).Worksheets("SkinFactor").Range("d5").value
-        T2(i) = Workbooks(fName).Worksheets("SkinFactor").Range("h13").value
+        T1(i) = wsSkinFactor.Range("d5").value
+        T2(i) = wsSkinFactor.Range("h13").value
         TA(i) = (T1(i) + T2(i)) / 2
         
-        S1(i) = Workbooks(fName).Worksheets("SkinFactor").Range("e10").value
-        S2(i) = Workbooks(fName).Worksheets("SkinFactor").Range("i16").value
+        S1(i) = wsSkinFactor.Range("e10").value
+        S2(i) = wsSkinFactor.Range("i16").value
         
-        K(i) = Workbooks(fName).Worksheets("SkinFactor").Range("e16").value
-        time_(i) = Workbooks(fName).Worksheets("SkinFactor").Range("h16").value
+        K(i) = wsSkinFactor.Range("e16").value
+        time_(i) = wsSkinFactor.Range("h16").value
         
-        shultze(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c13").value
-        webber(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c18").value
-        jacob(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c23").value
+        shultze(i) = wsSkinFactor.Range("c13").value
+        webber(i) = wsSkinFactor.Range("c18").value
+        jacob(i) = wsSkinFactor.Range("c23").value
         
-        skin(i) = Workbooks(fName).Worksheets("SkinFactor").Range("g6").value
-        er(i) = Workbooks(fName).Worksheets("SkinFactor").Range("c8").value
+        skin(i) = wsSkinFactor.Range("g6").value
+        er(i) = wsSkinFactor.Range("c8").value
         
         
         ' 경험식, 1번, 2번, 3번의 유효우물반경
-        ER1(i) = Workbooks(fName).Worksheets("SkinFactor").Range("K8").value
-        ER2(i) = Workbooks(fName).Worksheets("SkinFactor").Range("K9").value
-        ER3(i) = Workbooks(fName).Worksheets("SkinFactor").Range("K10").value
+        ER1(i) = wsSkinFactor.Range("K8").value
+        ER2(i) = wsSkinFactor.Range("K9").value
+        ER3(i) = wsSkinFactor.Range("K10").value
         
         '----------------------------------------------------------------------------------
         
-        qh(i) = Workbooks(fName).Worksheets("SafeYield").Range("b13").value
-        qg(i) = Workbooks(fName).Worksheets("SafeYield").Range("b7").value
+        qh(i) = wsSafeYield.Range("b13").value
+        qg(i) = wsSafeYield.Range("b7").value
         
-        sd1(i) = Workbooks(fName).Worksheets("SafeYield").Range("b3").value
-        sd2(i) = Workbooks(fName).Worksheets("SafeYield").Range("b4").value
-        q1(i) = Workbooks(fName).Worksheets("SafeYield").Range("b2").value
+        sd1(i) = wsSafeYield.Range("b3").value
+        sd2(i) = wsSafeYield.Range("b4").value
+        q1(i) = wsSafeYield.Range("b2").value
         
-        ratio(i) = Workbooks(fName).Worksheets("SafeYield").Range("b11").value
+        ratio(i) = wsSafeYield.Range("b11").value
         
         '*****************************************************************************************
         
