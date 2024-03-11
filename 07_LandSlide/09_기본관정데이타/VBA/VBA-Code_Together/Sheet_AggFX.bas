@@ -175,155 +175,51 @@ End Sub
 
 
 
-
-'
-'Sub SetDataArrayValues(ByVal wb As Workbook, ByVal wellIndex As Integer, ByVal dataArrayName As String)
-'    Dim wsInput As Worksheet
-'    Dim wsSkinFactor As Worksheet
-'    Dim wsSafeYield As Worksheet
-'    Dim dataCell As Range
-'    Dim value As Variant
-'
-'    Set wsInput = wb.Worksheets("Input")
-'    Set wsSkinFactor = wb.Worksheets("SkinFactor")
-'    Set wsSafeYield = wb.Worksheets("SafeYield")
-'
-'    Select Case dataArrayName
-'        Case "Q"
-'            Set dataCell = wsInput.Range("m51")
-'        Case "hp"
-'            Set dataCell = wsInput.Range("i48")
-'
-'
-'        Case "natural"
-'            Set dataCell = wsInput.Range("m48")
-'        Case "stable"
-'            Set dataCell = wsInput.Range("m49")
-'        Case "radius"
-'            Set dataCell = wsInput.Range("m44")
-'        Case "Rw"
-'            Set dataCell = wsSkinFactor.Range("e4")
-'
-'        Case "well_depth"
-'            Set dataCell = wsInput.Range("m45")
-'        Case "casing"
-'            Set dataCell = wsInput.Range("i52")
-'
-'        Case "C"
-'            Set dataCell = wsInput.Range("A31")
-'         Case "B"
-'            Set dataCell = wsInput.Range("B31")
-'
-'
-'        Case "recover"
-'            Set dataCell = wsSkinFactor.Range("c10")
-'        Case "Sw"
-'            Set dataCell = wsSkinFactor.Range("c11")
-'
-'        Case "delta_h"
-'            Set dataCell = wsSkinFactor.Range("b16")
-'        Case "delta_s"
-'            Set dataCell = wsSkinFactor.Range("b4")
-'
-'        Case "daeSoo"
-'            Set dataCell = wsSkinFactor.Range("c16")
-'
-'  '--------------------------------------------------------------
-'
-'       Case "T0"
-'            Set dataCell = wsSkinFactor.Range("d4")
-'        Case "S0"
-'            Set dataCell = wsSkinFactor.Range("f4")
-'       Case "ER_MODE"
-'            Set dataCell = wsSkinFactor.Range("h10")
-'
-'        Case "T1"
-'            Set dataCell = wsSkinFactor.Range("d5")
-'        Case "T2"
-'            Set dataCell = wsSkinFactor.Range("h13")
-'        Case "TA"
-'            Set dataCell = wsSkinFactor.Range("d16")
-'
-'       Case "S1"
-'            Set dataCell = wsSkinFactor.Range("e10")
-'        Case "S2"
-'            Set dataCell = wsSkinFactor.Range("i16")
-'
-'        Case "K"
-'            Set dataCell = wsSkinFactor.Range("e16")
-'        Case "time_"
-'            Set dataCell = wsSkinFactor.Range("h16")
-'
-'        Case "shultze"
-'            Set dataCell = wsSkinFactor.Range("c13")
-'        Case "webber"
-'            Set dataCell = wsSkinFactor.Range("c18")
-'        Case "jacob"
-'            Set dataCell = wsSkinFactor.Range("c23")
-'
-'
-'       Case "skin"
-'            Set dataCell = wsSkinFactor.Range("g6")
-'        Case "er"
-'            Set dataCell = wsSkinFactor.Range("c8")
-'
-'        Case "ER1"
-'            Set dataCell = wsSkinFactor.Range("k8")
-'        Case "ER2"
-'            Set dataCell = wsSkinFactor.Range("k9")
-'        Case "ER3"
-'            Set dataCell = wsSkinFactor.Range("k10")
-'
-'
-'        Case "qh"
-'            Set dataCell = wsSafeYield.Range("b13")
-'        Case "qg"
-'            Set dataCell = wsSafeYield.Range("b7")
-'
-'        Case "sd1"
-'            Set dataCell = wsSafeYield.Range("b3")
-'        Case "sd2"
-'            Set dataCell = wsSafeYield.Range("b4")
-'        Case "q1"
-'            Set dataCell = wsSafeYield.Range("b2")
-'        Case "ratio"
-'            Set dataCell = wsSafeYield.Range("b11")
-'    End Select
-'
-'    SetCellValueForWell wellIndex, dataCell, dataArrayName
-'End Sub
-
 Sub SetCellValueForWell(ByVal wellIndex As Integer, ByVal dataCell As Range, ByVal dataArrayName As String)
     Dim wellData As Variant
+    Dim numberFormats As Object
+    Set numberFormats = CreateObject("Scripting.Dictionary")
 
+    ' Define number formats for each dataArrayName
+    With numberFormats
+        .Add "recover", "0.00"
+        .Add "Sw", "0.00"
+        .Add "S2", "0.0000000"
+        .Add "T1", "0.0000"
+        .Add "T2", "0.0000"
+        .Add "TA", "0.0000"
+        .Add "qh", "0."
+        .Add "qg", "0.00"
+        .Add "q1", "0.00"
+        .Add "sd1", "0.00"
+        .Add "sd2", "0.00"
+        .Add "skin", "0.0000"
+        .Add "er", "0.0000"
+        .Add "ratio", "0.0%"
+        .Add "T0", "0.0000"
+        .Add "S0", "0.0000"
+        .Add "delta_s", "0.00"
+        .Add "time_", "0.00"
+        .Add "shultze", "0.00"
+        .Add "webber", "0.00"
+        .Add "jacob", "0.00"
+        
+    End With
+
+    ' Get value from dataCell
     wellData = dataCell.value
     
-    
     Cells(4 + wellIndex, 1).value = "W-" & wellIndex
-    Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).value = wellData
     
-    If dataArrayName = "recover" Or dataArrayName = "Sw" Then
-        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.00"
-    ElseIf dataArrayName = "S2" Then
-        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.0000000"
-    ElseIf dataArrayName = "T1" Or dataArrayName = "T2" Or dataArrayName = "TA" Then
-        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.0000"
-    ElseIf dataArrayName = "qh" Then
-        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0."
-    ElseIf dataArrayName = "qg" Then
-        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.00"
-    ElseIf dataArrayName = "q1" Or dataArrayName = "sd1" Or dataArrayName = "sd2" Then
-        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.00"
-    ElseIf dataArrayName = "skin" Then
-        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).value = Format(wellData, "0.0000")
-    ElseIf dataArrayName = "er" Then
-        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.0000"
-    ElseIf dataArrayName = "ratio" Then
-        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.0%"
-    ElseIf dataArrayName = "T0" Or dataArrayName = "S0" Then
-        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.0000"
-    End If
+    ' Set value and number format based on dataArrayName
+    With Cells(4 + wellIndex, GetColumnIndex(dataArrayName))
+        .value = wellData
+        If numberFormats.Exists(dataArrayName) Then
+            .NumberFormat = numberFormats(dataArrayName)
+        End If
+    End With
 End Sub
+
 
 
 Function GetColumnIndex(ByVal columnName As String) As Integer
