@@ -48,218 +48,328 @@ Call GetBaseDataFromYangSoo(singleWell, True)
 
 End Sub
 
+'<><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><>
+' Code Refactor by OpenAI
+'
+
 
 Sub GetBaseDataFromYangSoo(ByVal singleWell As Integer, ByVal isSingleWellImport As Boolean)
-' isSingleWellImport = True ---> SingleWell Import
-' isSingleWellImport = False ---> AllWell Import
-'
-' SingleWell --> ImportWell Number
-' 999 & False --> 모든관정을 임포트
-'
-    Dim fName As String
-    Dim nofwell, i As Integer
+    Dim nofwell As Integer
+    Dim i As Integer
     Dim rngString As String
-        
-    Dim natural, stable, recover, Sw, delta_h, radius, Rw, well_depth As Double
-    Dim casing, Q, delta_s, hp, daeSoo As Double
-    Dim T1, T2, TA, S1, S2, T0, S0, ER_MODE, ER1, ER2, ER3 As Double
-    Dim K, time_, shultze, webber, jacob, skin, er As Double
-    Dim qh, qg, q1, sd1, sd2, C, B, ratio As Double
-    
+
+    ' Arrays to store data
+    Dim dataArrays As Variant
+    dataArrays = Array("natural", "stable", "recover", "delta_h", "Sw", "radius", _
+                       "Rw", "well_depth", "casing", "Q", "delta_s", "hp", _
+                       "daeSoo", "T1", "T2", "TA", "S1", "S2", "K", "time_", _
+                       "shultze", "webber", "jacob", "skin", "er", "ER1", _
+                       "ER2", "ER3", "qh", "qg", "sd1", "sd2", "q1", "C", _
+                       "B", "ratio", "T0", "S0", "ER_MODE")
+
+    ' Check if all well data should be imported
+    nofwell = GetNumberOfWell()
+    If Not isSingleWellImport And singleWell = 999 Then
+        rngString = "A5:AN" & (nofwell + 5 - 1)
+        Call EraseCellData(rngString)
+    End If
+
+    ' Loop through each well
+    For i = 1 To nofwell
+        ' Import data for all wells or only for the specified single well
+        If Not isSingleWellImport Or (isSingleWellImport And i = singleWell) Then
+            ImportDataForWell i, dataArrays
+        End If
+    Next i
+End Sub
+
+Sub ImportDataForWell(ByVal wellIndex As Integer, ByVal dataArrays As Variant)
+    Dim fName As String
     Dim wb As Workbook
     Dim wsInput As Worksheet
     Dim wsSkinFactor As Worksheet
     Dim wsSafeYield As Worksheet
-    
-    nofwell = GetNumberOfWell()
-    Sheets("YangSoo").Select
-    
-    If isSingleWellImport Then
-        rngString = "A" & (singleWell + 5 - 1) & ":AN" & (singleWell + 5 - 1)
-        Call EraseCellData(rngString)
-    Else
-        rngString = "A5:AN37"
-        Call EraseCellData(rngString)
-    End If
-        
-    
-    For i = 1 To nofwell
-        
-        If Not isSingleWellImport Or (isSingleWellImport And i = singleWell) Then
-            GoTo SINGLE_ITERATION
-        Else
-            GoTo NEXT_ITERATION
-        End If
-        
-SINGLE_ITERATION:
-        
-        fName = "A" & CStr(i) & "_ge_OriginalSaveFile.xlsm"
-        If Not IsWorkBookOpen(fName) Then
-            MsgBox "Please open the yangsoo data ! " & fName
-            Exit Sub
-        End If
-        
-        Set wb = Workbooks(fName)
-        Set wsInput = wb.Worksheets("Input")
-        Set wsSkinFactor = wb.Worksheets("SkinFactor")
-        Set wsSafeYield = wb.Worksheets("SafeYield")
-        
-        
-        Q = wsInput.Range("m51").value
-        hp = wsInput.Range("i48").value
-        
-        natural = wsInput.Range("m48").value
-        stable = wsInput.Range("m49").value
-        radius = wsInput.Range("m44").value
-        Rw = radius / 2000
-        
-        well_depth = wsInput.Range("m45").value
-        casing = wsInput.Range("i52").value
-        
-        
-        C = wsInput.Range("A31").value
-        B = wsInput.Range("B31").value
-        
-        
-        
-        recover = wsSkinFactor.Range("c10").value
-        Sw = stable - recover
-        
-        delta_h = wsSkinFactor.Range("b16").value
-        delta_s = wsSkinFactor.Range("b4").value
-        
-        daeSoo = wsSkinFactor.Range("c16").value
-        
-        '----------------------------------------------------------------------------------
-        
-        T0 = wsSkinFactor.Range("d4").value
-        S0 = wsSkinFactor.Range("f4").value
-        ER_MODE = wsSkinFactor.Range("h10").value
-        
-        T1 = wsSkinFactor.Range("d5").value
-        T2 = wsSkinFactor.Range("h13").value
-        TA = (T1 + T2) / 2
-        
-        S1 = wsSkinFactor.Range("e10").value
-        S2 = wsSkinFactor.Range("i16").value
-        
-        K = wsSkinFactor.Range("e16").value
-        time_ = wsSkinFactor.Range("h16").value
-        
-        shultze = wsSkinFactor.Range("c13").value
-        webber = wsSkinFactor.Range("c18").value
-        jacob = wsSkinFactor.Range("c23").value
-        
-        skin = wsSkinFactor.Range("g6").value
-        er = wsSkinFactor.Range("c8").value
-        
-        
-        ' 경험식, 1번, 2번, 3번의 유효우물반경
-        ER1 = wsSkinFactor.Range("K8").value
-        ER2 = wsSkinFactor.Range("K9").value
-        ER3 = wsSkinFactor.Range("K10").value
-        
-        '----------------------------------------------------------------------------------
-        
-        qh = wsSafeYield.Range("b13").value
-        qg = wsSafeYield.Range("b7").value
-        
-        sd1 = wsSafeYield.Range("b3").value
-        sd2 = wsSafeYield.Range("b4").value
-        q1 = wsSafeYield.Range("b2").value
-        
-        ratio = wsSafeYield.Range("b11").value
-        
-        '*****************************************************************************************
-        
-        Cells(4 + i, "a").value = "W-" & i
-        Cells(4 + i, "b").value = natural
-        Cells(4 + i, "c").value = stable
-        
-        Cells(4 + i, "d").value = recover
-        Cells(4 + i, "d").NumberFormat = "0.00"
-        
-        Cells(4 + i, "e").value = Sw
-        Cells(4 + i, "e").NumberFormat = "0.00"
-        
-        Cells(4 + i, "f").value = delta_h
-        Cells(4 + i, "f").NumberFormat = "0.00"
-        
-        Cells(4 + i, "g").value = radius
-        Cells(4 + i, "h").value = Rw
-        Cells(4 + i, "i").value = well_depth
-        Cells(4 + i, "j").value = casing
-        Cells(4 + i, "k").value = Q
-        
-        Cells(4 + i, "l").value = delta_s
-        Cells(4 + i, "l").NumberFormat = "0.00"
-        
-        Cells(4 + i, "m").value = hp
-        Cells(4 + i, "n").value = daeSoo
-        
-        Cells(4 + i, "o").value = T1
-        Cells(4 + i, "o").NumberFormat = "0.0000"
-         
-        Cells(4 + i, "p").value = T2
-        Cells(4 + i, "p").NumberFormat = "0.0000"
-         
-        Cells(4 + i, "q").value = TA
-        Cells(4 + i, "q").NumberFormat = "0.0000"
-        
-        Cells(4 + i, "r").value = S1
-        
-        Cells(4 + i, "s").value = S2
-        Cells(4 + i, "s").NumberFormat = "0.0000000"
-        
-        Cells(4 + i, "t").value = K
-        Cells(4 + i, "t").NumberFormat = "0.0000"
-        
-        Cells(4 + i, "u").value = time_
-        
-        Cells(4 + i, "v").value = shultze
-        Cells(4 + i, "v").NumberFormat = "0.0"
-        
-        Cells(4 + i, "w").value = webber
-        Cells(4 + i, "w").NumberFormat = "0.0"
-        
-        Cells(4 + i, "x").value = jacob
-        Cells(4 + i, "x").NumberFormat = "0.0"
-        
-        
-        
-        Cells(4 + i, "y").value = Format(skin, "0.0000")
-        
-        Cells(4 + i, "z").value = er
-        Cells(4 + i, "z").NumberFormat = "0.0000"
-        
-        Cells(4 + i, "aa").value = Format(qh, "0.")
-        Cells(4 + i, "ab").value = Format(qg, "0.00")
-        Cells(4 + i, "ac").value = Format(q1, "0.")
-        
-        Cells(4 + i, "ad").value = Format(sd1, "0.00")
-        Cells(4 + i, "ae").value = Format(sd2, "0.00")
-        
-        Cells(4 + i, "af").value = C
-        Cells(4 + i, "ag").value = B
-        
-        Cells(4 + i, "ah").value = ratio
-        Cells(4 + i, "ah").NumberFormat = "0.0%"
-        
-        
-        ' 2023/09/22 새로 추가한 값들 ...
-        Cells(4 + i, "AI").value = Format(T0, "0.0000")
-        Cells(4 + i, "AJ").value = Format(S0, "0.0000")
-        Cells(4 + i, "AK").value = ER_MODE
-        
-        Cells(4 + i, "AL").value = Format(ER1, "0.0000")
-        Cells(4 + i, "AM").value = Format(ER2, "0.0000")
-        Cells(4 + i, "AN").value = Format(ER3, "0.0000")
-        
-NEXT_ITERATION:
+    Dim dataIdx As Integer
+    Dim cellOffset As Integer
+    Dim dataCell As Range
 
-    Next i
+    ' Open the workbook
+    fName = "A" & CStr(wellIndex) & "_ge_OriginalSaveFile.xlsm"
+    If Not IsWorkBookOpen(fName) Then
+        MsgBox "Please open the yangsoo data! " & fName
+        Exit Sub
+    End If
+    Set wb = Workbooks(fName)
+
+    ' Loop through data arrays and import values
+    For dataIdx = LBound(dataArrays) To UBound(dataArrays)
+        SetDataArrayValues wb, wellIndex, dataArrays(dataIdx)
+    Next dataIdx
+    
+    ' Close workbook
+    ' wb.Close SaveChanges:=False
 End Sub
 
+Sub SetDataArrayValues(ByVal wb As Workbook, ByVal wellIndex As Integer, ByVal dataArrayName As String)
+    Dim wsInput As Worksheet
+    Dim wsSkinFactor As Worksheet
+    Dim wsSafeYield As Worksheet
+    Dim dataCell As Range
+    Dim value As Variant
+
+    Set wsInput = wb.Worksheets("Input")
+    Set wsSkinFactor = wb.Worksheets("SkinFactor")
+    Set wsSafeYield = wb.Worksheets("SafeYield")
+
+    Select Case dataArrayName
+        Case "Q"
+            Set dataCell = wsInput.Range("m51")
+        Case "hp"
+            Set dataCell = wsInput.Range("i48")
+        
+        
+        Case "natural"
+            Set dataCell = wsInput.Range("m48")
+        Case "stable"
+            Set dataCell = wsInput.Range("m49")
+        Case "radius"
+            Set dataCell = wsInput.Range("m44")
+        Case "Rw"
+            Set dataCell = wsSkinFactor.Range("e4")
+        
+        Case "well_depth"
+            Set dataCell = wsInput.Range("m45")
+        Case "casing"
+            Set dataCell = wsInput.Range("i52")
+        
+        Case "C"
+            Set dataCell = wsInput.Range("A31")
+         Case "B"
+            Set dataCell = wsInput.Range("B31")
+        
+        
+        Case "recover"
+            Set dataCell = wsSkinFactor.Range("c10")
+        Case "Sw"
+            Set dataCell = wsSkinFactor.Range("c11")
+        
+        Case "delta_h"
+            Set dataCell = wsSkinFactor.Range("b16")
+        Case "delta_s"
+            Set dataCell = wsSkinFactor.Range("b4")
+    
+        Case "daeSoo"
+            Set dataCell = wsSkinFactor.Range("c16")
+            
+  '--------------------------------------------------------------
+  
+       Case "T0"
+            Set dataCell = wsSkinFactor.Range("d4")
+        Case "S0"
+            Set dataCell = wsSkinFactor.Range("f4")
+       Case "ER_MODE"
+            Set dataCell = wsSkinFactor.Range("h10")
+                  
+        Case "T1"
+            Set dataCell = wsSkinFactor.Range("d5")
+        Case "T2"
+            Set dataCell = wsSkinFactor.Range("h13")
+        Case "TA"
+            Set dataCell = wsSkinFactor.Range("d16")
+            
+       Case "S1"
+            Set dataCell = wsSkinFactor.Range("e10")
+        Case "S2"
+            Set dataCell = wsSkinFactor.Range("i16")
+        
+        Case "K"
+            Set dataCell = wsSkinFactor.Range("e16")
+        Case "time_"
+            Set dataCell = wsSkinFactor.Range("h16")
+            
+        Case "shultze"
+            Set dataCell = wsSkinFactor.Range("c13")
+        Case "webber"
+            Set dataCell = wsSkinFactor.Range("c18")
+        Case "jacob"
+            Set dataCell = wsSkinFactor.Range("c23")
+                    
+                        
+       Case "skin"
+            Set dataCell = wsSkinFactor.Range("g6")
+        Case "er"
+            Set dataCell = wsSkinFactor.Range("c8")
+            
+        Case "ER1"
+            Set dataCell = wsSkinFactor.Range("k8")
+        Case "ER2"
+            Set dataCell = wsSkinFactor.Range("k9")
+        Case "ER3"
+            Set dataCell = wsSkinFactor.Range("k10")
+
+
+        Case "qh"
+            Set dataCell = wsSafeYield.Range("b13")
+        Case "qg"
+            Set dataCell = wsSafeYield.Range("b7")
+            
+        Case "sd1"
+            Set dataCell = wsSafeYield.Range("b3")
+        Case "sd2"
+            Set dataCell = wsSafeYield.Range("b4")
+        Case "q1"
+            Set dataCell = wsSafeYield.Range("b2")
+        Case "ratio"
+            Set dataCell = wsSafeYield.Range("b11")
+    End Select
+
+    SetCellValueForWell wellIndex, dataCell, dataArrayName
+End Sub
+
+Sub SetCellValueForWell(ByVal wellIndex As Integer, ByVal dataCell As Range, ByVal dataArrayName As String)
+    Dim wellData As Variant
+
+    wellData = dataCell.value
+    
+    
+    Cells(4 + wellIndex, 1).value = "W-" & wellIndex
+    Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).value = wellData
+    
+    If dataArrayName = "recover" Or dataArrayName = "Sw" Then
+        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.00"
+    ElseIf dataArrayName = "S2" Then
+        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.0000000"
+    ElseIf dataArrayName = "T1" Or dataArrayName = "T2" Or dataArrayName = "TA" Then
+        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.0000"
+    ElseIf dataArrayName = "qh" Then
+        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0."
+    ElseIf dataArrayName = "qg" Then
+        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.00"
+    ElseIf dataArrayName = "q1" Or dataArrayName = "sd1" Or dataArrayName = "sd2" Then
+        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.00"
+    ElseIf dataArrayName = "skin" Then
+        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).value = Format(wellData, "0.0000")
+    ElseIf dataArrayName = "er" Then
+        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.0000"
+    ElseIf dataArrayName = "ratio" Then
+        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.0%"
+    ElseIf dataArrayName = "T0" Or dataArrayName = "S0" Then
+        Cells(4 + wellIndex, GetColumnIndex(dataArrayName)).NumberFormat = "0.0000"
+    End If
+End Sub
+
+Function GetColumnIndex(ByVal columnName As String) As Integer
+    Dim colIndex As Integer
+
+    Select Case columnName
+        Case "Q"
+            colIndex = 11
+        Case "hp"
+            colIndex = 13
+        
+        
+        Case "natural"
+            colIndex = 2
+        Case "stable"
+            colIndex = 3
+        Case "radius"
+            colIndex = 7
+        Case "Rw"
+            colIndex = 8
+        
+        Case "well_depth"
+            colIndex = 9
+        Case "casing"
+           colIndex = 10
+        
+        Case "C"
+           colIndex = 32
+         Case "B"
+            colIndex = 33
+        
+        
+        Case "recover"
+            colIndex = 4
+        Case "Sw"
+            colIndex = 5
+        
+        Case "delta_h"
+            colIndex = 6
+        Case "delta_s"
+            colIndex = 12
+    
+        Case "daeSoo"
+           colIndex = 14
+            
+  '--------------------------------------------------------------
+  
+       Case "T0"
+           colIndex = 35
+        Case "S0"
+           colIndex = 36
+       Case "ER_MODE"
+           colIndex = 37
+                  
+        Case "T1"
+           colIndex = 15
+        Case "T2"
+            colIndex = 16
+        Case "TA"
+           colIndex = 17
+            
+       Case "S1"
+           colIndex = 18
+        Case "S2"
+            colIndex = 19
+        
+        Case "K"
+           colIndex = 20
+        Case "time_"
+            colIndex = 21
+            
+        Case "shultze"
+           colIndex = 22
+        Case "webber"
+            colIndex = 23
+        Case "jacob"
+            colIndex = 24
+                    
+                        
+       Case "skin"
+            colIndex = 25
+        Case "er"
+            colIndex = 26
+            
+        Case "ER1"
+            colIndex = 38
+        Case "ER2"
+            colIndex = 39
+        Case "ER3"
+            colIndex = 40
+
+        Case "qh"
+            colIndex = 27
+        Case "qg"
+            colIndex = 28
+            
+        Case "sd1"
+            colIndex = 30
+        Case "sd2"
+            colIndex = 31
+        Case "q1"
+            colIndex = 29
+        Case "ratio"
+            colIndex = 34
+    End Select
+
+    GetColumnIndex = colIndex
+End Function
+
+
+' in here by refctor by  openai
+' replace GetBaseDataFromYangSoo Module
+'
+'<><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><><><><><><>><><>
 
 Public Sub MyDebug(sPrintStr As String, Optional bClear As Boolean = False)
    If bClear = True Then
@@ -500,6 +610,8 @@ Sub FormulaRadiusOfInfluence(FileNum As Integer)
     Print #FileNum, "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
     
 End Sub
+
+
 
 
 
