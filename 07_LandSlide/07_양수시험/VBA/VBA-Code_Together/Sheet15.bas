@@ -1,13 +1,26 @@
 Private Sub CommandButton1_Click()
-  UserFormTS1.Show
+    UserFormTS1.Show
 End Sub
 
 
 Private Sub CommandButton2_Click()
-    Call make_adjust_value
+    Dim i As Integer
+    
+    For i = 14 To 23
+        ' Temp
+        Cells(i, "h").Value = Round(myRandBetween(1, 3, 10), 1)
+        
+        ' EC
+        Cells(i, "i").Value = myRandBetween(1, 3, 1)
+        
+        ' PH
+        Cells(i, "j").Value = Round(myRandBetween(7, 13, 100), 2)
+    Next i
+
 End Sub
 
 Private Sub CommandButton3_Click()
+
     Range("L14:N23").Select
     Selection.Copy
     Range("H14").Select
@@ -16,6 +29,7 @@ Private Sub CommandButton3_Click()
         
     Range("K9").Select
     Application.CutCopyMode = False
+
 End Sub
 
 
@@ -33,25 +47,29 @@ Private Sub SetWellTitle(ByVal gong As Integer)
     
 End Sub
 
-Private Sub Worksheet_Activate()
- '   Dim gong As Integer
+'
+' Random Generator
+'
 
-'    Range("C6").Select
-'    ActiveCell.FormulaR1C1 = "=LongTest!R[4]C"
+Private Sub CommandButton4_Click()
+' 2024,03,11
+' Random Generation by Button ...
 
-'    gong = Val(CleanString(shInput.Range("J48").Value))
-'    Call SetWellTitle(gong)
+
+    Dim i As Integer
+    
+    For i = 14 To 23
+        'Temperature
+        Cells(i, "L").Value = myRandBetween(1, 3, 10)
+        
+        'EC
+        Cells(i, "M").Value = myRandBetween(1, 20, 1)
+        
+        'PH
+        Cells(i, "N").Value = myRandBetween(8, 12, 100)
+    Next i
+    
 End Sub
-
-
-
-
-
-
-   
-  
-  
-
 
 
 

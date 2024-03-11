@@ -67,8 +67,8 @@ Sub make_step_document()
         Sheets("StepTest (2)").name = "Step"
     End If
     
-    ' ActiveSheet.VPageBreaks(1).DragOff Direction:=xlToRight, RegionIndex:=1
-    
+     ActiveSheet.VPageBreaks(1).DragOff Direction:=xlToRight, RegionIndex:=1
+     
     Application.CutCopyMode = False
     Application.ScreenUpdating = True
 End Sub

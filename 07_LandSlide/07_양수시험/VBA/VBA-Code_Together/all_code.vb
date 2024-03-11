@@ -448,15 +448,28 @@ End Sub
 
 
 Private Sub CommandButton1_Click()
-  UserFormTS1.Show
+    UserFormTS1.Show
 End Sub
 
 
 Private Sub CommandButton2_Click()
-    Call make_adjust_value
+    Dim i As Integer
+    
+    For i = 14 To 23
+        ' Temp
+        Cells(i, "h").Value = Round(myRandBetween(1, 3, 10), 1)
+        
+        ' EC
+        Cells(i, "i").Value = myRandBetween(1, 3, 1)
+        
+        ' PH
+        Cells(i, "j").Value = Round(myRandBetween(7, 13, 100), 2)
+    Next i
+
 End Sub
 
 Private Sub CommandButton3_Click()
+
     Range("L14:N23").Select
     Selection.Copy
     Range("H14").Select
@@ -465,6 +478,7 @@ Private Sub CommandButton3_Click()
         
     Range("K9").Select
     Application.CutCopyMode = False
+
 End Sub
 
 
@@ -482,25 +496,29 @@ Private Sub SetWellTitle(ByVal gong As Integer)
     
 End Sub
 
-Private Sub Worksheet_Activate()
- '   Dim gong As Integer
+'
+' Random Generator
+'
 
-'    Range("C6").Select
-'    ActiveCell.FormulaR1C1 = "=LongTest!R[4]C"
+Private Sub CommandButton4_Click()
+' 2024,03,11
+' Random Generation by Button ...
 
-'    gong = Val(CleanString(shInput.Range("J48").Value))
-'    Call SetWellTitle(gong)
+
+    Dim i As Integer
+    
+    For i = 14 To 23
+        'Temperature
+        Cells(i, "L").Value = myRandBetween(1, 3, 10)
+        
+        'EC
+        Cells(i, "M").Value = myRandBetween(1, 20, 1)
+        
+        'PH
+        Cells(i, "N").Value = myRandBetween(8, 12, 100)
+    Next i
+    
 End Sub
-
-
-
-
-
-
-   
-  
-  
-
 
 
 
@@ -754,8 +772,8 @@ Sub make_step_document()
         Sheets("StepTest (2)").name = "Step"
     End If
     
-    ' ActiveSheet.VPageBreaks(1).DragOff Direction:=xlToRight, RegionIndex:=1
-    
+     ActiveSheet.VPageBreaks(1).DragOff Direction:=xlToRight, RegionIndex:=1
+     
     Application.CutCopyMode = False
     Application.ScreenUpdating = True
 End Sub
@@ -979,13 +997,19 @@ End Sub
 
 
 ' Refactor 2023/10/20
-
 Public Function myRandBetween(i As Double, j As Double, Optional div As Double = 100) As Double
+    
     Dim SIGN        As Integer
+    
+    ' Random Generation from i to j
+    ' div - devide  factor ...
+    
     
     SIGN = IIf(WorksheetFunction.RandBetween(0, 1), 1, -1)
     myRandBetween = (Application.WorksheetFunction.RandBetween(i, j) / div) * SIGN
+
 End Function
+
 
 Public Function myRandBetween2(i As Double, j As Double, Optional div As Double = 100) As Double
     Dim SIGN        As Integer
@@ -993,22 +1017,6 @@ Public Function myRandBetween2(i As Double, j As Double, Optional div As Double 
     myRandBetween2 = (Application.WorksheetFunction.RandBetween(i, j) / div)
 End Function
 
-'Public Sub rnd_between()
-'    Dim i, SIGN     As Integer
-'
-'    For i = 14 To 24
-'        If Application.WorksheetFunction.RandBetween(0, 1) Then
-'            SIGN = 1
-'        Else
-'            SIGN = -1
-'        End If
-'
-'        Cells(i, 14).Value = (Application.WorksheetFunction.RandBetween(7, 12) / 100) * SIGN
-'        Cells(i, 14).HorizontalAlignment = xlCenter
-'        Cells(i, 14).VerticalAlignment = xlCenter
-'        Cells(i, 14).NumberFormatLocal = "0.00"
-'    Next i
-'End Sub
 
 ' Refactor 2023/10/20
 
@@ -1029,17 +1037,6 @@ Public Sub rnd_between()
 End Sub
 
 
-
-
-Sub make_adjust_value()
-    Dim i           As Integer
-    
-    For i = 14 To 23
-        Cells(i, "h").Value = Round(myRandBetween(1, 3, 10), 1)
-        Cells(i, "i").Value = myRandBetween(1, 3, 1)
-        Cells(i, "j").Value = Round(myRandBetween(7, 13, 100), 2)
-    Next i
-End Sub
 
 Global WB_NAME      As String
 
@@ -2824,7 +2821,14 @@ Sub PrintAllCode()
     If Dir(pathToExport) <> "" Then Kill pathToExport & "*.*"
     
     For Each item In ThisWorkbook.VBProject.VBComponents
-        lineToPrint = item.CodeModule.Lines(1, item.CodeModule.CountOfLines)
+        
+        
+        If item.CodeModule.CountOfLines <> 0 Then
+            lineToPrint = item.CodeModule.Lines(1, item.CodeModule.CountOfLines)
+        Else
+            lineToPrint = "'This Module is Empty "
+        End If
+        
         
         fName = item.CodeModule.name
         Debug.Print lineToPrint
@@ -2920,3 +2924,12 @@ CreateLogFile_Error:
 
 End Sub
 
+
+Sub 매크로1()
+'
+' 매크로1 매크로
+'
+
+'
+    ActiveSheet.VPageBreaks(1).DragOff Direction:=xlToRight, RegionIndex:=1
+End Sub

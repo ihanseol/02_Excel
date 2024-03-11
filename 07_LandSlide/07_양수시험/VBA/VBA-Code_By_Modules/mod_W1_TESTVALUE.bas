@@ -34,13 +34,19 @@ End Sub
 
 
 ' Refactor 2023/10/20
-
 Public Function myRandBetween(i As Double, j As Double, Optional div As Double = 100) As Double
+    
     Dim SIGN        As Integer
+    
+    ' Random Generation from i to j
+    ' div - devide  factor ...
+    
     
     SIGN = IIf(WorksheetFunction.RandBetween(0, 1), 1, -1)
     myRandBetween = (Application.WorksheetFunction.RandBetween(i, j) / div) * SIGN
+
 End Function
+
 
 Public Function myRandBetween2(i As Double, j As Double, Optional div As Double = 100) As Double
     Dim SIGN        As Integer
@@ -48,22 +54,6 @@ Public Function myRandBetween2(i As Double, j As Double, Optional div As Double 
     myRandBetween2 = (Application.WorksheetFunction.RandBetween(i, j) / div)
 End Function
 
-'Public Sub rnd_between()
-'    Dim i, SIGN     As Integer
-'
-'    For i = 14 To 24
-'        If Application.WorksheetFunction.RandBetween(0, 1) Then
-'            SIGN = 1
-'        Else
-'            SIGN = -1
-'        End If
-'
-'        Cells(i, 14).Value = (Application.WorksheetFunction.RandBetween(7, 12) / 100) * SIGN
-'        Cells(i, 14).HorizontalAlignment = xlCenter
-'        Cells(i, 14).VerticalAlignment = xlCenter
-'        Cells(i, 14).NumberFormatLocal = "0.00"
-'    Next i
-'End Sub
 
 ' Refactor 2023/10/20
 
@@ -84,15 +74,4 @@ Public Sub rnd_between()
 End Sub
 
 
-
-
-Sub make_adjust_value()
-    Dim i           As Integer
-    
-    For i = 14 To 23
-        Cells(i, "h").Value = Round(myRandBetween(1, 3, 10), 1)
-        Cells(i, "i").Value = myRandBetween(1, 3, 1)
-        Cells(i, "j").Value = Round(myRandBetween(7, 13, 100), 2)
-    Next i
-End Sub
 
