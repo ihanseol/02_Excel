@@ -6275,6 +6275,60 @@ Function CheckFileExistence(filePath As String) As Boolean
 End Function
 
 
+Private Sub CommandButton3_Click()
+' Write Formula Button
+    
+    Dim formula1, formula2 As String
+    Dim nofwell As Integer
+    Dim i As Integer
+    Dim T, Q, radius, skin, er As Double
+    Dim T0, S0 As Double
+    Dim ERMode As String
+    Dim ER1, ER2, ER3, B, S1 As Double
+    
+    ' Save array to a file
+    Dim filePath As String
+    Dim FileNum As Integer
+    
+    
+    nofwell = GetNumberOfWell()
+    Sheets("YangSoo").Select
+    
+    filePath = ThisWorkbook.Path & "\" & ActiveSheet.name & ".csv"
+    DeleteFileIfExists filePath
+    FileNum = FreeFile
+    
+    Open filePath For Output As FileNum
+        
+    Call MyDebug("Formula SkinFactor ... ", True)
+    
+    Debug.Print "************************************************************************************************************************************************************************************************"
+    Print #FileNum, "************************************************************************************************************************************************************************************************"
+    
+    ' 스킨계수
+    Call FormulaSkinFactorAndER("SKIN", FileNum)
+    
+    ' 유효우물반경
+    Call FormulaSkinFactorAndER("ER", FileNum)
+    
+    
+    Debug.Print "************************************************************************************************************************************************************************************************"
+    Print #FileNum, "************************************************************************************************************************************************************************************************"
+    
+    
+    Call FormulaChwiSoo(FileNum)
+    ' 3-7, 적정취수량
+    
+    Call FormulaRadiusOfInfluence(FileNum)
+    ' 양수영향반경
+        
+    Close FileNum
+    
+' End of Write Formula Button
+End Sub
+
+
+
 
 Private Sub FormulaSkinFactorAndER(ByVal Mode As String, ByVal FileNum As Integer)
     Dim formula1, formula2 As String
@@ -6304,14 +6358,14 @@ Private Sub FormulaSkinFactorAndER(ByVal Mode As String, ByVal FileNum As Intege
                 
         delta_s = Format(Cells(4 + i, "l").value, "0.00")
         radius = Format(Cells(4 + i, "h").value, "0.000")
-        skin = Cells(4 + i, "y").value
-        er = Cells(4 + i, "z").value
+        skin = Format(Cells(4 + i, "y").value, "0.0000")
+        er = Format(Cells(4 + i, "z").value, "0.0000")
         
         
         B = Format(Cells(4 + i, "AG").value, "0.0000")
-        ER1 = Cells(4 + i, "AL").value
-        ER2 = Cells(4 + i, "AM").value
-        ER3 = Cells(4 + i, "AN").value
+        ER1 = Format(Cells(4 + i, "AL").value, "0.0000")
+        ER2 = Format(Cells(4 + i, "AM").value, "0.0000")
+        ER3 = Format(Cells(4 + i, "AN").value, "0.0000")
         
         
         Select Case DetermineEffectiveRadius(Cells(4 + i, "AK").value)
@@ -6369,62 +6423,10 @@ Sub DeleteFileIfExists(filePath As String)
             
         End If
     Else
-        MsgBox "File '" & filePath & "' does not exist.", vbExclamation
+        ' MsgBox "File '" & filePath & "' does not exist.", vbExclamation
     End If
 End Sub
 
-
-Private Sub CommandButton3_Click()
-' Write Formula Button
-    
-    Dim formula1, formula2 As String
-    Dim nofwell As Integer
-    Dim i As Integer
-    Dim T, Q, radius, skin, er As Double
-    Dim T0, S0 As Double
-    Dim ERMode As String
-    Dim ER1, ER2, ER3, B, S1 As Double
-    
-    ' Save array to a file
-    Dim filePath As String
-    Dim FileNum As Integer
-    
-    
-    nofwell = GetNumberOfWell()
-    Sheets("YangSoo").Select
-    
-    filePath = ThisWorkbook.Path & "\" & ActiveSheet.name & ".csv"
-    DeleteFileIfExists filePath
-    FileNum = FreeFile
-    
-    Open filePath For Output As FileNum
-        
-    Call MyDebug("Formula SkinFactor ... ", True)
-    
-    Debug.Print "************************************************************************************************************************************************************************************************"
-    Print #FileNum, "************************************************************************************************************************************************************************************************"
-    
-    ' 스킨계수
-    Call FormulaSkinFactorAndER("SKIN", FileNum)
-    
-    ' 유효우물반경
-    Call FormulaSkinFactorAndER("ER", FileNum)
-    
-    
-    Debug.Print "************************************************************************************************************************************************************************************************"
-    Print #FileNum, "************************************************************************************************************************************************************************************************"
-    
-    
-    Call FormulaChwiSoo(FileNum)
-    ' 3-7, 적정취수량
-    
-    Call FormulaRadiusOfInfluence(FileNum)
-    ' 양수영향반경
-        
-    Close FileNum
-    
-' End of Write Formula Button
-End Sub
 
 
 Sub FormulaChwiSoo(FileNum As Integer)
@@ -6454,7 +6456,10 @@ Sub FormulaChwiSoo(FileNum As Integer)
         S2 = Format(Cells(4 + i, "ae").value, "0.00")
         res = Format(Cells(4 + i, "ab").value, "0.00")
         
-        formula = "W-" & i & "호공~~Q _{ & 2} `＝" & q1 & "` TIMES  `(` {" & S2 & "} over {" & S1 & "} `) ^{2/3} `＝" & res & "㎥/일"
+        'W-1호공~~Q _{& 2} =100 TIMES  ( {8.71} over {4.09} ) ^{2/3} =165.52㎥/일
+        'W-1호공~~Q _{& 2} =100 TIMES  ( {8.71} over {4.09} ) ^{2/3} =`165.52㎥/일
+        
+        formula = "W-" & i & "호공~~Q_{& 2} = " & q1 & " TIMES ({" & S2 & "} over {" & S1 & "}) ^{2/3} = `" & res & " ㎥/일"
         
         Debug.Print formula
         Debug.Print "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
