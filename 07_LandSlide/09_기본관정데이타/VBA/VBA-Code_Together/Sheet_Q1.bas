@@ -139,34 +139,34 @@ Private Sub CommandButton3_Click()
     Debug.Print "----------------------------------------------"
 End Sub
 
-Function getEC(ByVal LOWHI As Integer, ByVal well As Integer)
-    Sheets("p" & well).Activate
+Function getEC(ByVal LOWHI As Integer, ByVal Well As Integer)
+    Sheets("p" & Well).Activate
     
     If LOWHI = cellLOW Then
-        getEC = Sheets("p" & CStr(well)).Range("e25").value
+        getEC = Sheets("p" & CStr(Well)).Range("e25").value
     Else
-        getEC = Sheets("p" & CStr(well)).Range("e24").value
+        getEC = Sheets("p" & CStr(Well)).Range("e24").value
     End If
 End Function
 
-Function getPH(ByVal LOWHI As Integer, ByVal well As Integer)
-    Sheets("p" & CStr(well)).Activate
+Function getPH(ByVal LOWHI As Integer, ByVal Well As Integer)
+    Sheets("p" & CStr(Well)).Activate
     
     If LOWHI = cellLOW Then
-        getPH = Sheets("p" & CStr(well)).Range("f25").value
+        getPH = Sheets("p" & CStr(Well)).Range("f25").value
     Else
-        getPH = Sheets("p" & CStr(well)).Range("f24").value
+        getPH = Sheets("p" & CStr(Well)).Range("f24").value
     End If
     
 End Function
 
-Function getTEMP(ByVal LOWHI As Integer, ByVal well As Integer)
-    Sheets("p" & CStr(well)).Activate
+Function getTEMP(ByVal LOWHI As Integer, ByVal Well As Integer)
+    Sheets("p" & CStr(Well)).Activate
 
     If LOWHI = cellLOW Then
-        getTEMP = Sheets("p" & CStr(well)).Range("d25").value
+        getTEMP = Sheets("p" & CStr(Well)).Range("d25").value
     Else
-        getTEMP = Sheets("p" & CStr(well)).Range("d24").value
+        getTEMP = Sheets("p" & CStr(Well)).Range("d24").value
     End If
 End Function
 

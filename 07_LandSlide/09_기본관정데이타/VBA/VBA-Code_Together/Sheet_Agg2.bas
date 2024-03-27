@@ -19,6 +19,7 @@ End Sub
 
 Private Sub CommandButton3_Click()
     ' SingleWell Import
+    ' 지열공 같은경우, 단일공만 임포트 해야 할경우에 ....
         
     Dim singleWell  As Integer
     Dim WB_NAME As String
@@ -41,6 +42,22 @@ End Sub
 
 
 
+' 회복 T값, S값 을 정리해서 뿌려준다.
+Private Sub Write_SummaryTS(ByVal Well As Integer)
+
+    Dim i As Integer
+    
+    i = Well - 1
+    
+    Range("H" & (i + 80)).value = "W-" & (i + 1)
+    Range("i" & (i + 80)).value = Range("e" & (49 + i * 3)).value
+    Range("J" & (i + 80)).value = Range("f" & (48 + i * 3)).value
+
+End Sub
+
+
+
+
 Private Sub ImportWellSpec(ByVal singleWell As Integer, ByVal isSingleWellImport As Boolean)
     Dim fName As String
     Dim nofwell, i As Integer
@@ -59,9 +76,29 @@ Private Sub ImportWellSpec(ByVal singleWell As Integer, ByVal isSingleWellImport
     If Not isSingleWellImport Then
     ' if All Colect Data Pressed ...
     
+        'Write33
         Call EraseCellData("C3:J33")
+        
+        'Write34
         Call EraseCellData("L3:Q33")
+        
+        'Write35
         Call EraseCellData("S3:U33")
+        
+        'Write37
+        Call EraseCellData("E37:AH43")
+        
+        'Write36
+        Call EraseCellData("E48:F137")
+        
+        'Write38
+        Call EraseCellData("H48:N77")
+        
+        'Write34
+        Call EraseCellData("P48:S77")
+        
+        Call EraseCellData("H80:J109")
+        
     End If
         
             
@@ -112,6 +149,8 @@ SINGLE_ITERATION:
         Call WriteData36_TS_Analysis_Single(T1, T2, TA, S2, i, isSingleWellImport)
         Call Write38_RadiusOfInfluence_Result_Single(shultz, webber, jcob, i, isSingleWellImport)
         Call Wrote34_SkinFactor_Single(skin, er, i, isSingleWellImport)
+        
+        Call Write_SummaryTS(i)
         
         Call TurnOnStuff
         
@@ -293,6 +332,8 @@ End Sub
 
 
 '3.8 영향반경
+' 그리고 single 이 붙으면 알수있듯이 , 공번에 해당하는 라인에 관한것만 출력해준다.
+'
 Sub Write38_RadiusOfInfluence_Result_Single(shultz As Variant, webber As Variant, jcob As Variant, i As Variant, ByVal isSingleWellImport As Boolean)
  
 '****************************************
@@ -310,6 +351,9 @@ Sub Write38_RadiusOfInfluence_Result_Single(shultz As Variant, webber As Variant
     ip = Values(2)
     
     'Call EraseCellData("H" & ip & ":N" & (ip + nofwell - 1))
+    
+    ' 단일공의 임포트의 경우 한줄만 지우고
+    ' 그 이외에는 나머지 모두를 지워서 깨끗하게 해준다.
     
     If isSingleWellImport Then
         Call EraseCellData("H" & (ip + i - 1) & ":N" & (ip + i - 1))

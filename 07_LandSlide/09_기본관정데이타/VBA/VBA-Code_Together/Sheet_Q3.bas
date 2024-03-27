@@ -399,11 +399,11 @@ End Sub
 ' 1, 2, 3 --> p1
 ' 4, 5, 6 --> p2
 
-Function getEC(ByVal LOWHI As Integer, ByVal well As Integer)
+Function getEC(ByVal LOWHI As Integer, ByVal Well As Integer)
     Dim page, quo, remainder As Integer
     
-    quo = WorksheetFunction.quotient(well - 1, 3)
-    remainder = well Mod 3
+    quo = WorksheetFunction.quotient(Well - 1, 3)
+    remainder = Well Mod 3
     page = quo + 1
        
     Select Case remainder
@@ -430,11 +430,11 @@ Function getEC(ByVal LOWHI As Integer, ByVal well As Integer)
     End Select
 End Function
 
-Function getPH(ByVal LOWHI As Integer, ByVal well As Integer)
+Function getPH(ByVal LOWHI As Integer, ByVal Well As Integer)
     Dim page, quo, remainder As Integer
     
-    quo = WorksheetFunction.quotient(well - 1, 3)
-    remainder = well Mod 3
+    quo = WorksheetFunction.quotient(Well - 1, 3)
+    remainder = Well Mod 3
     page = quo + 1
        
     Select Case remainder
@@ -461,11 +461,11 @@ Function getPH(ByVal LOWHI As Integer, ByVal well As Integer)
     End Select
 End Function
 
-Function getTEMP(ByVal LOWHI As Integer, ByVal well As Integer)
+Function getTEMP(ByVal LOWHI As Integer, ByVal Well As Integer)
     Dim page, quo, remainder As Integer
     
-    quo = WorksheetFunction.quotient(well - 1, 3)
-    remainder = well Mod 3
+    quo = WorksheetFunction.quotient(Well - 1, 3)
+    remainder = Well Mod 3
     page = quo + 1
        
     Select Case remainder

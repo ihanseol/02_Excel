@@ -152,6 +152,8 @@ Public Sub JojungSheetData()
     
     For i = 1 To n_sheets
         Sheets(CStr(i)).Activate
+        Range("B26").value = "W-" & i
+        
         Call JojungData(i)
         Call SetMyTabColor(i)
     Next i

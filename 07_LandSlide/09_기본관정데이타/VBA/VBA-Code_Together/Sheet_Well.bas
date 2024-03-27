@@ -79,9 +79,9 @@ Private Sub CommandButton8_Click()
     Call DecorateWellBorder(nofwell - 1)
 End Sub
 
-Sub DeleteWorksheet(well As Integer)
+Sub DeleteWorksheet(Well As Integer)
     Application.DisplayAlerts = False
-    ThisWorkbook.Worksheets(CStr(well)).Delete
+    ThisWorkbook.Worksheets(CStr(Well)).Delete
     Application.DisplayAlerts = True
 End Sub
 

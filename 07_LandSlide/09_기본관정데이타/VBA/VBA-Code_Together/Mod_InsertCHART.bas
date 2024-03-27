@@ -71,32 +71,32 @@ NEXT_ITERATION:
     TurnOnStuff
 End Sub
 
-Sub Write_InsertChart(well As Integer, source_name As String)
+Sub Write_InsertChart(Well As Integer, source_name As String)
     Dim fName As String
     Dim imagePath As String
 
     imagePath = Environ("TEMP") & "\tempChartImage.png"
 
-    fName = "A" & CStr(well) & "_ge_OriginalSaveFile.xlsm"
+    fName = "A" & CStr(Well) & "_ge_OriginalSaveFile.xlsm"
     If Not IsWorkBookOpen(fName) Then
         MsgBox "Please open the yangsoo data ! " & fName
         Exit Sub
     End If
 
-    Call SaveAndInsertChart(well, source_name, "Chart 5", "d" & CStr(3 + 16 * (well - 1)))
-    Call SaveAndInsertChart(well, source_name, "Chart 7", "j" & CStr(3 + 16 * (well - 1)))
-    Call SaveAndInsertChart(well, source_name, "Chart 9", "p" & CStr(3 + 16 * (well - 1)))
+    Call SaveAndInsertChart(Well, source_name, "Chart 5", "d" & CStr(3 + 16 * (Well - 1)))
+    Call SaveAndInsertChart(Well, source_name, "Chart 7", "j" & CStr(3 + 16 * (Well - 1)))
+    Call SaveAndInsertChart(Well, source_name, "Chart 9", "p" & CStr(3 + 16 * (Well - 1)))
 End Sub
 
 
-Sub SaveAndInsertChart(well As Integer, source_name As String, chartName As String, targetRange As String)
+Sub SaveAndInsertChart(Well As Integer, source_name As String, chartName As String, targetRange As String)
     Dim imagePath As String
     Dim fName As String
     Dim targetCell As Range
     Dim picWidth As Double, picHeight As Double
     
     imagePath = Environ("TEMP") & "\tempChartImage.png"
-    fName = "A" & CStr(well) & "_ge_OriginalSaveFile.xlsm"
+    fName = "A" & CStr(Well) & "_ge_OriginalSaveFile.xlsm"
 
     Windows(fName).Activate
     Worksheets("Input").ChartObjects(chartName).Activate

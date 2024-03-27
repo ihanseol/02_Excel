@@ -90,11 +90,11 @@ Private Sub CommandButton5_Click()
 End Sub
 
 
-Function getEC(ByVal LOWHI As Integer, ByVal well As Integer)
+Function getEC(ByVal LOWHI As Integer, ByVal Well As Integer)
     Dim page, quo, remainder As Integer
     
-    quo = WorksheetFunction.quotient(well, 2)
-    remainder = well Mod 2
+    quo = WorksheetFunction.quotient(Well, 2)
+    remainder = Well Mod 2
     page = quo + remainder
     
     Sheets("p" & CStr(page)).Activate
@@ -114,11 +114,11 @@ Function getEC(ByVal LOWHI As Integer, ByVal well As Integer)
     End If
 End Function
 
-Function getPH(ByVal LOWHI As Integer, ByVal well As Integer)
+Function getPH(ByVal LOWHI As Integer, ByVal Well As Integer)
     Dim page, quo, remainder As Integer
     
-    quo = WorksheetFunction.quotient(well, 2)
-    remainder = well Mod 2
+    quo = WorksheetFunction.quotient(Well, 2)
+    remainder = Well Mod 2
     page = quo + remainder
     
     Sheets("p" & CStr(page)).Activate
@@ -138,11 +138,11 @@ Function getPH(ByVal LOWHI As Integer, ByVal well As Integer)
     End If
 End Function
 
-Function getTEMP(ByVal LOWHI As Integer, ByVal well As Integer)
+Function getTEMP(ByVal LOWHI As Integer, ByVal Well As Integer)
     Dim page, quo, remainder As Integer
     
-    quo = WorksheetFunction.quotient(well, 2)
-    remainder = well Mod 2
+    quo = WorksheetFunction.quotient(Well, 2)
+    remainder = Well Mod 2
     page = quo + remainder
     
     Sheets("p" & CStr(page)).Activate

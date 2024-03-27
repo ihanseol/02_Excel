@@ -298,102 +298,166 @@ Function DetermineEffectiveRadius(ERMode As String) As Integer
 End Function
 
 
+Function CheckFileExistence(filePath As String) As Boolean
+   
+    If Dir(filePath) <> "" Then
+        CheckFileExistence = True
+    Else
+        CheckFileExistence = False
+    End If
+    
+End Function
+
+
+
+Private Sub FormulaSkinFactorAndER(ByVal Mode As String, ByVal FileNum As Integer)
+    Dim formula1, formula2 As String
+    Dim nofwell As Integer
+    Dim i As Integer
+    Dim T, Q, radius, skin, er As Double
+    Dim T0, S0 As Double
+    Dim ERMode As String
+    Dim ER1, ER2, ER3, B, S1 As Double
+    
+        
+    Call MyDebug("Formula SkinFactor ... ", True)
+    
+    nofwell = GetNumberOfWell()
+    
+    Debug.Print "************************************************************************************************************************************************************************************************"
+    Print #FileNum, "************************************************************************************************************************************************************************************************"
+    
+    
+    For i = 1 To nofwell
+        T = Format(Cells(4 + i, "o").value, "0.0000")
+        Q = Cells(4 + i, "k").value
+        
+        T0 = Format(Cells(4 + i, "AI").value, "0.0000")
+        S0 = Format(Cells(4 + i, "AJ").value, "0.0000")
+        S1 = Cells(4 + i, "R").value
+                
+        delta_s = Format(Cells(4 + i, "l").value, "0.00")
+        radius = Format(Cells(4 + i, "h").value, "0.000")
+        skin = Cells(4 + i, "y").value
+        er = Cells(4 + i, "z").value
+        
+        
+        B = Format(Cells(4 + i, "AG").value, "0.0000")
+        ER1 = Cells(4 + i, "AL").value
+        ER2 = Cells(4 + i, "AM").value
+        ER3 = Cells(4 + i, "AN").value
+        
+        
+        Select Case DetermineEffectiveRadius(Cells(4 + i, "AK").value)
+        ' 경험식 1번
+        Case erRE1
+            
+            formula1 = "W-" & i & "호공~~r _{e-" & i & "} `=~ sqrt {{2.25 TIMES  " & T0 & " TIMES  0.0833333} over {" & S0 & " TIMES  10 ^{5.46 TIMES  " & T & " TIMES  " & B & "}}} `=~" & ER1 & "m"
+            formula2 = "erRE1, 경험식 1번"
+            
+        ' 경험식 2번
+        Case erRE2
+            formula1 = "W-" & i & "호공~~r _{e-" & i & "} `=~ sqrt {{2.25 TIMES  " & T0 & " TIMES  0.0833333} over {" & S0 & " TIMES  10 ^{4 pi TIMES " & T & " TIMES  " & B & "}}} `=~" & ER2 & "m"
+            formula2 = "erRE2, 경험식 2번"
+        ' 경험식 3번
+        Case erRE3
+            formula1 = "W-" & i & "호공~~r _{e-" & i & "} `=~" & radius & " TIMES  sqrt {{" & S1 & "} over {" & S0 & "}} `=~" & ER3 & "m"
+            formula2 = "erRE3, 경험식 3번"
+            
+        Case Else
+            ' 스킨계수
+            formula1 = "W-" & i & "호공~~ sigma  _{w-" & i & "} = {2 pi  TIMES  " & T & " TIMES  " & delta_s & " } over {" & Q & "} -1.15 TIMES  log {2.25 TIMES  " & T & " TIMES  (1/1440)} over {0.0005 TIMES  (" & radius & " TIMES  " & radius & ")} =`" & skin
+            ' 유효우물반경
+            formula2 = "W-" & i & "호공~~r _{e-" & i & "} `=~r _{w} e ^{- sigma  _{w-" & i & "}} =" & radius & " TIMES e ^{-(" & skin & ")} =" & er & "m"
+        End Select
+        
+        
+        If Mode = "SKIN" Then
+            Debug.Print formula1
+            Debug.Print "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+            
+            Print #FileNum, formula1
+            Print #FileNum, "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+        Else
+            Debug.Print formula2
+            Debug.Print "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+                
+            Print #FileNum, formula2
+            Print #FileNum, "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+        End If
+    Next i
+
+End Sub
+
+
+Sub DeleteFileIfExists(filePath As String)
+    If Len(Dir(filePath)) > 0 Then ' Check if file exists
+        On Error Resume Next
+        Kill filePath ' Attempt to delete the file
+        
+        On Error GoTo 0
+        If Len(Dir(filePath)) > 0 Then
+            MsgBox "Unable to delete file '" & filePath & "'. The file may be in use.", vbExclamation
+        Else
+            ' MsgBox "File '" & filePath & "' has been deleted.", vbInformation
+            
+        End If
+    Else
+        MsgBox "File '" & filePath & "' does not exist.", vbExclamation
+    End If
+End Sub
+
 
 Private Sub CommandButton3_Click()
-' Formula Button
-
-Dim formula1, formula2 As String
-Dim nofwell As String
-Dim i As Integer
-Dim T, Q, radius, skin, er As Double
-Dim T0, S0 As Double
-Dim ERMode As String
-Dim ER1, ER2, ER3, B, S1 As Double
-
-' Save array to a file
-Dim filePath As String
-Dim FileNum As Integer
-
-
-
-nofwell = GetNumberOfWell()
-Sheets("YangSoo").Select
-
-
-filePath = ThisWorkbook.Path & "\" & ActiveSheet.name & ".csv"
-FileNum = FreeFile
-
-Open filePath For Output As FileNum
-
+' Write Formula Button
     
-Call MyDebug("Formula SkinFactor ... ", True)
-
-Debug.Print "************************************************************************************************************************************************************************************************"
-Print #FileNum, "************************************************************************************************************************************************************************************************"
-
-For i = 1 To nofwell
-
-    T = Format(Cells(4 + i, "o").value, "0.0000")
-    Q = Cells(4 + i, "k").value
+    Dim formula1, formula2 As String
+    Dim nofwell As Integer
+    Dim i As Integer
+    Dim T, Q, radius, skin, er As Double
+    Dim T0, S0 As Double
+    Dim ERMode As String
+    Dim ER1, ER2, ER3, B, S1 As Double
     
-    T0 = Format(Cells(4 + i, "AI").value, "0.0000")
-    S0 = Format(Cells(4 + i, "AJ").value, "0.0000")
-    S1 = Cells(4 + i, "R").value
-            
-    delta_s = Format(Cells(4 + i, "l").value, "0.00")
-    radius = Format(Cells(4 + i, "h").value, "0.000")
-    skin = Cells(4 + i, "y").value
-    er = Cells(4 + i, "z").value
+    ' Save array to a file
+    Dim filePath As String
+    Dim FileNum As Integer
     
     
-    B = Format(Cells(4 + i, "AG").value, "0.0000")
-    ER1 = Cells(4 + i, "AL").value
-    ER2 = Cells(4 + i, "AM").value
-    ER3 = Cells(4 + i, "AN").value
+    nofwell = GetNumberOfWell()
+    Sheets("YangSoo").Select
     
+    filePath = ThisWorkbook.Path & "\" & ActiveSheet.name & ".csv"
+    DeleteFileIfExists filePath
+    FileNum = FreeFile
     
-    Select Case DetermineEffectiveRadius(Cells(4 + i, "AK").value)
-    ' 경험식 1번
-    Case erRE1
-        formula1 = "W-" & i & "호공~~r _{e-" & i & "} `=~ sqrt {{2.25 TIMES  " & T0 & " TIMES  0.0833333} over {" & S0 & " TIMES  10 ^{5.46 TIMES  " & T & " TIMES  " & B & "}}} `=~" & ER1 & "m"
-        formula2 = "erRE1, 경험식 1번"
+    Open filePath For Output As FileNum
         
-    ' 경험식 2번
-    Case erRE2
-        formula1 = "W-" & i & "호공~~r _{e-" & i & "} `=~ sqrt {{2.25 TIMES  " & T0 & " TIMES  0.0833333} over {" & S0 & " TIMES  10 ^{4 pi TIMES " & T & " TIMES  " & B & "}}} `=~" & ER2 & "m"
-        formula2 = "erRE2, 경험식 2번"
-    ' 경험식 3번
-    Case erRE3
-        formula1 = "W-" & i & "호공~~r _{e-" & i & "} `=~" & radius & " TIMES  sqrt {{" & S1 & "} over {" & S0 & "}} `=~" & ER3 & "m"
-        formula2 = "erRE3, 경험식 3번"
+    Call MyDebug("Formula SkinFactor ... ", True)
+    
+    Debug.Print "************************************************************************************************************************************************************************************************"
+    Print #FileNum, "************************************************************************************************************************************************************************************************"
+    
+    ' 스킨계수
+    Call FormulaSkinFactorAndER("SKIN", FileNum)
+    
+    ' 유효우물반경
+    Call FormulaSkinFactorAndER("ER", FileNum)
+    
+    
+    Debug.Print "************************************************************************************************************************************************************************************************"
+    Print #FileNum, "************************************************************************************************************************************************************************************************"
+    
+    
+    Call FormulaChwiSoo(FileNum)
+    ' 3-7, 적정취수량
+    
+    Call FormulaRadiusOfInfluence(FileNum)
+    ' 양수영향반경
         
-    Case Else
-        ' 스킨계수
-        formula1 = "W-" & i & "호공~~ sigma  _{w-" & i & "} = {2 pi  TIMES  " & T & " TIMES  " & delta_s & " } over {" & Q & "} -1.15 TIMES  log {2.25 TIMES  " & T & " TIMES  (1/1440)} over {0.0005 TIMES  (" & radius & " TIMES  " & radius & ")} =`" & skin
-        ' 유효우물반경
-        formula2 = "W-" & i & "호공~~r _{e-" & i & "} `=~r _{w} e ^{- sigma  _{w-" & i & "}} =" & radius & " TIMES e ^{-(" & skin & ")} =" & er & "m"
-    End Select
+    Close FileNum
     
-    Debug.Print formula1
-    Debug.Print formula2
-    Debug.Print "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-    
-    Print #FileNum, formula1
-    Print #FileNum, formula2
-    Print #FileNum, "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-    
-
-Next i
-
-Debug.Print "************************************************************************************************************************************************************************************************"
-Print #FileNum, "************************************************************************************************************************************************************************************************"
-
-
-Call FormulaChwiSoo(FileNum)
-' 3-7, 적정취수량
-
-Call FormulaRadiusOfInfluence(FileNum)
-' 양수영향반경
+' End of Write Formula Button
 End Sub
 
 
@@ -422,8 +486,8 @@ Sub FormulaChwiSoo(FileNum As Integer)
  
         S1 = Format(Cells(4 + i, "ad").value, "0.00")
         S2 = Format(Cells(4 + i, "ae").value, "0.00")
+        res = Format(Cells(4 + i, "ab").value, "0.00")
         
-        res = Cells(4 + i, "ab").value
         formula = "W-" & i & "호공~~Q _{ & 2} `＝" & q1 & "` TIMES  `(` {" & S2 & "} over {" & S1 & "} `) ^{2/3} `＝" & res & "㎥/일"
         
         Debug.Print formula
@@ -436,15 +500,24 @@ Sub FormulaChwiSoo(FileNum As Integer)
     
     Debug.Print "************************************************************************************************************************************************************************************************"
     Print #FileNum, "************************************************************************************************************************************************************************************************"
-    
-    
+      
 End Sub
 
 
 Sub FormulaRadiusOfInfluence(FileNum As Integer)
 ' 양수영향반경
 
-    Dim formula1, formula2, formula3 As String
+    Call FormulaSUB_ROI("SCHULTZE", FileNum)
+    Call FormulaSUB_ROI("WEBBER", FileNum)
+    Call FormulaSUB_ROI("JCOB", FileNum)
+    
+End Sub
+
+
+
+
+Sub FormulaSUB_ROI(Mode As String, FileNum As Integer)
+  Dim formula1, formula2, formula3 As String
     ' 슐츠, 웨버, 제이콥
     
     Dim nofwell As String
@@ -465,45 +538,49 @@ Sub FormulaRadiusOfInfluence(FileNum As Integer)
     
     
     For i = 1 To nofwell
-        shultze = CStr(Cells(4 + i, "v").value)
-        webber = CStr(Cells(4 + i, "w").value)
-        jacob = CStr(Cells(4 + i, "x").value)
+        schultze = CStr(Format(Cells(4 + i, "v").value, "0.00"))
+        webber = CStr(Format(Cells(4 + i, "w").value, "0.00"))
+        jacob = CStr(Format(Cells(4 + i, "x").value, "0.00"))
         
         T = CStr(Format(Cells(4 + i, "q").value, "0.0000"))
         S = CStr(Format(Cells(4 + i, "s").value, "0.0000000"))
         K = CStr(Format(Cells(4 + i, "t").value, "0.0000"))
     
-        delta_h = CStr(Cells(4 + i, "f").value)
+        delta_h = CStr(Format(Cells(4 + i, "f").value, "0.00"))
         time_ = CStr(Format(Cells(4 + i, "u").value, "0.0000"))
         
         
         ' Cells(4 + i, "y").value = Format(skin(i), "0.0000")
         
-        formula1 = "W-" & i & "호공~~R _{W-" & i & "} ``=`` sqrt {6 TIMES  " & delta_h & " TIMES  " & K & " TIMES  " & time_ & "/" & S & "} ``=~" & shultze & "m"
+        formula1 = "W-" & i & "호공~~R _{W-" & i & "} ``=`` sqrt {6 TIMES  " & delta_h & " TIMES  " & K & " TIMES  " & time_ & "/" & S & "} ``=~" & schultze & "m"
         formula2 = "W-" & i & "호공~~R _{W-" & i & "} ``=3`` sqrt {" & delta_h & " TIMES " & K & " TIMES " & time_ & "/" & S & "} `=`" & webber & "`m"
         formula3 = "W-" & i & "호공~~r _{0(W-" & i & ")} `=~ sqrt {{2.25 TIMES  " & T & " TIMES  " & time_ & "} over {" & S & "}} `=~" & jacob & "m"
         
-        Debug.Print ""
-        Debug.Print formula1
-        Debug.Print formula2
-        Debug.Print formula3
-        Debug.Print ""
+        
+        Select Case Mode
+            Case "SCHULTZE"
+                Debug.Print formula1
+                Print #FileNum, formula1
+            
+            Case "WEBBER"
+                Debug.Print formula2
+                Print #FileNum, formula2
+                
+            Case "JCOB"
+                Debug.Print formula3
+                Print #FileNum, formula3
+        End Select
         
         Debug.Print "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        
-        
-         Print #FileNum, " "
-         Print #FileNum, formula1
-         Print #FileNum, formula2
-         Print #FileNum, formula3
-         Print #FileNum, "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+        Print #FileNum, "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
         
     Next i
     
     Debug.Print "************************************************************************************************************************************************************************************************"
-    Print #FileNum, "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+    Print #FileNum, "************************************************************************************************************************************************************************************************"
     
 End Sub
+
 
 
 
